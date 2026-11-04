@@ -351,6 +351,14 @@ button{font:inherit;cursor:pointer}
 .cform .two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .cform .btn-yellow{justify-self:start}
 @media (max-width:860px){.contact-grid{grid-template-columns:1fr}.cform .two{grid-template-columns:1fr}}
+/* video player */
+.vmodal{position:fixed;inset:0;z-index:100;background:rgba(12,12,11,.9);display:grid;place-items:center;padding:calc(64px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.vbox{width:min(1100px,100%);display:grid;gap:12px}
+.vframe{position:relative;width:100%;aspect-ratio:16/9;max-height:calc(100vh - 160px);background:#000;border-radius:14px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.vframe iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vbar{display:flex;justify-content:space-between;align-items:center;gap:12px;color:#d8d7d1;font-size:14px}
+.vbar a{color:#d8d7d1}
+.vmodal .close{position:fixed;top:calc(16px + env(safe-area-inset-top,0px));right:max(16px,env(safe-area-inset-right,0px));background:rgba(255,255,255,.18)}
 /* service page */
 #service-form,.sform,#after-hero{scroll-margin-top:72px}
 .process{position:relative;z-index:1;list-style:none;margin:60px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:0;border-top:1px solid var(--yellow)}
@@ -427,6 +435,10 @@ button{font:inherit;cursor:pointer}
   <div id="shell"></div>
 </div>
 <div class="drawer" id="drawer" hidden></div>
+<div class="vmodal" id="vmodal" hidden role="dialog" aria-modal="true" aria-label="Video">
+  <button class="icon-btn close" type="button" id="vclose" aria-label="Close"><svg width="16" height="16" viewBox="0 0 16 16" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m3 3 10 10M13 3 3 13"/></svg></button>
+  <div class="vbox"><div class="vframe" id="vframe"></div><div class="vbar"><span id="vtitle"></span><a id="vext" href="#" target="_blank" rel="noopener"></a></div></div>
+</div>
 <div class="search" id="search" hidden role="dialog" aria-label="Search"></div>
 
 <script>
@@ -760,7 +772,7 @@ const VIEWS={
   </div></section>
 
   <section class="video"><div class="bg" aria-hidden="true"></div>
-   <a class="play" href="https://www.youtube.com/watch?v=QnYYTr1pIuc" target="_blank" rel="noopener" aria-label="YouTube">${PLAY}</a>
+   <a class="play" href="https://www.youtube.com/watch?v=QnYYTr1pIuc" target="_blank" rel="noopener" aria-label="${nl?'Cees Vervat over Weru kozijnen':'Cees Vervat on Weru Frames'}">${PLAY}</a>
    <div class="wrap" style="width:100%"><h2>${nl?'Cees Vervat over Weru kozijnen':'Cees Vervat on Weru Frames'}</h2></div></section>
 
   <section class="gallery" aria-label="${nl?'Projectfoto’s':'Project gallery'}"><span class="ghost-word" aria-hidden="true">${nl?'galerij':'gallery'}</span>
@@ -1011,7 +1023,23 @@ document.addEventListener('click',e=>{
     return}
   if(e.target===drawer||(e.target.closest('a')&&(drawer.contains(e.target)||search.contains(e.target)))){drawer.hidden=true;search.hidden=true}
 });
-addEventListener('keydown',e=>{if(e.key==='Escape'){search.hidden=true;drawer.hidden=true}});
+/* in-page video player */
+const vmodal=document.getElementById('vmodal'),vframe=document.getElementById('vframe');let vReturn=null;
+function videoFrom(href){let m=href.match(/youtube\.com\/watch\?v=([\w-]{6,})/)||href.match(/youtu\.be\/([\w-]{6,})/);
+  if(m)return 'https://www.youtube-nocookie.com/embed/'+m[1]+'?autoplay=1&rel=0&modestbranding=1&playsinline=1';
+  m=href.match(/vimeo\.com\/(\d+)/);if(m)return 'https://player.vimeo.com/video/'+m[1]+'?autoplay=1&dnt=1';return null}
+function openVideo(a){const src=videoFrom(a.href);if(!src)return false;const nl=LANG==='nl';vReturn=a;
+  vframe.innerHTML='<iframe src="'+src+'" title="Video" allow="autoplay; fullscreen; picture-in-picture; encrypted-media" allowfullscreen></iframe>';
+  const t=((a.querySelector('b')||{}).textContent||a.getAttribute('aria-label')||a.textContent||'').trim();document.getElementById('vtitle').textContent=t.length>2&&t.length<90?t:'';
+  const ext=document.getElementById('vext');ext.href=a.href;ext.textContent=a.href.includes('vimeo')?(nl?'Open op Vimeo':'Open on Vimeo'):(nl?'Open op YouTube':'Open on YouTube');
+  document.getElementById('vclose').setAttribute('aria-label',nl?'Video sluiten':'Close video');
+  vmodal.hidden=false;document.body.style.overflow='hidden';document.getElementById('vclose').focus();return true}
+function closeVideo(){if(vmodal.hidden)return;vmodal.hidden=true;vframe.innerHTML='';document.body.style.overflow='';if(vReturn&&vReturn.focus)vReturn.focus()}
+document.getElementById('vclose').onclick=closeVideo;
+vmodal.addEventListener('click',e=>{if(e.target===vmodal)closeVideo()});
+document.addEventListener('click',e=>{if(e.defaultPrevented||e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey)return;const a=e.target.closest('a[href]');
+  if(a&&!vmodal.contains(a)&&openVideo(a)){e.preventDefault();e.stopPropagation()}},true);
+addEventListener('keydown',e=>{if(e.key==='Escape'){search.hidden=true;drawer.hidden=true;closeVideo()}});
 const onScroll=()=>hdr.classList.toggle('scrolled',scrollY>40);
 addEventListener('scroll',onScroll,{passive:true});
 addEventListener('hashchange',()=>{render();onScroll()});
