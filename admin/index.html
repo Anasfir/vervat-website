@@ -435,25 +435,53 @@ const VIEW={
   return `${card('GitHub-verbinding',`<p>Ingelogd op <b>${esc(GH.owner)}/${esc(GH.repo)}</b>, branch <b>${esc(GH.branch)}</b>. Wijzigingen worden gepubliceerd naar deze branch; GitHub Pages zet ze daarna online.</p>
     <div id="buildBox" class="hint">Publicatiestatus wordt opgehaald…</div>`)}
   ${card('Formulieren koppelen (Google Sheet)',`
-    <p>Contactberichten, serviceverzoeken (met foto’s) en aanmeldingen voor de nieuwsbrief worden opgeslagen in een Google Sheet in uw Google-account. Foto’s komen in een map in Google Drive. Gratis, eenmalig ±5 minuten:</p>
+    <p>Contactberichten, serviceverzoeken (met foto’s) en aanmeldingen voor de nieuwsbrief worden opgeslagen in een Google Sheet, gemaild naar het adres hieronder, en optioneel als WhatsApp-bericht verstuurd. Gratis, eenmalig ±10 minuten.</p>
+    <h3 style="font-size:15px">Stap 1 — Uw instellingen</h3>
+    <p class="hint">Vul dit hier in. De code in stap 2 wordt er automatisch mee ingevuld, zodat u in Google niets hoeft aan te passen.</p>
+    <div class="grid2">
+     <label class="f"><span>E-mail voor inzendingen</span><input type="email" id="scEmail" value="${esc(SC.email)}" data-sc="email"><small>Elke inzending wordt hierheen gemaild, met foto’s als bijlage.</small></label>
+     <label class="f"><span>Geheime sleutel</span><div style="display:flex;gap:8px"><input type="text" id="formKey" value="${esc(key)}" class="mono" autocomplete="off" data-sc="key"><button type="button" class="btn" data-act="genKey">Nieuw</button></div><small>Automatisch gemaakt. Alleen in deze browser bewaard.</small></label>
+     <label class="f"><span>WhatsApp-nummer voor kopie</span><input type="text" id="scPhone" value="${esc(SC.phone)}" class="mono" data-sc="phone" placeholder="+31612345678"><small>Internationaal, met +. Leeg = geen WhatsApp.</small></label>
+     <label class="f"><span>CallMeBot apikey (voor WhatsApp)</span><input type="text" id="scApi" value="${esc(SC.api)}" class="mono" data-sc="api" placeholder="bijv. 123456"><small>Zie hieronder hoe u die krijgt. Leeg = geen WhatsApp.</small></label>
+    </div>
+    <details><summary><b>Hoe krijg ik een CallMeBot apikey?</b></summary>
+     <ol class="steps" style="margin-top:8px"><li>Open <a href="https://www.callmebot.com/blog/free-api-whatsapp-messages/" target="_blank" rel="noopener">callmebot.com (WhatsApp)</a> en sla het CallMeBot-nummer dat daar staat op in de telefoon die de berichten moet krijgen.</li>
+      <li>Stuur dat nummer via WhatsApp het bericht <code>I allow callmebot to send me messages</code>.</li>
+      <li>U krijgt een bericht terug met uw <i>apikey</i>. Vul alleen de cijfers/letters van de apikey hierboven in.</li></ol></details>
+    <h3 style="font-size:15px">Stap 2 — Code in Google zetten</h3>
     <ol class="steps">
      <li>Maak een nieuwe Google Sheet: <a href="https://sheets.new" target="_blank" rel="noopener">sheets.new</a>. Noem hem bijv. <i>Vervat website inzendingen</i>.</li>
-     <li>Klik in de Sheet op <b>Extensies → Apps Script</b>. Verwijder de voorbeeldcode en plak de code hieronder.</li>
-     <li>Vervang bovenaan <code>CHANGE-ME-to-a-long-secret</code> door een lange geheime sleutel (knop <b>Maak sleutel</b> hieronder). Controleer <code>NOTIFY_EMAIL</code>: elke inzending wordt naar dit adres gemaild, met de foto’s als bijlage. Klik <b>Opslaan</b> (het schijfje).</li>
-     <li><b>WhatsApp-kopie (optioneel):</b> open <a href="https://www.callmebot.com/blog/free-api-whatsapp-messages/" target="_blank" rel="noopener">callmebot.com (WhatsApp)</a>, sla het CallMeBot-nummer dat daar staat op in de telefoon die de berichten moet krijgen, en stuur het via WhatsApp het bericht <code>I allow callmebot to send me messages</code>. U krijgt een <i>apikey</i> terug. Zet die bij <code>CALLMEBOT_APIKEY</code> en controleer <code>WHATSAPP_PHONE</code>. Klik <b>Opslaan</b>.</li>
-     <li>Kies bovenin de functie <b>testNotify</b> en klik <b>Uitvoeren</b>. Geef Google toestemming. U ontvangt nu een test-e-mail (en WhatsApp-bericht).</li>
-     <li>Klik <b>Implementeren → Nieuwe implementatie</b> → type <b>Web-app</b>. Uitvoeren als: <b>Ik</b>. Wie heeft toegang: <b>Iedereen</b>. Klik <b>Implementeren</b> en geef toestemming.<br><span class="hint">Later de code aangepast? Kies <b>Implementeren → Implementaties beheren</b> → potlood → Versie: <b>Nieuwe versie</b> → Implementeren. De URL blijft hetzelfde.</span></li>
-     <li>Kopieer de <b>Web-app-URL</b> (eindigt op <code>/exec</code>) en plak hem hieronder, met dezelfde geheime sleutel. Klik daarna rechtsboven op <b>Publiceren</b>.</li>
+     <li>Klik in de Sheet op <b>Extensies → Apps Script</b>.</li>
+     <li>Klik in het codevenster, selecteer <b>alles</b> (Cmd/Ctrl + A) en verwijder het. Klik dan hieronder op <b>Kopieer code</b> en plak (Cmd/Ctrl + V). Pas niets aan. Klik <b>Opslaan</b> (het schijfje).</li>
+     <li>Kies bovenin bij de functies <b>testNotify</b> en klik <b>Uitvoeren</b>. Geef Google toestemming (bij “Google heeft deze app niet geverifieerd”: <i>Geavanceerd → Ga naar … (onveilig)</i>, dit is uw eigen script). U ontvangt een test-e-mail en, als ingesteld, een WhatsApp-bericht.</li>
+     <li>Klik <b>Implementeren → Nieuwe implementatie</b> → tandwiel → <b>Web-app</b>. Uitvoeren als: <b>Ik</b>. Wie heeft toegang: <b>Iedereen</b>. Klik <b>Implementeren</b>.<br><span class="hint">Code later opnieuw geplakt? Kies <b>Implementeren → Implementaties beheren</b> → potlood → Versie: <b>Nieuwe versie</b> → Implementeren. De URL blijft hetzelfde.</span></li>
     </ol>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><b>Apps Script-code (al ingevuld)</b><button type="button" class="btn primary sm" data-act="copyScript">Kopieer code</button></div>
+    <pre class="code" id="scriptCode">Laden…</pre>
+    <h3 style="font-size:15px">Stap 3 — Koppelen</h3>
+    <p>Kopieer de <b>Web-app-URL</b> (eindigt op <code>/exec</code>), plak hem hieronder, klik <b>Test verbinding</b> en daarna rechtsboven op <b>Publiceren</b>.</p>
     ${fld('Web-app-URL (Apps Script)','site.formEndpoint',{type:'url',mono:true,ph:'https://script.google.com/macros/s/…/exec',hint:'Wordt opgeslagen in de website, zodat de formulieren hiernaartoe versturen.'})}
-    <div class="grid2"><label class="f"><span>Geheime sleutel (alleen in deze browser)</span><input type="password" id="formKey" value="${esc(key)}" class="mono" autocomplete="off"><small>Nodig om inzendingen te lezen. Zet dezelfde sleutel in het script.</small></label>
-     <div class="f"><span>&nbsp;</span><div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn" data-act="genKey">Maak sleutel</button><button type="button" class="btn" data-act="saveKey">Sleutel opslaan</button><button type="button" class="btn" data-act="testInbox">Test verbinding</button></div></div></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn" data-act="testInbox">Test verbinding</button></div>
     <div id="keyMsg" role="status"></div>
     <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><b>Apps Script-code</b><button type="button" class="btn sm" data-act="copyScript">Kopieer code</button></div>
     <pre class="code" id="scriptCode">Laden…</pre>`)}
   ${card('Oude concepten',store.get('vdj-admin-draft-old',null)?`<p>Er is een ouder concept bewaard dat niet meer past bij de live versie (iemand anders heeft intussen gepubliceerd).</p><div style="display:flex;gap:8px"><button type="button" class="btn" data-act="restoreOld">Concept laden (overschrijft huidige bewerkingen)</button><button type="button" class="btn danger" data-act="dropOld">Verwijderen</button></div>`:'<p class="hint">Geen oude concepten.</p>')}`;
  }
 };
+const SC=Object.assign({email:'Intissar@vervat-breukelen.nl',phone:'',api:''},store.get('vdj-admin-script',{}));
+let SCRIPT_SRC='';
+function scDefaults(){if(!SC.phone&&C&&C.site.whatsapp)SC.phone='+'+C.site.whatsapp}
+const newKey=()=>Array.from(crypto.getRandomValues(new Uint8Array(24)),x=>x.toString(16).padStart(2,'0')).join('');
+function scriptWithSettings(){
+  const setc=(src,name,val)=>src.replace(new RegExp('^const '+name+' = .*$','m'),'const '+name+' = '+JSON.stringify(String(val||''))+';');
+  let t=SCRIPT_SRC;
+  t=setc(t,'ADMIN_KEY',store.get('vdj-admin-formkey',''));
+  t=setc(t,'NOTIFY_EMAIL',SC.email.trim());
+  t=setc(t,'WHATSAPP_PHONE',SC.phone.trim().replace(/[^+\d]/g,''));
+  t=setc(t,'CALLMEBOT_APIKEY',SC.api.trim());
+  return t;
+}
+function fillScript(){const c=$('#scriptCode');if(c&&SCRIPT_SRC)c.textContent=scriptWithSettings()}
 function VIEW_JOBS(){
   const rows=['nl','en'].map(l=>objList('Vacatures – '+(l==='nl'?'Nederlands':'Engels'),'jobs.'+l,p=>`<div class="grid2">${fld('Label',p+'.tag')}${fld('Functie',p+'.title')}</div><div class="grid2">${fld('Kop 1',p+'.h1')}${fld('Kop 2',p+'.h2')}</div><div class="grid2"><label class="f"><span>Punten 1 (één per regel)</span><textarea data-lines="${p}.l1">${esc((get(p+'.l1')||[]).join('\n'))}</textarea></label><label class="f"><span>Punten 2 (één per regel)</span><textarea data-lines="${p}.l2">${esc((get(p+'.l2')||[]).join('\n'))}</textarea></label></div>`,{tag:'',title:'',h1:'',l1:[],h2:'',l2:[]})).join('');
   return rows;
@@ -467,7 +495,8 @@ const VIEW_INIT={
    .catch(e=>{const g=$('#mediaGrid');if(g)g.innerHTML=`<div class="notice err">Foto’s laden mislukt: ${esc(e.message)}</div>`})},
  inbox(){if($('#inboxBox'))loadInbox()},
  texts(){const t=$('#tq');t.addEventListener('input',()=>{VIEW.texts.q=t.value;clearTimeout(t._d);t._d=setTimeout(()=>{render();const n=$('#tq');n.focus();n.setSelectionRange(n.value.length,n.value.length)},250)})},
- settings(){fetch('apps-script.gs',{cache:'no-store'}).then(r=>r.text()).then(t=>{const c=$('#scriptCode');if(c)c.textContent=t}).catch(()=>{});loadBuild()}
+ settings(){scDefaults();if(!store.get('vdj-admin-formkey',''))store.set('vdj-admin-formkey',newKey());const k=$('#formKey');if(k&&!k.value)k.value=store.get('vdj-admin-formkey','');
+   fetch('apps-script.gs?v='+Date.now(),{cache:'no-store'}).then(r=>r.text()).then(t=>{SCRIPT_SRC=t;fillScript()}).catch(()=>{const c=$('#scriptCode');if(c)c.textContent='Code laden mislukt. Vernieuw de pagina.'});loadBuild()}
 };
 
 /* ---------------- media ---------------- */
@@ -606,6 +635,7 @@ document.addEventListener('input',e=>{
     if(el.dataset.path.endsWith('.id')&&el.dataset.path.startsWith('products.')){const c=v.toLowerCase().replace(/[^a-z0-9-]/g,'');if(c!==v){el.value=c;set(el.dataset.path,c)}}}
   if(el.dataset.lines){set(el.dataset.lines,el.value.split('\n').map(s=>s.trim()).filter(Boolean));markDirty()}
   if(el.id==='fType'||el.id==='fStatus'||el.id==='fQ')drawInbox();
+  if(el.dataset.sc){if(el.dataset.sc==='key')store.set('vdj-admin-formkey',el.value.trim());else{SC[el.dataset.sc]=el.value;store.set('vdj-admin-script',SC)}fillScript()}
 });
 document.addEventListener('change',async e=>{
   const el=e.target;
@@ -649,11 +679,10 @@ document.addEventListener('click',async e=>{
    case 'openSub':openSub(b.dataset.id);break;
    case 'setStatus':setStatus(b.dataset.id,b.dataset.s);break;
    case 'delSub':confirmBox('Inzending verwijderen?','Deze inzending wordt uit de Google Sheet verwijderd. Bestanden in Google Drive blijven bewaard.','Verwijderen',()=>delSub(b.dataset.id));break;
-   case 'genKey':{const k=Array.from(crypto.getRandomValues(new Uint8Array(24)),x=>x.toString(16).padStart(2,'0')).join('');$('#formKey').value=k;$('#keyMsg').innerHTML='<div class="notice info">Nieuwe sleutel gemaakt. Kopieer hem naar het script (ADMIN_KEY) en klik <b>Sleutel opslaan</b>.</div>';break}
-   case 'saveKey':store.set('vdj-admin-formkey',$('#formKey').value.trim());$('#keyMsg').innerHTML='<div class="notice ok">Sleutel opgeslagen in deze browser.</div>';break;
-   case 'testInbox':{store.set('vdj-admin-formkey',$('#formKey').value.trim());const m=$('#keyMsg');if(!C.site.formEndpoint){m.innerHTML='<div class="notice warn">Vul eerst de Web-app-URL in.</div>';break}
+   case 'genKey':{const k=newKey();$('#formKey').value=k;store.set('vdj-admin-formkey',k);fillScript();$('#keyMsg').innerHTML='<div class="notice warn">Nieuwe sleutel gemaakt. Kopieer de code opnieuw naar Google en maak een nieuwe versie van de implementatie.</div>';break}
+   case 'testInbox':{const m=$('#keyMsg');if(!C.site.formEndpoint){m.innerHTML='<div class="notice warn">Vul eerst de Web-app-URL in.</div>';break}
      m.innerHTML='<p class="hint">Testen…</p>';try{const j=await inboxCall({action:'list'});m.innerHTML=`<div class="notice ok">Verbinding werkt. ${j.items.length} inzending(en) gevonden.${dirty?' Vergeet niet te <b>Publiceren</b>, zodat de website-formulieren de nieuwe URL gebruiken.':''}</div>`}catch(err){m.innerHTML=`<div class="notice err">Verbinding mislukt: ${esc(err.message)}</div>`}break}
-   case 'copyScript':{const t=$('#scriptCode').textContent;try{await navigator.clipboard.writeText(t);toast('Code gekopieerd')}catch(_){const r=document.createRange();r.selectNodeContents($('#scriptCode'));getSelection().removeAllRanges();getSelection().addRange(r);toast('Selecteer en kopieer de code (Ctrl/Cmd+C)')}break}
+   case 'copyScript':{if(!SCRIPT_SRC){toast('Code wordt nog geladen…');break}const t=scriptWithSettings();try{await navigator.clipboard.writeText(t);toast('Code gekopieerd')}catch(_){const r=document.createRange();r.selectNodeContents($('#scriptCode'));getSelection().removeAllRanges();getSelection().addRange(r);toast('Selecteer en kopieer de code (Ctrl/Cmd+C)')}break}
    case 'forcePublish':closeModal();publish(true);break;
    case 'reloadLive':closeModal();store.del('vdj-admin-draft');await loadContent();render(true);break;
    case 'restoreOld':{const d=store.get('vdj-admin-draft-old',null);if(d){C=d.content;store.del('vdj-admin-draft-old');markDirty();go('products')}break}
