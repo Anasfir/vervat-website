@@ -1,0 +1,687 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Vervat Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&family=Roboto+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: fixed left sidebar of sections, a top bar with publish state, and a single scrolling editor column. */
+:root{
+  --yellow:#F9C41E;--yellow-dk:#E0AC00;--ink:#1B1B1A;--ink-2:#3A3A38;--muted:#6E6D68;
+  --paper:#F6F5F1;--card:#FFFFFF;--line:#E1E0DA;--dark:#232322;
+  --ok:#1E7A3C;--ok-bg:#E6F4EA;--warn:#8A5A00;--warn-bg:#FFF4D6;--bad:#A32A1B;--bad-bg:#FDECEA;--info:#1F4E8C;--info-bg:#E7EEF8;
+  --font:"Roboto",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;--mono:"Roboto Mono",ui-monospace,Menlo,monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font:400 14px/1.5 var(--font);-webkit-font-smoothing:antialiased}
+[hidden]{display:none!important}
+img{max-width:100%;display:block}
+button{font:inherit;cursor:pointer;color:inherit}
+:focus-visible{outline:3px solid var(--yellow);outline-offset:2px;border-radius:6px}
+h1,h2,h3{margin:0;line-height:1.2;text-wrap:balance}
+a{color:var(--info)}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:8px 14px;font-weight:500;font-size:14px;text-decoration:none;color:var(--ink);white-space:nowrap}
+.btn:hover{border-color:var(--ink)}
+.btn.primary{background:var(--yellow);border-color:var(--yellow);font-weight:700}
+.btn.primary:hover{background:var(--yellow-dk);border-color:var(--yellow-dk)}
+.btn.dark{background:var(--ink);border-color:var(--ink);color:#fff}
+.btn.danger{color:var(--bad)}
+.btn.danger:hover{border-color:var(--bad);background:var(--bad-bg)}
+.btn.sm{padding:5px 10px;font-size:13px;border-radius:8px}
+.btn.icon{padding:5px 8px;min-width:30px}
+.btn:disabled{opacity:.5;cursor:default}
+
+/* login */
+.login{min-height:100vh;display:grid;place-items:center;padding:24px max(16px,env(safe-area-inset-left,0px))}
+.login-card{width:min(520px,100%);background:var(--card);border:1px solid var(--line);border-radius:18px;padding:34px;display:grid;gap:16px}
+.login-card .brand{display:flex;align-items:center;gap:12px}
+.login-card .brand img{width:96px}
+.login-card h1{font-size:24px}
+.login-card ol{margin:0;padding-left:20px;color:var(--ink-2);display:grid;gap:4px}
+
+/* shell */
+.app{display:grid;grid-template-columns:232px minmax(0,1fr);min-height:100vh}
+.side{background:var(--dark);color:#fff;padding:20px 14px calc(20px + env(safe-area-inset-bottom,0px));position:sticky;top:0;height:100vh;overflow:auto;display:flex;flex-direction:column;gap:4px}
+.side .brand{display:flex;align-items:center;gap:10px;padding:0 8px 18px;font-weight:700;letter-spacing:.02em}
+.side .brand img{width:72px;border:1px solid rgba(255,255,255,.5)}
+.side button.nav{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;text-align:left;background:none;border:0;color:#d9d8d2;padding:9px 12px;border-radius:9px;font-weight:500}
+.side button.nav:hover{background:rgba(255,255,255,.08);color:#fff}
+.side button.nav.on{background:var(--yellow);color:var(--ink);font-weight:700}
+.side .badge{background:var(--bad);color:#fff;border-radius:99px;font-size:11px;padding:1px 7px;font-weight:700}
+.side .foot{margin-top:auto;padding:14px 8px 0;font-size:12px;color:#a9a8a2;display:grid;gap:8px}
+.side .foot a{color:#fff}
+.top{position:sticky;top:0;z-index:20;background:rgba(246,245,241,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:12px max(20px,env(safe-area-inset-right,0px)) 12px 24px;flex-wrap:wrap}
+.top h1{font-size:20px;margin-right:auto}
+.state{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:500;padding:6px 12px;border-radius:99px;background:var(--ok-bg);color:var(--ok)}
+.state::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+.state.dirty{background:var(--warn-bg);color:var(--warn)}
+.state.busy{background:var(--info-bg);color:var(--info)}
+.state.err{background:var(--bad-bg);color:var(--bad)}
+.main{padding:24px 24px 120px;max-width:1080px;min-width:0}
+.menu-btn{display:none}
+@media (max-width:860px){
+  .app{grid-template-columns:1fr}
+  .side{position:fixed;inset:0 auto 0 0;width:260px;z-index:40;transform:translateX(-100%);transition:transform .25s}
+  .side.open{transform:none;box-shadow:0 0 0 100vw rgba(0,0,0,.4)}
+  .menu-btn{display:inline-flex}
+  .main{padding:16px max(16px,env(safe-area-inset-right,0px)) 120px max(16px,env(safe-area-inset-left,0px))}
+  .top{padding-left:max(16px,env(safe-area-inset-left,0px))}
+}
+
+/* editor blocks */
+.intro{color:var(--muted);margin:0 0 18px;max-width:70ch}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;display:grid;gap:14px;margin-bottom:16px;min-width:0}
+.card>h2{font-size:16px;display:flex;align-items:center;gap:10px;justify-content:space-between}
+.card>h2 small{font-weight:400;color:var(--muted);font-size:13px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+@media (max-width:700px){.grid2,.grid3{grid-template-columns:1fr}}
+.f{display:grid;gap:5px;min-width:0}
+.f>span{font-size:12px;font-weight:700;color:var(--ink-2);display:flex;align-items:center;gap:6px}
+.f>span .lng{font:500 10px/1 var(--mono);background:var(--paper);border:1px solid var(--line);border-radius:4px;padding:2px 4px;color:var(--muted)}
+.f small{color:var(--muted);font-size:12px}
+input[type=text],input[type=url],input[type=email],input[type=number],input[type=password],input[type=search],select,textarea{width:100%;font:400 14px/1.45 var(--font);color:var(--ink);background:#FCFCFA;border:1px solid var(--line);border-radius:9px;padding:9px 11px}
+textarea{min-height:76px;resize:vertical}
+textarea.long{min-height:130px}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--ink);background:#fff}
+.mono{font-family:var(--mono)!important;font-size:12.5px!important}
+.bi{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (max-width:700px){.bi{grid-template-columns:1fr}}
+
+.rows{display:grid;gap:10px}
+.row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:start;padding:12px;border:1px solid var(--line);border-radius:12px;background:#FCFCFA}
+.row .ctl{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+.row .num{font:500 11px var(--mono);color:var(--muted)}
+.add{justify-self:start}
+
+.imgf{display:flex;gap:12px;align-items:center;min-width:0}
+.imgf .pv{flex:none;width:96px;height:64px;border-radius:8px;background:var(--paper) center/cover no-repeat;border:1px solid var(--line)}
+.imgf .meta{display:grid;gap:6px;min-width:0}
+.imgf code{font:500 11.5px var(--mono);color:var(--muted);overflow-wrap:anywhere}
+
+/* product list */
+.plist{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,210px),1fr));gap:12px;margin-bottom:18px}
+.pitem{display:grid;grid-template-columns:56px 1fr;gap:10px;align-items:center;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px;min-width:0}
+.pitem.on{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.pitem .pv{width:56px;height:44px;border-radius:8px;background:var(--paper) center/cover}
+.pitem b{display:block;font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pitem small{color:var(--muted);font:500 11px var(--mono)}
+.pitem.new{place-items:center;grid-template-columns:1fr;border-style:dashed;color:var(--muted);font-weight:700;min-height:62px}
+
+/* texts */
+.tgroup{margin-bottom:22px}
+.tgroup h3{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:8px}
+.trow{display:grid;grid-template-columns:170px minmax(0,1fr) minmax(0,1fr);gap:10px;padding:10px 0;border-top:1px solid var(--line);align-items:start}
+.trow code{font:500 11.5px var(--mono);color:var(--muted);padding-top:9px;overflow-wrap:anywhere}
+@media (max-width:860px){.trow{grid-template-columns:1fr}}
+
+/* media */
+.media{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.mitem{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:grid;text-align:left;padding:0}
+.mitem .pv{aspect-ratio:4/3;background:var(--paper) center/cover}
+.mitem span{padding:7px 9px;font:500 11.5px var(--mono);color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mitem:hover{border-color:var(--ink)}
+.drop{border:2px dashed var(--line);border-radius:14px;padding:22px;text-align:center;background:var(--card);display:grid;gap:4px;justify-items:center;cursor:pointer}
+.drop:hover,.drop.over{border-color:var(--yellow-dk);background:#FFFBEA}
+.drop input{position:absolute;width:1px;height:1px;opacity:0}
+.drop:focus-within{outline:3px solid var(--yellow);outline-offset:2px}
+
+/* modal */
+.modal{position:fixed;inset:0;z-index:60;background:rgba(20,20,19,.55);display:grid;place-items:center;padding:24px max(16px,env(safe-area-inset-right,0px))}
+.modal-box{background:var(--paper);border-radius:16px;width:min(980px,100%);max-height:calc(100vh - 48px);overflow:auto;padding:22px;display:grid;gap:14px;box-shadow:0 30px 80px rgba(0,0,0,.35)}
+.modal-box.sm{width:min(460px,100%)}
+.modal-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.modal-head h2{font-size:18px}
+
+/* submissions */
+.filters{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.filters select,.filters input{width:auto;min-width:150px}
+.table-wrap{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:14px}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);background:#FCFCFA;white-space:nowrap}
+tbody tr{cursor:pointer}
+tbody tr:hover{background:#FFFBEA}
+td.date{white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--ink-2)}
+.pill{display:inline-block;border-radius:99px;padding:2px 9px;font-size:12px;font-weight:700;white-space:nowrap}
+.pill.new{background:var(--warn-bg);color:var(--warn)}
+.pill.progress{background:var(--info-bg);color:var(--info)}
+.pill.done{background:var(--ok-bg);color:var(--ok)}
+.pill.t-service{background:#F1E9FF;color:#5B2DA6}
+.pill.t-contact{background:var(--info-bg);color:var(--info)}
+.pill.t-newsletter{background:#EAF4F1;color:#1F6B57}
+.dl{display:grid;grid-template-columns:150px minmax(0,1fr);gap:8px 16px;margin:0}
+.dl dt{color:var(--muted);font-size:12.5px}
+.dl dd{margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
+.empty{padding:40px 20px;text-align:center;color:var(--muted)}
+.notice{border-radius:12px;padding:14px 16px;font-size:13.5px;border:1px solid}
+.notice.warn{background:var(--warn-bg);border-color:#F0D99B;color:#5E3E00}
+.notice.info{background:var(--info-bg);border-color:#C7D6EC;color:#173B6B}
+.notice.err{background:var(--bad-bg);border-color:#F2C2BC;color:#7A1F14}
+.notice.ok{background:var(--ok-bg);border-color:#BFE0C8;color:#14532A}
+pre.code{background:var(--dark);color:#EDEBE4;border-radius:12px;padding:16px;overflow:auto;max-height:340px;font:400 12px/1.5 var(--mono);margin:0}
+.steps{margin:0;padding-left:20px;display:grid;gap:8px}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:99px;font-weight:500;z-index:80;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.hint{font-size:12px;color:var(--muted)}
+.sep{height:1px;background:var(--line);margin:4px 0}
+</style>
+</head>
+<body>
+
+<div id="loginView" class="login" hidden>
+  <form class="login-card" id="loginForm">
+    <div class="brand"><img src="../assets/logo.webp" alt="Vervat &amp; de Jong"><h1>Website beheer</h1></div>
+    <p>Log in met een GitHub-sleutel (token) die schrijfrechten heeft op de website-repository.</p>
+    <details>
+      <summary><b>Hoe maak ik een sleutel?</b></summary>
+      <ol>
+        <li>Open <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">github.com/settings/personal-access-tokens/new</a>.</li>
+        <li>Naam: <i>Vervat admin</i>. Vervaldatum: bijvoorbeeld 1 jaar.</li>
+        <li>Repository access: <b>Only select repositories</b> → <b>vervat-website</b>.</li>
+        <li>Permissions → Repository: <b>Contents: Read and write</b> (en optioneel <b>Actions: Read-only</b> om de publicatiestatus te zien).</li>
+        <li>Klik <b>Generate token</b> en plak de sleutel hieronder.</li>
+      </ol>
+    </details>
+    <label class="f"><span>GitHub-sleutel</span><input type="password" id="lgToken" autocomplete="off" placeholder="github_pat_…" required></label>
+    <div class="grid3">
+      <label class="f"><span>Eigenaar</span><input type="text" id="lgOwner" value="Anasfir"></label>
+      <label class="f"><span>Repository</span><input type="text" id="lgRepo" value="vervat-website"></label>
+      <label class="f"><span>Branch</span><input type="text" id="lgBranch" value="gh-pages"></label>
+    </div>
+    <button class="btn primary" type="submit" id="lgBtn">Inloggen</button>
+    <div id="lgMsg" role="status"></div>
+    <p class="hint">De sleutel wordt alleen in deze browser bewaard. Log uit op gedeelde computers.</p>
+  </form>
+</div>
+
+<div id="appView" class="app" hidden>
+  <aside class="side" id="side">
+    <div class="brand"><img src="../assets/logo.webp" alt=""><span>Beheer</span></div>
+    <div id="navList" style="display:grid;gap:2px"></div>
+    <div class="foot">
+      <a href="../" target="_blank" rel="noopener">Bekijk live website ↗</a>
+      <span id="whoami"></span>
+      <button class="btn sm" type="button" id="logoutBtn" style="justify-self:start">Uitloggen</button>
+    </div>
+  </aside>
+  <div style="min-width:0">
+    <div class="top">
+      <button class="btn icon menu-btn" type="button" id="menuBtn" aria-label="Menu">☰</button>
+      <h1 id="pageTitle">Beheer</h1>
+      <span class="state" id="state">Alles gepubliceerd</span>
+      <button class="btn" type="button" id="previewBtn">Voorbeeld</button>
+      <button class="btn" type="button" id="discardBtn" hidden>Wijzigingen weggooien</button>
+      <button class="btn primary" type="button" id="publishBtn" disabled>Publiceren</button>
+    </div>
+    <main class="main" id="main"></main>
+  </div>
+</div>
+
+<div class="modal" id="modal" hidden role="dialog" aria-modal="true"><div class="modal-box" id="modalBox"></div></div>
+<div class="toast" id="toast" hidden role="status"></div>
+
+<script>
+/* =================================================================
+   Vervat & de Jong — admin panel
+   Reads and writes content.json and images in the GitHub repository
+   through the GitHub REST API. Form submissions come from a Google
+   Apps Script web app (see apps-script.gs).
+   ================================================================= */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const store={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(_){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(_){}},del(k){try{localStorage.removeItem(k)}catch(_){}}};
+const b64enc=str=>{const bytes=new TextEncoder().encode(str);let bin='';for(let i=0;i<bytes.length;i+=0x8000)bin+=String.fromCharCode.apply(null,bytes.subarray(i,i+0x8000));return btoa(bin)};
+const b64dec=b=>new TextDecoder().decode(Uint8Array.from(atob(b.replace(/\s/g,'')),c=>c.charCodeAt(0)));
+const clone=o=>JSON.parse(JSON.stringify(o));
+function toast(msg,ms=2600){const t=$('#toast');t.textContent=msg;t.hidden=false;clearTimeout(toast._t);toast._t=setTimeout(()=>t.hidden=true,ms)}
+
+/* ---------------- GitHub ---------------- */
+let GH=store.get('vdj-admin-gh',null);
+const rawBase=()=>`https://raw.githubusercontent.com/${GH.owner}/${GH.repo}/${GH.branch}/`;
+async function gh(path,opt={}){
+  const r=await fetch('https://api.github.com/repos/'+GH.owner+'/'+GH.repo+path,{...opt,headers:{'Accept':'application/vnd.github+json','Authorization':'Bearer '+GH.token,'X-GitHub-Api-Version':'2022-11-28',...(opt.headers||{})}});
+  let body=null;try{body=await r.json()}catch(_){}
+  if(!r.ok){const e=new Error((body&&body.message)||('GitHub '+r.status));e.status=r.status;throw e}
+  return body;
+}
+async function putFile(path,b64,message,sha){
+  return gh('/contents/'+path.split('/').map(encodeURIComponent).join('/'),{method:'PUT',body:JSON.stringify({message,content:b64,branch:GH.branch,...(sha?{sha}:{})})});
+}
+
+/* ---------------- content state ---------------- */
+let C=null,BASE=null,SHA=null,dirty=false,TAB='products',SEL=0;
+const get=p=>p.split('.').reduce((o,k)=>o==null?o:o[k],C);
+function set(p,v){const ks=p.split('.');let o=C;for(let i=0;i<ks.length-1;i++){if(o[ks[i]]==null)o[ks[i]]=/^\d+$/.test(ks[i+1])?[]:{};o=o[ks[i]]}o[ks[ks.length-1]]=v}
+function markDirty(){dirty=JSON.stringify(C)!==BASE;store.set('vdj-admin-draft',{sha:SHA,content:C});updateState()}
+function updateState(msg,kind){
+  const s=$('#state');s.className='state'+(kind?' '+kind:dirty?' dirty':'');
+  s.textContent=msg||(dirty?'Niet-gepubliceerde wijzigingen':'Alles gepubliceerd');
+  $('#publishBtn').disabled=!dirty;$('#discardBtn').hidden=!dirty;
+}
+addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue=''}});
+
+async function loadContent(){
+  const f=await gh('/contents/content.json?ref='+encodeURIComponent(GH.branch));
+  SHA=f.sha;const live=JSON.parse(b64dec(f.content));BASE=JSON.stringify(live);
+  const draft=store.get('vdj-admin-draft',null);
+  if(draft&&draft.sha===SHA&&JSON.stringify(draft.content)!==BASE){C=draft.content;toast('Uw niet-gepubliceerde wijzigingen zijn hersteld.',4000)}
+  else{C=live;if(draft&&draft.sha!==SHA&&JSON.stringify(draft.content)!==BASE)store.set('vdj-admin-draft-old',draft);}
+  dirty=JSON.stringify(C)!==BASE;updateState();
+}
+
+/* ---------------- field builders ---------------- */
+const isLong=v=>String(v??'').length>90||/<p>|<br>/.test(String(v??''));
+function fld(label,path,o={}){
+  const v=get(path)??'';const long=o.long??isLong(v);
+  const inp=long?`<textarea data-path="${path}" class="${o.mono?'mono':''} ${String(v).length>300?'long':''}" ${o.ph?`placeholder="${esc(o.ph)}"`:''}>${esc(v)}</textarea>`
+    :`<input type="${o.type||'text'}" data-path="${path}" value="${esc(v)}" class="${o.mono?'mono':''}" ${o.ph?`placeholder="${esc(o.ph)}"`:''} ${o.type==='number'?'data-num="1"':''}>`;
+  return `<label class="f"><span>${label}${o.lang?` <i class="lng">${o.lang}</i>`:''}</span>${inp}${o.hint?`<small>${o.hint}</small>`:''}</label>`;
+}
+function bi(label,base,o={}){
+  const long=o.long??(isLong(get(base+'.nl'))||isLong(get(base+'.en')));
+  return `<div class="bi">${fld(label,base+'.nl',{...o,long,lang:'NL'})}${fld(label,base+'.en',{...o,long,lang:'EN'})}</div>`;
+}
+function biPair(label,pNL,pEN,o={}){
+  const long=o.long??(isLong(get(pNL))||isLong(get(pEN)));
+  return `<div class="bi">${fld(label,pNL,{...o,long,lang:'NL'})}${fld(label,pEN,{...o,long,lang:'EN'})}</div>`;
+}
+function imgUrl(ref){if(!ref)return'';if(/^https?:|^data:/.test(ref))return ref;return rawBase()+'assets/'+(/\.[a-z0-9]{3,4}$/i.test(ref)?ref:ref+'.webp')}
+function imgf(label,path,o={}){
+  const v=get(path)||'';
+  return `<div class="f"><span>${label}</span><div class="imgf"><div class="pv" style="background-image:url('${esc(imgUrl(v))}')"></div>
+    <div class="meta"><code>${esc(v)||'—'}</code><div style="display:flex;gap:6px;flex-wrap:wrap"><button type="button" class="btn sm" data-act="pick" data-path="${path}" ${o.mirror?`data-mirror="${o.mirror}"`:''}>Kies foto</button>${o.extra||''}</div></div></div></div>`;
+}
+const rowCtl=(list,i,n,mirror)=>`<div class="ctl"><button type="button" class="btn icon sm" data-act="up" data-list="${list}" ${mirror?`data-mirror="${mirror}"`:''} data-i="${i}" ${i===0?'disabled':''} aria-label="Omhoog">↑</button><button type="button" class="btn icon sm" data-act="down" data-list="${list}" ${mirror?`data-mirror="${mirror}"`:''} data-i="${i}" ${i===n-1?'disabled':''} aria-label="Omlaag">↓</button><button type="button" class="btn icon sm danger" data-act="del" data-list="${list}" ${mirror?`data-mirror="${mirror}"`:''} data-i="${i}" aria-label="Verwijderen">✕</button></div>`;
+/* list where NL and EN arrays are edited side by side, row by row */
+function paired(title,pNL,pEN,cols,o={}){
+  const a=get(pNL)||[],b=get(pEN)||[];const n=Math.max(a.length,b.length);
+  const rows=[];for(let i=0;i<n;i++){
+    let inner='';
+    if(!cols){inner=biPair(o.label||'Tekst',`${pNL}.${i}`,`${pEN}.${i}`,{long:o.long})}
+    else inner=cols.map((c,k)=>c==='img'?imgf('Foto',`${pNL}.${i}.${k}`,{mirror:`${pEN}.${i}.${k}`}):biPair(c,`${pNL}.${i}.${k}`,`${pEN}.${i}.${k}`,{long:o.longCols&&o.longCols.includes(k)})).join('');
+    rows.push(`<div class="row"><div style="display:grid;gap:10px;min-width:0"><span class="num">#${i+1}</span>${inner}</div>${rowCtl(pNL,i,n,pEN)}</div>`);
+  }
+  return `<div class="card"><h2>${title}${o.sub?` <small>${o.sub}</small>`:''}</h2><div class="rows">${rows.join('')||'<p class="hint">Nog niets toegevoegd.</p>'}</div>
+    <button type="button" class="btn sm add" data-act="add" data-list="${pNL}" data-mirror="${pEN}" data-tpl='${esc(JSON.stringify(cols?cols.map(c=>''):''))}'>+ Toevoegen</button></div>`;
+}
+/* list of objects, one language-neutral array */
+function objList(title,path,itemFn,tpl,o={}){
+  const a=get(path)||[];
+  const rows=a.map((_,i)=>`<div class="row"><div style="display:grid;gap:10px;min-width:0"><span class="num">#${i+1}</span>${itemFn(`${path}.${i}`,i)}</div>${rowCtl(path,i,a.length)}</div>`).join('');
+  return `<div class="card"><h2>${title}${o.sub?` <small>${o.sub}</small>`:''}</h2><div class="rows">${rows||'<p class="hint">Nog niets toegevoegd.</p>'}</div>
+   <button type="button" class="btn sm add" data-act="add" data-list="${path}" data-tpl='${esc(JSON.stringify(tpl))}'>+ Toevoegen</button></div>`;
+}
+const card=(title,body,sub)=>`<div class="card"><h2>${title}${sub?` <small>${sub}</small>`:''}</h2>${body}</div>`;
+const ytId=u=>{const m=String(u||'').match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([\w-]{6,})/);return m?m[1]:null};
+const vimeoId=u=>{const m=String(u||'').match(/vimeo\.com\/(?:video\/)?(\d+)/);return m?m[1]:null};
+function videoFields(p,o={}){
+  const auto=`<button type="button" class="btn sm" data-act="autothumb" data-path="${p}">Thumbnail van video</button>`;
+  return `${o.noTitle?'':bi('Titel',p+'.title')}${fld('Video-link (YouTube of Vimeo)',p+'.url',{type:'url',mono:true,ph:'https://www.youtube.com/watch?v=…'})}${imgf('Thumbnail',p+'.thumb',{extra:auto})}`;
+}
+
+/* ---------------- tabs ---------------- */
+const TABS=[
+ ['products','Producten'],['home','Homepagina'],['slides','Hero-slides'],['videos','Video’s'],['reviews','Reviews'],
+ ['pages','Over ons & vacatures'],['contact','Contact & openingstijden'],['texts','Alle teksten'],['photos','Foto’s'],
+ ['inbox','Inzendingen'],['settings','Instellingen']];
+let INBOX_NEW=0;
+function renderNav(){$('#navList').innerHTML=TABS.map(([k,t])=>`<button type="button" class="nav ${k===TAB?'on':''}" data-tab="${k}"><span>${t}</span>${k==='inbox'&&INBOX_NEW?`<span class="badge">${INBOX_NEW}</span>`:''}</button>`).join('')}
+function go(tab){TAB=tab;$('#side').classList.remove('open');render(true)}
+function render(top){
+  const y=scrollY;renderNav();$('#pageTitle').textContent=(TABS.find(t=>t[0]===TAB)||[])[1]||'';
+  $('#main').innerHTML=VIEW[TAB]();
+  if(VIEW_INIT[TAB])VIEW_INIT[TAB]();
+  scrollTo(0,top?0:y);
+}
+
+const VIEW={
+ products(){
+  const ps=C.products;if(SEL>=ps.length)SEL=0;const p=ps[SEL];
+  const list=ps.map((x,i)=>`<button type="button" class="pitem ${i===SEL?'on':''}" data-act="selprod" data-i="${i}"><div class="pv" style="background-image:url('${esc(imgUrl(x.img))}')"></div><div style="min-width:0"><b>${esc(x.nl.short||x.nl.name)}</b><small>#${esc(x.id)}</small></div></button>`).join('')+`<button type="button" class="pitem new" data-act="newprod">+ Nieuw product</button>`;
+  if(!p)return `<p class="intro">Kies een product om te bewerken.</p><div class="plist">${list}</div>`;
+  const b=`products.${SEL}`;
+  return `<p class="intro">Kies een product, pas de velden aan en klik rechtsboven op <b>Publiceren</b>. Teksten mogen eenvoudige HTML bevatten, zoals &lt;b&gt; en &lt;br&gt;.</p>
+  <div class="plist">${list}</div>
+  ${card(esc(p.nl.name),`<div class="grid3">${fld('Adres (in de link)',b+'.id',{mono:true,hint:'#'+esc(p.id)+' — alleen kleine letters, cijfers en -'})}${fld('Knop-link',b+'.ctaHref',{mono:true,hint:'#contact, of een volledige URL'})}${fld('Video-link (optioneel)',b+'.video',{mono:true,ph:'https://www.youtube.com/watch?v=…'})}</div>
+    <div class="grid3">${imgf('Foto op productkaart',b+'.img')}${imgf('Grote headerfoto',b+'.hero')}${imgf('Kleine foto in header',b+'.thumb')}</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn sm" data-act="moveprod" data-d="-1" ${SEL===0?'disabled':''}>← Eerder in lijst</button><button type="button" class="btn sm" data-act="moveprod" data-d="1" ${SEL===ps.length-1?'disabled':''}>Later in lijst →</button><a class="btn sm" href="../#${esc(p.id)}" target="_blank" rel="noopener">Bekijk live ↗</a><button type="button" class="btn sm danger" data-act="delprod" style="margin-left:auto">Product verwijderen</button></div>`,'#'+esc(p.id))}
+  ${card('Namen en header',`${biPair('Naam',b+'.nl.name',b+'.en.name')}${biPair('Korte naam (menu)',b+'.nl.short',b+'.en.short')}${biPair('Label',b+'.nl.tag',b+'.en.tag')}${biPair('Ondertitel',b+'.nl.sub',b+'.en.sub')}${biPair('Knoptekst',b+'.nl.cta',b+'.en.cta')}${biPair('Videoknop-tekst',b+'.nl.videoT',b+'.en.videoT')}`)}
+  ${card('Kop van de introductie',`${biPair('Deel 1 (zwart)',b+'.nl.intro.0',b+'.en.intro.0')}${biPair('Deel 2 (geel)',b+'.nl.intro.1',b+'.en.intro.1')}`)}
+  ${paired('Introductie-alinea’s',b+'.nl.lead',b+'.en.lead',null,{label:'Alinea',long:true})}
+  ${paired('Kenmerken',b+'.nl.feats',b+'.en.feats',['Titel','Tekst'],{longCols:[1]})}
+  ${paired('Foto’s onderaan',b+'.nl.gallery',b+'.en.gallery',['img','Bijschrift'])}
+  ${paired('Labels (chips)',b+'.nl.chips',b+'.en.chips',null,{label:'Label',sub:'optioneel'})}
+  ${paired('Referenties',b+'.nl.refs',b+'.en.refs',null,{label:'Project',sub:'optioneel'})}
+  ${paired('Extra links',b+'.nl.links',b+'.en.links',['Tekst','URL'],{sub:'optioneel'})}`;
+ },
+ home(){
+  const h='home';
+  return `<p class="intro">Foto’s, lijsten en de video van de homepagina. De kopteksten van de homepagina vindt u onder <b>Alle teksten → home</b>.</p>
+  ${card('Foto’s',`<div class="grid3">${imgf('Opgericht in 1842',h+'.images.founded')}${imgf('Onze schilders',h+'.images.painters')}${imgf('Plattegrond',h+'.images.plan')}${imgf('Optimaal ruimtegebruik',h+'.images.space')}${imgf('Lang gebouw',h+'.images.longBuilding')}${imgf('Klanten-sectie',h+'.images.clients')}</div>`)}
+  ${card('Video op de homepagina',videoFields(h+'.video'))}
+  ${paired('Vinkjes (Opgericht in 1842)',h+'.checks.nl',h+'.checks.en',null,{label:'Punt'})}
+  ${paired('Diensten (Onze schilders)',h+'.services.nl',h+'.services.en',null,{label:'Dienst'})}
+  ${objList('Galerij – bovenste rij',h+'.gallery1',p=>`<div class="grid3">${imgf('Foto',p+'.0')}${fld('Breedte (px)',p+'.1',{type:'number'})}${fld('Hoogte (px)',p+'.2',{type:'number'})}</div>`,['',300,220])}
+  ${objList('Galerij – onderste rij',h+'.gallery2',p=>`<div class="grid3">${imgf('Foto',p+'.0')}${fld('Breedte (px)',p+'.1',{type:'number'})}${fld('Hoogte (px)',p+'.2',{type:'number'})}</div>`,['',300,220])}`;
+ },
+ slides(){
+  return `<p class="intro">De wisselende slides bovenaan de homepagina, in volgorde.</p>
+  ${objList('Slides','slides',p=>`${bi('Titel',p+'.title')}${bi('Ondertitel',p+'.sub')}${bi('Knoptekst',p+'.btn')}${fld('Knop-link',p+'.href',{mono:true,hint:'Bijv. #painting of een volledige URL'})}<div class="grid2">${imgf('Achtergrondfoto',p+'.bg')}${imgf('Kleine foto rechts',p+'.thumb')}</div>`,
+   {title:{nl:'',en:''},sub:{nl:'',en:''},btn:{nl:'Meer',en:'More'},href:'#products',bg:'hero-showroom',thumb:'hero-showroom'})}`;
+ },
+ videos(){
+  return `<p class="intro">Alle video’s spelen af in de website. Plak een YouTube- of Vimeo-link en kies een thumbnail: een eigen foto, of klik <b>Thumbnail van video</b> om die van YouTube/Vimeo te gebruiken. Video’s bij producten stelt u in bij <b>Producten</b>.</p>
+  ${card('Video op de homepagina',videoFields('home.video'))}
+  ${objList('Virtuele showroom','videos',p=>videoFields(p),{title:{nl:'',en:''},url:'',thumb:'hero-showroom'},{sub:C.videos.length+' video’s'})}
+  ${objList('Video’s op “Over ons”','aboutVideos',p=>videoFields(p),{title:{nl:'',en:''},url:'',thumb:'hero-showroom'})}`;
+ },
+ reviews(){
+  return `<p class="intro">De score en klantcitaten. Neem de score over van Klantenvertellen, zodat die klopt.</p>
+  ${card('Score',`<div class="grid3">${fld('Cijfer',`reviews.score`,{ph:'9.3'})}${fld('Aantal beoordelingen',`reviews.count`,{ph:'4.247'})}${fld('Link naar reviews',`site.reviewsUrl`,{mono:true})}</div>`)}
+  ${objList('Klantcitaten','reviews.quotes',p=>`${bi('Citaat',p+'.text',{long:true})}<div class="grid2">${fld('Naam en plaats',p+'.name')}${imgf('Foto (optioneel)',p+'.avatar')}</div>${bi('Functie',p+'.role')}`,{text:{nl:'',en:''},name:'',role:{nl:'',en:''},avatar:''})}`;
+ },
+ pages(){
+  return `<p class="intro">Inhoud van de pagina’s Over ons en Vacatures. Kopteksten staan onder <b>Alle teksten → about / vac</b>.</p>
+  ${card('Over ons – foto’s',`<div class="grid3">${imgf('Headerfoto','about.images.hero')}${imgf('Foto 1','about.images.photo1')}${imgf('Foto 2','about.images.photo2')}</div>`)}
+  ${paired('Over ons – kenmerken','about.feats.nl','about.feats.en',['Titel','Tekst'],{longCols:[1]})}
+  ${VIEW_JOBS()}
+  ${objList('Merken (Service-pagina)','brands',p=>fld('Merk',p),'')}`;
+ },
+ contact(){
+  const s='site';
+  return `<p class="intro">Deze gegevens worden overal op de website gebruikt: header, footer, contactpagina en WhatsApp-knop.</p>
+  ${card('Contactgegevens',`<div class="grid2">${fld('Telefoon (zoals getoond)',s+'.phone')}${fld('Telefoon internationaal (voor bellen)',s+'.phoneIntl',{mono:true,hint:'Bijv. +31346261959'})}${fld('E-mail',s+'.email',{type:'email'})}${fld('WhatsApp-nummer',s+'.whatsapp',{mono:true,hint:'Internationaal, zonder + en spaties. Bijv. 31612345678'})}</div>
+    <div class="grid3">${fld('Adres regel 1',s+'.address.0')}${fld('Adres regel 2',s+'.address.1')}${fld('Adres regel 3',s+'.address.2')}</div>
+    <div class="grid2">${fld('Facebook',s+'.facebook',{mono:true})}${fld('Instagram',s+'.instagram',{mono:true})}</div>${bi('Telefonisch bereikbaar',s+'.phoneHours')}`)}
+  ${paired('Openingstijden showroom',s+'.hours.nl',s+'.hours.en',['Dag','Tijden'],{sub:'Een regel die met “Ma/Mon” begint, verschijnt niet in de footer.'})}`;
+ },
+ texts(){
+  const q=(VIEW.texts.q||'').toLowerCase();
+  const keys=Object.keys(C.texts).filter(k=>!q||k.toLowerCase().includes(q)||JSON.stringify(C.texts[k]).toLowerCase().includes(q));
+  const groups={};keys.forEach(k=>{const g=k.includes('.')?k.split('.')[0]:'algemeen';(groups[g]=groups[g]||[]).push(k)});
+  const NAMES={algemeen:'Algemeen (menu, knoppen, footer, nieuwsbrief)',home:'Homepagina',products:'Productenpagina',product:'Productpagina’s',about:'Over ons',vac:'Vacatures',show:'Virtuele showroom',svc:'Reparatie & onderhoud',contact:'Contact',form:'Formulier-meldingen',news:'Nieuwsbrief'};
+  return `<p class="intro">Alle vaste teksten van de website, in het Nederlands en Engels. HTML mag: <code>&lt;span class="y"&gt;</code> maakt tekst geel, <code>&lt;br&gt;</code> is een nieuwe regel, <code>&lt;p&gt;</code> een alinea.</p>
+  <div class="filters"><input type="search" id="tq" placeholder="Zoek in teksten…" value="${esc(VIEW.texts.q||'')}" style="min-width:min(100%,320px)"></div>
+  ${Object.entries(groups).map(([g,ks])=>`<div class="card tgroup"><h3>${NAMES[g]||g}</h3>${ks.map(k=>{const long=isLong(C.texts[k].nl)||isLong(C.texts[k].en);
+    const f=l=>long?`<textarea data-path="texts.${k}.${l}" aria-label="${k} ${l}">${esc(C.texts[k][l])}</textarea>`:`<input type="text" data-path="texts.${k}.${l}" value="${esc(C.texts[k][l])}" aria-label="${k} ${l}">`;
+    return `<div class="trow"><code>${esc(k)}</code><label class="f"><span><i class="lng">NL</i></span>${f('nl')}</label><label class="f"><span><i class="lng">EN</i></span>${f('en')}</label></div>`}).join('')}</div>`).join('')||'<p class="empty">Geen teksten gevonden.</p>'}`;
+ },
+ photos(){
+  return `<p class="intro">Upload foto’s om ze daarna overal te kunnen kiezen. Foto’s worden automatisch verkleind (max. 2000 px) en als lichte webafbeelding opgeslagen. Een nieuwe foto staat na ongeveer een minuut online.</p>
+  ${uploadBox('upMain')}
+  <div class="card"><h2>Bibliotheek <small id="mediaCount"></small></h2><div class="media" id="mediaGrid"><p class="hint">Laden…</p></div></div>`;
+ },
+ inbox(){
+  const ep=C.site.formEndpoint,key=store.get('vdj-admin-formkey','');
+  if(!ep||!key)return `<div class="notice warn"><b>Inzendingen zijn nog niet gekoppeld.</b> Volg de stappen onder <a href="#" data-tab="settings">Instellingen → Formulieren koppelen</a>. Daarna verschijnen alle contactberichten, serviceverzoeken en aanmeldingen voor de nieuwsbrief hier.</div>`;
+  return `<div class="filters">
+    <select id="fType"><option value="">Alle soorten</option><option value="service">Serviceverzoeken</option><option value="contact">Contact</option><option value="newsletter">Nieuwsbrief</option></select>
+    <select id="fStatus"><option value="">Elke status</option><option value="new">Nieuw</option><option value="progress">In behandeling</option><option value="done">Afgehandeld</option></select>
+    <input type="search" id="fQ" placeholder="Zoek op naam, e-mail…">
+    <button type="button" class="btn" data-act="reloadInbox">Vernieuwen</button>
+    <button type="button" class="btn" data-act="exportCsv">Exporteer CSV</button>
+  </div>
+  <div id="inboxBox"><p class="hint">Laden…</p></div>`;
+ },
+ settings(){
+  const key=store.get('vdj-admin-formkey','');
+  return `${card('GitHub-verbinding',`<p>Ingelogd op <b>${esc(GH.owner)}/${esc(GH.repo)}</b>, branch <b>${esc(GH.branch)}</b>. Wijzigingen worden gepubliceerd naar deze branch; GitHub Pages zet ze daarna online.</p>
+    <div id="buildBox" class="hint">Publicatiestatus wordt opgehaald…</div>`)}
+  ${card('Formulieren koppelen (Google Sheet)',`
+    <p>Contactberichten, serviceverzoeken (met foto’s) en aanmeldingen voor de nieuwsbrief worden opgeslagen in een Google Sheet in uw Google-account. Foto’s komen in een map in Google Drive. Gratis, eenmalig ±5 minuten:</p>
+    <ol class="steps">
+     <li>Maak een nieuwe Google Sheet: <a href="https://sheets.new" target="_blank" rel="noopener">sheets.new</a>. Noem hem bijv. <i>Vervat website inzendingen</i>.</li>
+     <li>Klik in de Sheet op <b>Extensies → Apps Script</b>. Verwijder de voorbeeldcode en plak de code hieronder.</li>
+     <li>Vervang bovenaan <code>CHANGE-ME-to-a-long-secret</code> door een lange geheime sleutel (knop <b>Maak sleutel</b> hieronder). Vul eventueel bij <code>NOTIFY_EMAIL</code> een e-mailadres in voor een melding per inzending. Klik <b>Opslaan</b>.</li>
+     <li>Klik <b>Implementeren → Nieuwe implementatie</b> → type <b>Web-app</b>. Uitvoeren als: <b>Ik</b>. Wie heeft toegang: <b>Iedereen</b>. Klik <b>Implementeren</b> en geef toestemming.</li>
+     <li>Kopieer de <b>Web-app-URL</b> (eindigt op <code>/exec</code>) en plak hem hieronder, met dezelfde geheime sleutel. Klik daarna rechtsboven op <b>Publiceren</b>.</li>
+    </ol>
+    ${fld('Web-app-URL (Apps Script)','site.formEndpoint',{type:'url',mono:true,ph:'https://script.google.com/macros/s/…/exec',hint:'Wordt opgeslagen in de website, zodat de formulieren hiernaartoe versturen.'})}
+    <div class="grid2"><label class="f"><span>Geheime sleutel (alleen in deze browser)</span><input type="password" id="formKey" value="${esc(key)}" class="mono" autocomplete="off"><small>Nodig om inzendingen te lezen. Zet dezelfde sleutel in het script.</small></label>
+     <div class="f"><span>&nbsp;</span><div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn" data-act="genKey">Maak sleutel</button><button type="button" class="btn" data-act="saveKey">Sleutel opslaan</button><button type="button" class="btn" data-act="testInbox">Test verbinding</button></div></div></div>
+    <div id="keyMsg" role="status"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><b>Apps Script-code</b><button type="button" class="btn sm" data-act="copyScript">Kopieer code</button></div>
+    <pre class="code" id="scriptCode">Laden…</pre>`)}
+  ${card('Oude concepten',store.get('vdj-admin-draft-old',null)?`<p>Er is een ouder concept bewaard dat niet meer past bij de live versie (iemand anders heeft intussen gepubliceerd).</p><div style="display:flex;gap:8px"><button type="button" class="btn" data-act="restoreOld">Concept laden (overschrijft huidige bewerkingen)</button><button type="button" class="btn danger" data-act="dropOld">Verwijderen</button></div>`:'<p class="hint">Geen oude concepten.</p>')}`;
+ }
+};
+function VIEW_JOBS(){
+  const rows=['nl','en'].map(l=>objList('Vacatures – '+(l==='nl'?'Nederlands':'Engels'),'jobs.'+l,p=>`<div class="grid2">${fld('Label',p+'.tag')}${fld('Functie',p+'.title')}</div><div class="grid2">${fld('Kop 1',p+'.h1')}${fld('Kop 2',p+'.h2')}</div><div class="grid2"><label class="f"><span>Punten 1 (één per regel)</span><textarea data-lines="${p}.l1">${esc((get(p+'.l1')||[]).join('\n'))}</textarea></label><label class="f"><span>Punten 2 (één per regel)</span><textarea data-lines="${p}.l2">${esc((get(p+'.l2')||[]).join('\n'))}</textarea></label></div>`,{tag:'',title:'',h1:'',l1:[],h2:'',l2:[]})).join('');
+  return rows;
+}
+function uploadBox(id){return `<label class="drop" for="${id}" data-drop="1"><input type="file" id="${id}" accept="image/*" multiple data-upload="1"><b>Foto’s uploaden</b><span class="hint">Klik of sleep foto’s hierheen · JPG, PNG, WebP</span></label><div class="upmsg" role="status"></div>`}
+
+/* ---------------- tab init hooks ---------------- */
+const VIEW_INIT={
+ photos(){loadMedia().then(()=>{const g=$('#mediaGrid');if(!g)return;$('#mediaCount').textContent=MEDIA.length+' foto’s';
+   g.innerHTML=MEDIA.map(m=>`<button type="button" class="mitem" data-act="copyref" data-ref="${esc(m.ref)}" title="Klik om de naam te kopiëren"><div class="pv" style="background-image:url('${esc(m.url)}')"></div><span>${esc(m.ref)}</span></button>`).join('')})
+   .catch(e=>{const g=$('#mediaGrid');if(g)g.innerHTML=`<div class="notice err">Foto’s laden mislukt: ${esc(e.message)}</div>`})},
+ inbox(){if($('#inboxBox'))loadInbox()},
+ texts(){const t=$('#tq');t.addEventListener('input',()=>{VIEW.texts.q=t.value;clearTimeout(t._d);t._d=setTimeout(()=>{render();const n=$('#tq');n.focus();n.setSelectionRange(n.value.length,n.value.length)},250)})},
+ settings(){fetch('apps-script.gs',{cache:'no-store'}).then(r=>r.text()).then(t=>{const c=$('#scriptCode');if(c)c.textContent=t}).catch(()=>{});loadBuild()}
+};
+
+/* ---------------- media ---------------- */
+let MEDIA=null;
+async function loadMedia(force){
+  if(MEDIA&&!force)return MEDIA;
+  const list=async p=>{try{return await gh('/contents/'+p+'?ref='+encodeURIComponent(GH.branch))}catch(e){if(e.status===404)return[];throw e}};
+  const [a,u]=await Promise.all([list('assets'),list('assets/uploads')]);
+  const img=f=>f.type==='file'&&/\.(webp|jpe?g|png|gif|svg)$/i.test(f.name);
+  MEDIA=[...u.filter(img).map(f=>({ref:'uploads/'+f.name,url:rawBase()+'assets/uploads/'+f.name})).reverse(),
+         ...a.filter(img).map(f=>({ref:/\.webp$/i.test(f.name)?f.name.replace(/\.webp$/i,''):f.name,url:rawBase()+'assets/'+f.name}))];
+  return MEDIA;
+}
+async function processImage(file){
+  const bmp=await createImageBitmap(file);const max=2000;const s=Math.min(1,max/Math.max(bmp.width,bmp.height));
+  const cv=document.createElement('canvas');cv.width=Math.round(bmp.width*s);cv.height=Math.round(bmp.height*s);
+  cv.getContext('2d').drawImage(bmp,0,0,cv.width,cv.height);
+  let blob=await new Promise(r=>cv.toBlob(r,'image/webp',.82));let ext='webp';
+  if(!blob||blob.type!=='image/webp'){blob=await new Promise(r=>cv.toBlob(r,'image/jpeg',.85));ext='jpg'}
+  const buf=new Uint8Array(await blob.arrayBuffer());let bin='';for(let i=0;i<buf.length;i+=0x8000)bin+=String.fromCharCode.apply(null,buf.subarray(i,i+0x8000));
+  return {b64:btoa(bin),ext,size:buf.length};
+}
+async function uploadFiles(files,msgEl){
+  const done=[];
+  for(const f of files){
+    if(!/^image\//.test(f.type)){msgEl.innerHTML+=`<div class="notice err">${esc(f.name)}: geen afbeelding.</div>`;continue}
+    try{
+      msgEl.innerHTML=`<p class="hint">Uploaden: ${esc(f.name)}…</p>`;
+      const {b64,ext}=await processImage(f);
+      const slug=f.name.replace(/\.[^.]+$/,'').toLowerCase().normalize('NFKD').replace(/[^\w]+/g,'-').replace(/^-|-$/g,'').slice(0,40)||'foto';
+      const name=`${slug}-${Date.now().toString(36)}.${ext}`;
+      await putFile('assets/uploads/'+name,b64,'Upload photo '+name+' (admin)');
+      const ref='uploads/'+name;done.push(ref);
+      if(MEDIA)MEDIA.unshift({ref,url:rawBase()+'assets/uploads/'+name});
+    }catch(e){msgEl.innerHTML=`<div class="notice err">Upload van ${esc(f.name)} mislukt: ${esc(e.message)}</div>`;return done}
+  }
+  msgEl.innerHTML=done.length?`<div class="notice ok">${done.length} foto(’s) geüpload.</div>`:'';
+  return done;
+}
+
+/* ---------------- media picker ---------------- */
+let PICK=null;
+async function openPicker(path,mirror){
+  PICK={path,mirror};
+  openModal(`<div class="modal-head"><h2>Kies een foto</h2><button type="button" class="btn" data-act="closeModal">Sluiten</button></div>
+   ${uploadBox('upPick')}
+   <div class="f"><span>Of plak een link naar een afbeelding</span><div style="display:flex;gap:8px"><input type="url" id="pickUrl" class="mono" placeholder="https://…"><button type="button" class="btn" data-act="pickUrl">Gebruik</button></div></div>
+   <div class="media" id="pickGrid"><p class="hint">Laden…</p></div>`);
+  try{await loadMedia();fillPick()}catch(e){$('#pickGrid').innerHTML=`<div class="notice err">${esc(e.message)}</div>`}
+}
+function fillPick(){const g=$('#pickGrid');if(g)g.innerHTML=MEDIA.map(m=>`<button type="button" class="mitem" data-act="choose" data-ref="${esc(m.ref)}"><div class="pv" style="background-image:url('${esc(m.url)}')"></div><span>${esc(m.ref)}</span></button>`).join('')}
+function choose(ref){set(PICK.path,ref);if(PICK.mirror)set(PICK.mirror,ref);closeModal();markDirty();render()}
+function openModal(html,sm){$('#modalBox').className='modal-box'+(sm?' sm':'');$('#modalBox').innerHTML=html;$('#modal').hidden=false}
+function closeModal(){$('#modal').hidden=true;$('#modalBox').innerHTML=''}
+function confirmBox(title,text,okLabel,fn){openModal(`<div class="modal-head"><h2>${title}</h2></div><p>${text}</p><div style="display:flex;gap:8px;justify-content:flex-end"><button type="button" class="btn" data-act="closeModal">Annuleren</button><button type="button" class="btn dark" id="cfOk">${okLabel}</button></div>`,true);$('#cfOk').onclick=()=>{closeModal();fn()}}
+
+/* ---------------- publish ---------------- */
+async function publish(force){
+  const btn=$('#publishBtn');btn.disabled=true;updateState('Publiceren…','busy');
+  try{
+    if(force){const f=await gh('/contents/content.json?ref='+encodeURIComponent(GH.branch));SHA=f.sha}
+    const r=await putFile('content.json',b64enc(JSON.stringify(C,null,1)+'\n'),'Update website content (admin)',SHA);
+    SHA=r.content.sha;BASE=JSON.stringify(C);dirty=false;store.del('vdj-admin-draft');updateState('Gepubliceerd — online binnen ±1 minuut','busy');
+    toast('Gepubliceerd. De website is binnen ongeveer een minuut bijgewerkt.',4000);watchBuild();
+  }catch(e){
+    if(e.status===409||e.status===422){updateState('Conflict','err');
+      openModal(`<div class="modal-head"><h2>Iemand anders heeft intussen gepubliceerd</h2></div><p>De live versie is gewijzigd sinds u begon met bewerken. U kunt uw versie toch publiceren (wijzigingen van de ander worden dan overschreven), of de live versie laden.</p>
+       <div style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap"><button type="button" class="btn" data-act="closeModal">Annuleren</button><button type="button" class="btn" data-act="reloadLive">Live versie laden</button><button type="button" class="btn dark" data-act="forcePublish">Mijn versie publiceren</button></div>`,true)}
+    else{updateState('Publiceren mislukt','err');toast('Publiceren mislukt: '+e.message,5000)}
+    btn.disabled=false;
+  }
+}
+async function watchBuild(){
+  for(let i=0;i<40;i++){
+    await new Promise(r=>setTimeout(r,6000));
+    try{const r=await gh('/actions/runs?branch='+encodeURIComponent(GH.branch)+'&per_page=1');const run=r.workflow_runs&&r.workflow_runs[0];
+      if(run&&run.status==='completed'){if(!dirty)updateState(run.conclusion==='success'?'Online bijgewerkt':'Publicatie mislukt op GitHub',run.conclusion==='success'?null:'err');return}
+    }catch(e){if(!dirty)updateState('Gepubliceerd');return}
+  }
+}
+async function loadBuild(){
+  const box=$('#buildBox');if(!box)return;
+  try{const r=await gh('/actions/runs?branch='+encodeURIComponent(GH.branch)+'&per_page=3');
+    box.innerHTML=(r.workflow_runs||[]).map(x=>`<div>${new Date(x.created_at).toLocaleString('nl-NL')} — ${x.status==='completed'?(x.conclusion==='success'?'✔ online':'✖ '+x.conclusion):'bezig…'} <span class="hint">(${esc(x.head_commit&&x.head_commit.message||'').split('\n')[0]})</span></div>`).join('')||'Nog geen publicaties.'}
+  catch(e){box.textContent='Publicatiestatus niet beschikbaar (de sleutel heeft geen “Actions: Read-only”-recht). Publiceren werkt wel.'}
+}
+
+/* ---------------- inbox ---------------- */
+let INBOX=[];
+async function inboxCall(params){
+  const u=new URL(C.site.formEndpoint);Object.entries({...params,key:store.get('vdj-admin-formkey','')}).forEach(([k,v])=>u.searchParams.set(k,v));
+  const r=await fetch(u.toString());const j=await r.json();if(!j.ok)throw new Error(j.error==='unauthorized'?'De geheime sleutel klopt niet.':j.error);return j;
+}
+async function loadInbox(){
+  const box=$('#inboxBox');
+  try{const j=await inboxCall({action:'list'});INBOX=j.items||[];INBOX_NEW=INBOX.filter(x=>x.status==='new').length;renderNav();drawInbox()}
+  catch(e){if(box)box.innerHTML=`<div class="notice err">Inzendingen laden mislukt: ${esc(e.message)}. Controleer de Web-app-URL (en publiceer die) en de geheime sleutel onder Instellingen.</div>`}
+}
+const TYPE={service:'Serviceverzoek',contact:'Contact',newsletter:'Nieuwsbrief',other:'Overig'};
+const STAT={new:'Nieuw',progress:'In behandeling',done:'Afgehandeld'};
+const FIELD={company:'Bedrijf',street:'Straat en huisnummer',postcode:'Postcode',city:'Plaats',product:'Product',year:'Installatiejaar',suppliedByUs:'Door ons geleverd',description:'Omschrijving',subject:'Onderwerp',message:'Bericht'};
+function drawInbox(){
+  const box=$('#inboxBox');if(!box)return;
+  const t=$('#fType').value,s=$('#fStatus').value,q=$('#fQ').value.trim().toLowerCase();
+  const rows=INBOX.filter(x=>(!t||x.type===t)&&(!s||x.status===s)&&(!q||JSON.stringify(x).toLowerCase().includes(q)));
+  if(!INBOX.length){box.innerHTML='<div class="empty">Nog geen inzendingen. Zodra iemand een formulier op de website verstuurt, verschijnt het hier.</div>';return}
+  box.innerHTML=`<div class="table-wrap"><table><thead><tr><th>Datum</th><th>Soort</th><th>Naam</th><th>Contact</th><th>Onderwerp</th><th>Status</th></tr></thead><tbody>${rows.map(x=>{
+    const subj=x.details.product||x.details.subject||'';
+    return `<tr data-act="openSub" data-id="${esc(x.id)}" tabindex="0"><td class="date">${new Date(x.date).toLocaleString('nl-NL',{dateStyle:'short',timeStyle:'short'})}</td><td><span class="pill t-${esc(x.type)}">${TYPE[x.type]||esc(x.type)}</span></td><td>${esc(x.name)||'—'}</td><td>${esc(x.email)}${x.phone?'<br><span class="hint">'+esc(x.phone)+'</span>':''}</td><td>${esc(subj)}${x.files.length?` <span class="hint">· ${x.files.length} bestand(en)</span>`:''}</td><td><span class="pill ${esc(x.status)}">${STAT[x.status]||esc(x.status)}</span></td></tr>`}).join('')||'<tr><td colspan="6" class="empty">Geen resultaten voor dit filter.</td></tr>'}</tbody></table></div>`;
+}
+function openSub(id){
+  const x=INBOX.find(i=>i.id===id);if(!x)return;
+  const d=Object.entries(x.details).filter(([,v])=>v).map(([k,v])=>`<dt>${FIELD[k]||esc(k)}</dt><dd>${esc(v)}</dd>`).join('');
+  openModal(`<div class="modal-head"><h2>${TYPE[x.type]||''}: ${esc(x.name)||esc(x.email)}</h2><button type="button" class="btn" data-act="closeModal">Sluiten</button></div>
+   <dl class="dl"><dt>Datum</dt><dd>${new Date(x.date).toLocaleString('nl-NL')}</dd><dt>Naam</dt><dd>${esc(x.name)||'—'}</dd><dt>E-mail</dt><dd><a href="mailto:${esc(x.email)}">${esc(x.email)}</a></dd>${x.phone?`<dt>Telefoon</dt><dd><a href="tel:${esc(x.phone)}">${esc(x.phone)}</a></dd>`:''}${d}
+   ${x.files.length?`<dt>Bestanden</dt><dd>${x.files.map((f,i)=>`<a href="${esc(f)}" target="_blank" rel="noopener">Bestand ${i+1} (Google Drive) ↗</a>`).join('<br>')}</dd>`:''}
+   <dt>Taal</dt><dd>${esc(x.lang||'').toUpperCase()}</dd><dt>Referentie</dt><dd class="mono">${esc(x.id)}</dd></dl>
+   <div class="sep"></div>
+   <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><span class="hint">Status:</span>${Object.entries(STAT).map(([k,v])=>`<button type="button" class="btn sm ${x.status===k?'dark':''}" data-act="setStatus" data-id="${esc(x.id)}" data-s="${k}">${v}</button>`).join('')}
+    <a class="btn sm" href="mailto:${esc(x.email)}?subject=${encodeURIComponent('Uw aanvraag bij Vervat & de Jong')}">Beantwoorden per e-mail</a>
+    <button type="button" class="btn sm danger" data-act="delSub" data-id="${esc(x.id)}" style="margin-left:auto">Verwijderen</button></div>`);
+}
+async function setStatus(id,s){try{await inboxCall({action:'status',id,status:s});const x=INBOX.find(i=>i.id===id);if(x)x.status=s;INBOX_NEW=INBOX.filter(x=>x.status==='new').length;renderNav();drawInbox();openSub(id);toast('Status bijgewerkt')}catch(e){toast('Mislukt: '+e.message,4000)}}
+async function delSub(id){try{await inboxCall({action:'delete',id});INBOX=INBOX.filter(i=>i.id!==id);closeModal();drawInbox();toast('Verwijderd')}catch(e){toast('Mislukt: '+e.message,4000)}}
+function exportCsv(){
+  const cols=['date','type','status','name','email','phone'];const dk=[...new Set(INBOX.flatMap(x=>Object.keys(x.details)))];
+  const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
+  const csv=[[...cols,...dk,'files'].map(q).join(';'),...INBOX.map(x=>[...cols.map(c=>x[c]),...dk.map(k=>x.details[k]),x.files.join(' ')].map(q).join(';'))].join('\r\n');
+  openModal(`<div class="modal-head"><h2>Export (CSV)</h2><button type="button" class="btn" data-act="closeModal">Sluiten</button></div><p class="hint">Kopieer en plak in Excel of Google Sheets. Alles staat ook al in uw Google Sheet.</p><textarea style="min-height:300px" class="mono" readonly>${esc(csv)}</textarea>`);
+}
+
+/* ---------------- events ---------------- */
+document.addEventListener('input',e=>{
+  const el=e.target;
+  if(el.dataset.path&&el.closest('#main,#modalBox')){let v=el.value;if(el.dataset.num)v=v===''?'':Number(v);set(el.dataset.path,v);markDirty();
+    if(el.dataset.path.endsWith('.id')&&el.dataset.path.startsWith('products.')){const c=v.toLowerCase().replace(/[^a-z0-9-]/g,'');if(c!==v){el.value=c;set(el.dataset.path,c)}}}
+  if(el.dataset.lines){set(el.dataset.lines,el.value.split('\n').map(s=>s.trim()).filter(Boolean));markDirty()}
+  if(el.id==='fType'||el.id==='fStatus'||el.id==='fQ')drawInbox();
+});
+document.addEventListener('change',async e=>{
+  const el=e.target;
+  if(el.id==='fType'||el.id==='fStatus')drawInbox();
+  if(el.dataset.upload){const files=[...el.files];if(!files.length)return;const msg=el.closest('label').nextElementSibling;
+    const refs=await uploadFiles(files,msg);el.value='';
+    if(el.id==='upPick'&&refs.length){choose(refs[0])}else if(TAB==='photos')VIEW_INIT.photos()}
+});
+['dragover','dragleave','drop'].forEach(t=>document.addEventListener(t,e=>{const d=e.target.closest&&e.target.closest('[data-drop]');if(!d)return;e.preventDefault();
+  if(t==='dragover')d.classList.add('over');else d.classList.remove('over');
+  if(t==='drop'){const inp=d.querySelector('input');const files=[...e.dataTransfer.files];const msg=d.nextElementSibling;uploadFiles(files,msg).then(refs=>{if(inp.id==='upPick'&&refs.length)choose(refs[0]);else if(TAB==='photos')VIEW_INIT.photos()})}}));
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#modal').hidden)closeModal();if(e.key==='Enter'&&e.target.dataset&&e.target.dataset.act==='openSub')openSub(e.target.dataset.id);
+  if((e.metaKey||e.ctrlKey)&&e.key==='s'){e.preventDefault();if(dirty)publish()}});
+$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
+document.addEventListener('click',async e=>{
+  const tabBtn=e.target.closest('[data-tab]');if(tabBtn){e.preventDefault();go(tabBtn.dataset.tab);return}
+  const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act;
+  const listOp=(fn)=>{const L=get(b.dataset.list);fn(L);if(b.dataset.mirror){const M=get(b.dataset.mirror);if(M)fn(M)}markDirty();render()};
+  const i=+b.dataset.i;
+  switch(a){
+   case 'up':listOp(L=>{if(i>0&&i<L.length)[L[i-1],L[i]]=[L[i],L[i-1]]});break;
+   case 'down':listOp(L=>{if(i<L.length-1)[L[i+1],L[i]]=[L[i],L[i+1]]});break;
+   case 'del':confirmBox('Item verwijderen?','Dit item wordt verwijderd'+(b.dataset.mirror?' (in beide talen)':'')+'. Pas na Publiceren is het van de website af.','Verwijderen',()=>listOp(L=>L.splice(i,1)));break;
+   case 'add':{const tpl=JSON.parse(b.dataset.tpl);if(!get(b.dataset.list))set(b.dataset.list,[]);if(b.dataset.mirror&&!get(b.dataset.mirror))set(b.dataset.mirror,[]);listOp(L=>L.push(clone(tpl)));break}
+   case 'pick':openPicker(b.dataset.path,b.dataset.mirror);break;
+   case 'choose':choose(b.dataset.ref);break;
+   case 'pickUrl':{const u=$('#pickUrl').value.trim();if(/^https?:\/\//.test(u))choose(u);break}
+   case 'closeModal':closeModal();break;
+   case 'autothumb':{const p=b.dataset.path;const url=get(p+'.url');const y=ytId(url),v=vimeoId(url);
+     if(y){set(p+'.thumb',`https://i.ytimg.com/vi/${y}/hqdefault.jpg`)}else if(v){set(p+'.thumb',`https://vumbnail.com/${v}.jpg`)}else{toast('Vul eerst een geldige YouTube- of Vimeo-link in.');break}
+     markDirty();render();break}
+   case 'selprod':SEL=i;render(true);break;
+   case 'newprod':{const id='nieuw-product-'+Date.now().toString(36).slice(-4);const L=()=>({name:'Nieuw product',short:'Nieuw product',tag:'',sub:'',cta:'Neem contact op',intro:['',''],lead:[''],feats:[['','']],gallery:[],links:[],refs:[],chips:[],videoT:''});
+     const en=L();en.name=en.short='New product';en.cta='Contact us';
+     C.products.push({id,img:'hero-showroom',hero:'hero-showroom',thumb:'hero-showroom',ctaHref:'#contact',video:'',nl:L(),en});SEL=C.products.length-1;markDirty();render(true);break}
+   case 'delprod':confirmBox('Product verwijderen?',`“${esc(C.products[SEL].nl.name)}” wordt van de website verwijderd na Publiceren.`,'Verwijderen',()=>{C.products.splice(SEL,1);SEL=0;markDirty();render(true)});break;
+   case 'moveprod':{const d=+b.dataset.d,j=SEL+d;if(j<0||j>=C.products.length)break;[C.products[SEL],C.products[j]]=[C.products[j],C.products[SEL]];SEL=j;markDirty();render();break}
+   case 'copyref':{const r=b.dataset.ref;try{await navigator.clipboard.writeText(r);toast('Naam gekopieerd: '+r)}catch(_){toast(r)}break}
+   case 'reloadInbox':loadInbox();break;
+   case 'exportCsv':exportCsv();break;
+   case 'openSub':openSub(b.dataset.id);break;
+   case 'setStatus':setStatus(b.dataset.id,b.dataset.s);break;
+   case 'delSub':confirmBox('Inzending verwijderen?','Deze inzending wordt uit de Google Sheet verwijderd. Bestanden in Google Drive blijven bewaard.','Verwijderen',()=>delSub(b.dataset.id));break;
+   case 'genKey':{const k=Array.from(crypto.getRandomValues(new Uint8Array(24)),x=>x.toString(16).padStart(2,'0')).join('');$('#formKey').value=k;$('#keyMsg').innerHTML='<div class="notice info">Nieuwe sleutel gemaakt. Kopieer hem naar het script (ADMIN_KEY) en klik <b>Sleutel opslaan</b>.</div>';break}
+   case 'saveKey':store.set('vdj-admin-formkey',$('#formKey').value.trim());$('#keyMsg').innerHTML='<div class="notice ok">Sleutel opgeslagen in deze browser.</div>';break;
+   case 'testInbox':{store.set('vdj-admin-formkey',$('#formKey').value.trim());const m=$('#keyMsg');if(!C.site.formEndpoint){m.innerHTML='<div class="notice warn">Vul eerst de Web-app-URL in.</div>';break}
+     m.innerHTML='<p class="hint">Testen…</p>';try{const j=await inboxCall({action:'list'});m.innerHTML=`<div class="notice ok">Verbinding werkt. ${j.items.length} inzending(en) gevonden.${dirty?' Vergeet niet te <b>Publiceren</b>, zodat de website-formulieren de nieuwe URL gebruiken.':''}</div>`}catch(err){m.innerHTML=`<div class="notice err">Verbinding mislukt: ${esc(err.message)}</div>`}break}
+   case 'copyScript':{const t=$('#scriptCode').textContent;try{await navigator.clipboard.writeText(t);toast('Code gekopieerd')}catch(_){const r=document.createRange();r.selectNodeContents($('#scriptCode'));getSelection().removeAllRanges();getSelection().addRange(r);toast('Selecteer en kopieer de code (Ctrl/Cmd+C)')}break}
+   case 'forcePublish':closeModal();publish(true);break;
+   case 'reloadLive':closeModal();store.del('vdj-admin-draft');await loadContent();render(true);break;
+   case 'restoreOld':{const d=store.get('vdj-admin-draft-old',null);if(d){C=d.content;store.del('vdj-admin-draft-old');markDirty();go('products')}break}
+   case 'dropOld':store.del('vdj-admin-draft-old');render();break;
+  }
+});
+$('#publishBtn').onclick=()=>publish();
+$('#discardBtn').onclick=()=>confirmBox('Wijzigingen weggooien?','Alle niet-gepubliceerde wijzigingen gaan verloren.','Weggooien',()=>{C=JSON.parse(BASE);store.del('vdj-admin-draft');markDirty();render()});
+$('#previewBtn').onclick=()=>{store.set('vdj-admin-draft',{sha:SHA,content:C});window.open('../?preview=1'+(TAB==='products'&&C.products[SEL]?'#'+C.products[SEL].id:''),'_blank')};
+$('#menuBtn').onclick=()=>$('#side').classList.toggle('open');
+$('#logoutBtn').onclick=()=>confirmBox('Uitloggen?',dirty?'U heeft niet-gepubliceerde wijzigingen. Die blijven als concept in deze browser bewaard.':'De sleutel wordt uit deze browser verwijderd.','Uitloggen',()=>{store.del('vdj-admin-gh');location.reload()});
+
+/* ---------------- login & boot ---------------- */
+$('#loginForm').addEventListener('submit',async e=>{
+  e.preventDefault();const m=$('#lgMsg');const btn=$('#lgBtn');
+  GH={token:$('#lgToken').value.trim(),owner:$('#lgOwner').value.trim(),repo:$('#lgRepo').value.trim(),branch:$('#lgBranch').value.trim()||'gh-pages'};
+  btn.disabled=true;m.innerHTML='<p class="hint">Controleren…</p>';
+  try{const r=await gh('');if(!r.permissions||!r.permissions.push)throw new Error('Deze sleutel heeft geen schrijfrechten (Contents: Read and write).');
+    store.set('vdj-admin-gh',GH);await start()}
+  catch(err){m.innerHTML=`<div class="notice err">Inloggen mislukt: ${esc(err.status===401?'de sleutel is ongeldig of verlopen.':err.status===404?'repository niet gevonden, of de sleutel heeft er geen toegang toe.':err.message)}</div>`;GH=null}
+  btn.disabled=false;
+});
+async function start(){
+  $('#loginView').hidden=true;$('#appView').hidden=false;$('#whoami').textContent=GH.owner+'/'+GH.repo;
+  $('#main').innerHTML='<p class="hint">Inhoud laden…</p>';
+  try{await loadContent();render(true);
+    if(C.site.formEndpoint&&store.get('vdj-admin-formkey','')){inboxCall({action:'list'}).then(j=>{INBOX=j.items||[];INBOX_NEW=INBOX.filter(x=>x.status==='new').length;renderNav()}).catch(()=>{})}}
+  catch(e){$('#main').innerHTML=`<div class="notice err">Inhoud laden mislukt: ${esc(e.message)}. ${e.status===401?'Uw sleutel is ongeldig of verlopen: log uit en opnieuw in.':''}</div>`}
+}
+if(GH)start();else $('#loginView').hidden=false;
+</script>
+</body>
+</html>

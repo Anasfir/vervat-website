@@ -258,6 +258,7 @@ button{font:inherit;cursor:pointer}
 .news form button{background:none;border:0;padding:8px;color:var(--ink);display:grid;place-items:center}
 .news form button:hover{color:var(--yellow-dk)}
 .form-msg{position:relative;margin-top:16px;font-size:14px;color:var(--ink-2);min-height:22px}
+.form-msg.ok{color:#1E7A3C;font-weight:700}
 
 /* footer */
 .ftr{position:relative;background:#262624;color:var(--white);overflow:hidden}
@@ -330,8 +331,10 @@ button{font:inherit;cursor:pointer}
 .vids{position:relative;z-index:1;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:20px;margin-top:56px}
 .vid{display:flex;flex-direction:column;justify-content:space-between;gap:30px;min-height:190px;padding:26px;border-radius:var(--radius);background:var(--dark);color:var(--white);text-decoration:none;position:relative;overflow:hidden;transition:transform .25s}
 .vid:hover{transform:translateY(-4px)}
-.vid::before{content:"";position:absolute;inset:0;background:url(assets/hero-showroom.webp) center/cover;opacity:.18;transition:opacity .3s}
-.vid:hover::before{opacity:.32}
+.vid::before{content:"";position:absolute;inset:0;background:var(--img,url(assets/hero-showroom.webp)) center/cover;opacity:.32;transition:opacity .3s}
+.vid::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(20,20,19,.85),rgba(20,20,19,.2))}
+.vid>*{z-index:1}
+.vid:hover::before{opacity:.55}
 .vid>*{position:relative}
 .vid .n{font-size:13px;color:var(--yellow);font-weight:700}
 .vid b{font-size:19px;line-height:1.3}
@@ -359,6 +362,8 @@ button{font:inherit;cursor:pointer}
 .vbar{display:flex;justify-content:space-between;align-items:center;gap:12px;color:#d8d7d1;font-size:14px}
 .vbar a{color:#d8d7d1}
 .vmodal .close{position:fixed;top:calc(16px + env(safe-area-inset-top,0px));right:max(16px,env(safe-area-inset-right,0px));background:rgba(255,255,255,.18)}
+.preview-bar{position:fixed;z-index:90;left:50%;top:calc(84px + env(safe-area-inset-top,0px));transform:translateX(-50%);background:var(--yellow);color:var(--ink);font-weight:700;font-size:13px;padding:8px 16px;border-radius:99px;box-shadow:0 8px 24px rgba(0,0,0,.25);white-space:nowrap}
+.preview-bar a{color:var(--ink)}
 /* service page */
 #service-form,.sform,#after-hero{scroll-margin-top:72px}
 .process{position:relative;z-index:1;list-style:none;margin:60px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:0;border-top:1px solid var(--yellow)}
@@ -441,189 +446,30 @@ button{font:inherit;cursor:pointer}
 </div>
 <div class="search" id="search" hidden role="dialog" aria-label="Search"></div>
 
+<script type="application/json" id="content-fallback">{"site": {"phone": "0346 - 261 959", "phoneIntl": "+31346261959", "email": "info@vervat-breukelen.nl", "whatsapp": "31346261959", "address": ["Vervat &amp; de Jong", "Keulschevaart 3a1", "3621 MX Breukelen"], "facebook": "https://www.facebook.com/vervatbreukelen.nl", "instagram": "https://www.instagram.com/vervatendejong/", "reviewsUrl": "https://www.klantenvertellen.nl/reviews/1037906/", "hours": {"nl": [["Di", "10:00 – 17:00"], ["Wo", "10:00 – 17:00"], ["Do", "10:00 – 17:00"], ["Vr", "10:00 – 17:00"], ["Za", "10:00 – 13:00"], ["Ma", "Alleen huisbezoeken"]], "en": [["Tue", "10:00 AM – 5:00 PM"], ["Wed", "10:00 AM – 5:00 PM"], ["Thu", "10:00 AM – 5:00 PM"], ["Fri", "10:00 AM – 5:00 PM"], ["Sat", "10:00 AM – 1:00 PM"], ["Mon", "Home visits only"]]}, "phoneHours": {"nl": "Maandag t/m vrijdag, 7:30 – 17:00", "en": "Monday to Friday, 7:30 AM – 5:00 PM"}, "formEndpoint": ""}, "slides": [{"title": {"nl": "Vervat &amp; de jong", "en": "Vervat &amp; de jong"}, "sub": {"nl": "Schilders-, glaszet- en montagebedrijf<br>een begrip in de regio", "en": "Painting, glazing and installation company<br>a household name in the region"}, "btn": {"nl": "Weru ramen en deuren", "en": "Weru windows and doors"}, "href": "#weru-windows", "bg": "hero-showroom", "thumb": "hero-showroom"}, {"title": {"nl": "Weru ramen en deuren", "en": "Weru windows and doors"}, "sub": {"nl": "Kunststof kozijnen in Breukelen, Maarssen, Utrecht, Loenen, Hilversum en Loosdrecht", "en": "Plastic window frames in Breukelen, Maarssen, Utrecht, Loenen, Hilversum and Loosdrecht"}, "btn": {"nl": "Weru ramen en deuren", "en": "Weru windows and doors"}, "href": "#weru-windows", "bg": "hero-weru", "thumb": "storefront"}, {"title": {"nl": "Schilderwerk", "en": "Painting work"}, "sub": {"nl": "Van kasteel tot rijtjeshuis, schilders sinds 1842", "en": "From castles to terraced houses, painters since 1842"}, "btn": {"nl": "Schilderwerk", "en": "Painting work"}, "href": "#painting", "bg": "hero-painting", "thumb": "shutters"}, {"title": {"nl": "Terras&shy;overkappingen", "en": "Terrace coverings"}, "sub": {"nl": "Haal het heerlijke buitenleven naar binnen met een Palazzo terrasoverkapping", "en": "Bring the wonderful outdoors inside with a Palazzo patio cover"}, "btn": {"nl": "Palazzo terrasoverkappingen", "en": "Palazzo patio covers"}, "href": "#terrace-covers", "bg": "hero-terrace", "thumb": "palazzo"}, {"title": {"nl": "Gevel&shy;bekleding", "en": "Facade cladding"}, "sub": {"nl": "Kunststof geveldelen van Keralit®<br>niet van echt hout te onderscheiden", "en": "Plastic facade panels from Keralit®<br>indistinguishable from real wood"}, "btn": {"nl": "Keralit geveldelen", "en": "Keralit facade parts"}, "href": "#keralit", "bg": "hero-keralit", "thumb": "keralit"}], "products": [{"id": "keralit", "img": "keralit", "hero": "hero-keralit", "thumb": "keralit", "ctaHref": "#contact", "video": "", "nl": {"name": "Keralit geveldelen", "short": "Gevelbekleding", "tag": "Gevelbekleding", "sub": "Kunststof geveldelen van Keralit®, niet van echt hout te onderscheiden", "cta": "Keralit geveldelen", "intro": ["Onderhoudsarme", "gevelbekleding"], "lead": ["Kunststof geveldelen zijn niet nieuw, maar glad kunststof mist vaak de warme uitstraling van hout. Keralit® lost dat op: de panelen hebben een natuurlijke houtnerf en zijn nauwelijks van echt hout te onderscheiden.", "Wij leveren en monteren Keralit® voor gevels, topgevels en dakkapellen, zodat u jarenlang verlost bent van schuren en schilderen."], "feats": [["Natuurlijke houtnerf", "Een realistische houtstructuur die uw gevel de warmte van hout geeft."], ["Veel RAL-kleuren", "Leverbaar in veel RAL-kleuren, met de uitstraling van geschilderde of gebeitste houten delen."], ["Kleurvast", "De kleur verbleekt niet, zodat de gevel er fris uit blijft zien."], ["Bestand tegen rot", "Bestand tegen schimmels, bacteriën en andere rottingsprocessen."], ["Trekt niet krom", "De panelen blijven recht, hoe vochtig of warm het ook wordt."], ["10 jaar garantie", "Op Keralit® geveldelen krijgt u 10 jaar garantie."]], "gallery": [["keralit", "Keralit gevelbekleding op een topgevel"], ["dormer-roof", "Dakkapellen afgewerkt met geveldelen"]], "links": [], "refs": [], "chips": [], "videoT": ""}, "en": {"name": "Keralit facade parts", "short": "Facade cladding", "tag": "Facade cladding", "sub": "Plastic facade panels from Keralit®, indistinguishable from real wood", "cta": "Keralit facade parts", "intro": ["Low-maintenance", "facade cladding"], "lead": ["Plastic facade panels are nothing new, but smooth plastic often misses the warm look of wood. Keralit® panels solve that: they have a natural wood grain and are hard to tell apart from real timber.", "We supply and fit Keralit® cladding for facades, gables and dormers, so you are done with scraping and repainting for years."], "feats": [["Natural wood grain", "A realistic wood texture that gives your facade the warmth of a timber finish."], ["Many RAL colours", "Available in a wide range of RAL colours, with the look of painted or stained wooden boards."], ["Colourfast", "The colour does not fade, so the facade keeps looking fresh."], ["Resists rot", "Resistant to mould, bacteria and other rotting processes."], ["Does not warp", "The panels stay straight, however humid or warm it gets."], ["10-year guarantee", "Keralit® facade panels come with a 10-year guarantee."]], "gallery": [["keralit", "Keralit cladding on a gable"], ["dormer-roof", "Dormers finished with facade panels"]], "links": [], "refs": [], "chips": [], "videoT": ""}}, {"id": "weru-windows", "img": "weru-door", "hero": "hero-weru", "thumb": "hero-weru", "ctaHref": "https://weru.nl/vakbedrijven-kunststof-kozijnen/over-vervat-de-jong/", "video": "https://www.youtube.com/watch?v=QnYYTr1pIuc", "nl": {"name": "Weru ramen en deuren", "short": "Weru ramen en deuren", "tag": "Weru dealer", "sub": "Kunststof kozijnen in Breukelen, Maarssen, Utrecht, Loenen, Hilversum en Loosdrecht", "cta": "Weru website", "intro": ["Weru kunststof kozijnen bij", "Vervat &amp; de Jong"], "lead": ["In onze showroom in Breukelen laten we u het complete Weru-assortiment kunststof kozijnen en deuren zien, en adviseren we u over de kozijnen en andere producten die bij uw woning passen.", "U krijgt een transparante offerte zonder verrassingen, en garantie en service na montage via het Weru Partner Garant®-programma."], "feats": [["De nummer 1 in kunststof kozijnen", "Weru is al 40 jaar marktleider en produceerde de afgelopen vijf jaar meer dan 20 miljoen kozijnen."], ["De charme van een houten kozijn", "Weru-ontwerpen zijn gebaseerd op traditionele houten kozijnen en combineren daardoor goed met de bestaande houten kozijnen in uw woning."], ["Hoogste kwaliteit, betaalbaar", "Sinds 1960 op maat gemaakt in de eigen fabriek in Duitsland, met eigen R&amp;D en strenge Duitse kwaliteits- en testnormen."], ["Comfortabeler en energiezuiniger", "De kozijnen voldoen aan hoge Duitse isolatienormen. Triple glas (3-dubbelglas) is mogelijk voor extra comfort en jaarlijkse energiebesparing."], ["Inwendige stalen versterking", "Alle Weru-kozijnen hebben standaard een inwendige stalen versterking. Dat maakt ze steviger en voorkomt doorbuigen."], ["Weru Partner Garant®", "Garantie en service van een gecertificeerde Weru-partner met 30 jaar Weru-ervaring."]], "links": [["Blader door de Weru-brochure", "https://weru.nl/"], ["Subsidie op energiezuinige kozijnen", "https://weru.nl/waarom-weru/subsidie-kunststof-kozijnen-2022/"]], "videoT": "Bedrijfsfilm over Weru kozijnen", "gallery": [["weru-door", "Weru voordeur in antraciet"], ["window-view", "Weru hoekraam, van binnenuit gezien"], ["hero-showroom", "Weru deuren en kozijnen in onze showroom in Breukelen"]], "refs": [], "chips": []}, "en": {"name": "Weru windows and doors", "short": "Weru windows and doors", "tag": "Weru dealer", "sub": "Plastic window frames in Breukelen, Maarssen, Utrecht, Loenen, Hilversum and Loosdrecht", "cta": "Weru website", "intro": ["Weru uPVC frames at", "Vervat &amp; de Jong"], "lead": ["In our showroom in Breukelen we show you the full Weru range of plastic window frames and doors, and advise you on the frames and other products that suit your home.", "You get a transparent quote without surprises, and warranty and service after installation through the Weru Partner Garant® programme."], "feats": [["The number 1 in uPVC frames", "Weru has been a market leader for 40 years and produced more than 20 million frames in the last five years."], ["The charm of a wooden frame", "Weru designs are based on traditional wooden frames, so they combine well with the existing wooden frames in your home."], ["Top quality, made affordable", "Made to measure in Weru’s own factory in Germany since 1960, with in-house R&amp;D and strict German quality and testing standards."], ["More comfort, lower energy bills", "The frames meet high German insulation standards. Triple glazing is available for extra comfort and yearly energy savings."], ["Internal steel reinforcement", "Every Weru frame has an internal steel reinforcement as standard. It makes the frame sturdier and prevents sagging."], ["Weru Partner Garant®", "Warranty and after-sales service from a certified Weru partner, with 30 years of Weru experience."]], "links": [["Browse the Weru brochure", "https://weru.nl/"], ["Subsidies for energy-saving frames", "https://weru.nl/waarom-weru/subsidie-kunststof-kozijnen-2022/"]], "videoT": "Company film about Weru frames", "gallery": [["weru-door", "Weru front door in anthracite"], ["window-view", "Weru corner window, seen from the inside"], ["hero-showroom", "Weru doors and frames in our Breukelen showroom"]], "refs": [], "chips": []}}, {"id": "weru-sliding-doors", "img": "sliding-door", "hero": "sliding-door", "thumb": "sliding-door-2", "ctaHref": "#contact", "video": "", "nl": {"name": "Weru schuifpuien", "short": "Weru schuifpuien", "tag": "Schuifpuien", "sub": "Meer licht, meer ruimte en zo de tuin in", "cta": "Plan een showroombezoek", "intro": ["Creëer ruimte met een", "stijlvolle schuifpui"], "lead": ["Weru kunststof schuifpuien zijn duurzaam en van hoge kwaliteit. De constructie heeft geen bewegende delen, dus slijtage is minimaal. Een schuifpui kan ook op de plek van een bestaand raam worden geplaatst.", "De pui schuift soepel en geruisloos open, laat frisse tuinlucht binnen en brengt u zo op het terras, zonder openstaande deuren in de weg."], "feats": [["Soepele, lichte bediening", "De pui loopt zo licht dat kinderen en ouderen hem moeiteloos openen."], ["Kies uw opening", "Met de bedieningsgreep laat u de pui zakken tijdens het schuiven, zodat u precies de gewenste opening kiest."], ["Rondom afgedicht", "De puien sluiten rondom luchtdicht af en isoleren daardoor zeer goed."], ["Politiekeurmerk Veilig Wonen", "Standaard voorzien van inbraakwerend beslag."], ["Minimale slijtage", "Een constructie zonder bewegende delen houdt het onderhoud jarenlang laag."], ["Op de plek van een raam", "We kunnen een bestaand raam vervangen door een schuifpui."]], "gallery": [["sliding-door", "4-delige schuifpui met dubbele plissé hor"], ["sliding-door-2", "Weru schuifpui naar de tuin"]], "links": [], "refs": [], "chips": [], "videoT": ""}, "en": {"name": "Weru sliding doors", "short": "Weru sliding doors", "tag": "Sliding doors", "sub": "More light, more space and an easy step into your garden", "cta": "Plan a showroom visit", "intro": ["Create space with a", "stylish sliding door"], "lead": ["Weru plastic sliding doors are durable and of high quality. The construction has no moving parts, so there is hardly any wear. A sliding door can also be fitted in the place of an existing window.", "The door slides open smoothly and quietly, lets fresh garden air into the house and takes you straight onto the terrace, without open doors getting in the way."], "feats": [["Smooth, light operation", "The door runs so lightly that children and older people can open it without effort."], ["Choose your opening", "With the operating handle you lower the door while sliding it, so you set the exact opening you want."], ["Fully sealed", "The doors close airtight all round, which gives very good insulation."], ["Police Safe Living mark", "Burglar-resistant hardware is fitted as standard."], ["Minimal wear", "A construction without moving parts keeps maintenance low for years."], ["Fits where a window was", "We can replace an existing window with a sliding door."]], "gallery": [["sliding-door", "Four-part sliding door with a double pleated insect screen"], ["sliding-door-2", "Weru sliding door onto the garden"]], "links": [], "refs": [], "chips": [], "videoT": ""}}, {"id": "painting", "img": "hero-painting", "hero": "hero-painting", "thumb": "shutters", "ctaHref": "#contact", "video": "https://www.youtube.com/watch?v=Z4Ste5Kq2fg", "nl": {"name": "Schilderwerk", "short": "Schilderwerk", "tag": "Schilders sinds 1842", "sub": "Van kasteel tot rijtjeshuis: kwaliteitsschilderwerk door een erkend schildersbedrijf", "cta": "Schilderwerk", "intro": ["Voor al uw", "schilderwerk"], "lead": ["U kunt bij ons terecht voor al uw schilderwerk, binnen en buiten. Onze schildershistorie gaat terug tot 1842 en onze schilders zijn allemaal in vaste dienst.", "We werken voor particulieren, eigenaren van monumentale villa’s en kastelen, groot of klein. Vraag naar een onderhoudsabonnement, zodat uw pand jaar na jaar goed wordt onderhouden."], "feats": [["100% opname en advies", "We nemen het hele project op en adviseren u voordat het werk begint."], ["Binnen- en buitenschilderwerk", "Schilderwerk voor onderhoud, renovatie en nieuwbouw."], ["Meerjarenonderhoudsplannen", "Een vaste planning die de kosten spreidt en uw pand in conditie houdt."], ["Prestatiegericht onderhoud", "Onderhoud op basis van afgesproken resultaat. Referentielijst op aanvraag."], ["Totaalonderhoud", "Schilderwerk, glaszetten en houtherstel bij één bedrijf."], ["Houtrot herstel", "Rot hout vakkundig hersteld voordat er geschilderd wordt."]], "refs": ["Kasteel Nijenrode", "Paulus- en Pieterskerk, Breukelen", "Gemeentehuis Breukelen", "Huis Groenevecht", "Huis Leeuwenburg", "De Breukelse Vechtbrug", "Brandspuithuisje, Breukelen", "Luiken van Nijenrode"], "videoT": "Film over onze schilders", "gallery": [["hero-painting", "Buitenschilderwerk aan een rietgedekte boerderij"], ["shutters", "Kozijnen en luiken opnieuw geschilderd"], ["church", "Restauratie van een kerk"]], "links": [], "chips": []}, "en": {"name": "Paint", "short": "Painting work", "tag": "Painters since 1842", "sub": "From castles to terraced houses: quality painting by a recognised painting company", "cta": "Painting work", "intro": ["All your", "painting work"], "lead": ["You can come to us for all your painting work, interior and exterior. Our painting history goes back to 1842, and our painters are permanent staff.", "We work for private homeowners, owners of monumental villas and castles alike, big jobs or small. Ask us about a maintenance subscription so your property is looked after year after year."], "feats": [["100% inventory and advice", "We record and inspect the full project and advise you before any work starts."], ["Interior and exterior", "Painting for maintenance, renovation and new construction."], ["Multi-year maintenance plans", "A planned schedule that spreads cost and keeps your property in condition."], ["Performance-oriented maintenance", "Maintenance agreed on results. A reference list is available on request."], ["Total maintenance", "Painting, glazing and wood repair from one company."], ["Wood restoration", "Rotten wood repaired and restored before painting."]], "refs": ["Nijenrode Castle", "Paulus- en Pieterskerk, Breukelen", "Former town hall, Breukelen", "Huis Groenevecht", "Huis Leeuwenburg", "Vecht bridge, Breukelen", "Fire engine house, Breukelen", "Shutters of Nijenrode"], "videoT": "Film about our painters", "gallery": [["hero-painting", "Exterior painting on a thatched farmhouse"], ["shutters", "Windows and shutters repainted"], ["church", "Church restoration project"]], "links": [], "chips": []}}, {"id": "glazing", "img": "glazing-install", "hero": "glazing-install", "thumb": "window-view", "ctaHref": "#contact", "video": "https://www.youtube.com/watch?v=Ehv9BCeDo2w", "nl": {"name": "Glaszetten", "short": "Glaszetten", "tag": "KOMO-gecertificeerd", "sub": "Van enkel glas tot isolatieglas HR++", "cta": "Vraag naar glaswerk", "intro": ["Wij plaatsen en leveren", "alle soorten glas"], "lead": ["Onze glaszetters plaatsen en leveren alle soorten glas, van enkel glas tot HR++ isolatieglas. Vervat &amp; de Jong is KOMO-gecertificeerd en een erkend leerbedrijf voor glaszetters.", "Geen ruit is te groot of te klein: van een grote etalageruit tot het glaasje in een fotolijst."], "feats": [["Enkel glas tot HR++", "Vervang oude beglazing door isolatieglas voor een warmer en stiller huis."], ["Hardglasdeuren", "Sterke deuren van gehard glas voor woning en bedrijf."], ["Glas in lood", "Plaatsen en vervangen van glas-in-loodramen."], ["Kleine ruitjes op maat", "Glas voor fotolijsten, koelkastplaten en andere kleine klussen."], ["KOMO-gecertificeerd", "Werk uitgevoerd onder het KOMO-keurmerk."], ["Eigen glaszetters", "Alle glaszetters zijn in vaste dienst en werken samen met onze schilders."]], "videoT": "Bedrijfsfilm over beglazing", "gallery": [["glazing-install", "Onze glaszetters plaatsen een grote ruit"], ["window-view", "Nieuw isolatieglas in een hoekraam"]], "links": [], "refs": [], "chips": []}, "en": {"name": "Glazing", "short": "Glazing", "tag": "KOMO certified", "sub": "From single glazing to HR++ insulating glass", "cta": "Ask about glazing", "intro": ["We supply and fit", "all types of glass"], "lead": ["Our glaziers place and supply every type of glass, from single glazing to HR++ insulating glass. Vervat &amp; de Jong is KOMO certified and a recognised training company for glaziers.", "No pane is too big or too small: from a large shop window to the glass in a picture frame."], "feats": [["Single glazing to HR++", "Replace old glazing with insulating glass for a warmer, quieter home."], ["Tempered glass doors", "Strong toughened-glass doors for homes and businesses."], ["Leaded glass", "Fitting and replacing leaded glass panels."], ["Small custom panes", "Glass for picture frames, fridge shelves and other small jobs."], ["KOMO certified", "Work carried out under the KOMO quality mark."], ["Our own glaziers", "All glaziers are permanent staff who work together with our painters."]], "videoT": "Company film about glazing", "gallery": [["glazing-install", "Our glaziers fitting a large pane"], ["window-view", "New insulating glass in a corner window"]], "links": [], "refs": [], "chips": []}}, {"id": "velux", "img": "velux", "hero": "velux", "thumb": "velux", "ctaHref": "#contact", "video": "", "nl": {"name": "Velux dakramen", "short": "Velux dakramen", "tag": "Dakramen", "sub": "Vakkundige montage van VELUX dakramen", "cta": "Plan een bezoek", "intro": ["Vakkundige montage van", "VELUX dakramen"], "lead": ["VELUX is een toonaangevende fabrikant van dakramen, lichtkoepels, dakdoorgangen, zonwering en rolluiken. Voor veel mensen is het de eerste naam die opkomt bij een raam in een schuin dak.", "VELUX heeft ruim drie decennia ervaring met ramen voor schuine daken. Het assortiment begon met één dakraam in één maat en is uitgegroeid tot een ruime keuze. Wij helpen u kiezen en plaatsen het juiste raam."], "feats": [["Dakramen", "Daglicht en frisse lucht op uw zolder."], ["Lichtkoepels en dakdoorgangen", "Oplossingen voor platte en schuine daken."], ["Zonwering en rolluiken", "Houd warmte en licht buiten wanneer u wilt."], ["Vakkundige montage", "Waterdicht geplaatst door onze eigen monteurs."]], "gallery": [["velux", "VELUX dakramen in een zolderwerkplek"], ["dormer-roof", "Dakramen en dakkapellen op één dak"]], "links": [], "refs": [], "chips": [], "videoT": ""}, "en": {"name": "Velux roof windows", "short": "Velux roof windows", "tag": "Roof windows", "sub": "Professional installation of VELUX roof windows", "cta": "Plan a visit", "intro": ["Expert installation of", "VELUX roof windows"], "lead": ["VELUX is a leading manufacturer of roof windows, skylights, roof openings, shading and roller shutters. For many people it is the first name that comes to mind for a window in a sloping roof.", "VELUX has more than three decades of experience with windows for sloping roofs. The range started with one roof window in one size and has grown into a wide choice. We help you choose and fit the right one."], "feats": [["Roof windows", "Bring daylight and fresh air into your attic."], ["Skylights and roof openings", "Solutions for flat and sloping roofs."], ["Shading and roller shutters", "Keep heat and light out when you want to."], ["Professional installation", "Fitted watertight by our own installers."]], "gallery": [["velux", "VELUX roof windows in an attic study"], ["dormer-roof", "Roof windows and dormers on one roof"]], "links": [], "refs": [], "chips": [], "videoT": ""}}, {"id": "terrace-covers", "img": "palazzo", "hero": "hero-terrace", "thumb": "palazzo", "ctaHref": "#contact", "video": "", "nl": {"name": "Palazzo terrasoverkappingen", "short": "Terrasoverkappingen", "tag": "Palazzo", "sub": "Haal het heerlijke buitenleven naar binnen met een Palazzo terrasoverkapping", "cta": "Palazzo terrasoverkappingen", "intro": ["Aluminium veranda’s en", "terrasoverkappingen"], "lead": ["Palazzo veranda’s en terrasoverkappingen zijn gemaakt van duurzaam aluminium. Het merk staat bekend om zijn stevigheid en hoogwaardige afwerking.", "Een glazen dak met een zeer grote overspanning geeft een sterk gevoel van ruimte. In onze showroom ziet u een Palazzo-profiel van dichtbij."], "feats": [["Vakantie in eigen tuin", "Geniet van buiten vanaf een beschutte plek in uw eigen tuin."], ["Een langere zomer", "Eerder in het voorjaar en langer in het najaar buiten zitten."], ["Ruimte voor feestjes", "Plaats voor feestjes en barbecues, wat het weer ook doet."], ["Glazen dak, grote overspanning", "Zeer grote overspanningen houden de ruimte open en licht."]], "chips": ["Aluminium serre", "Veranda", "Tuinoverkapping", "Terrasoverkapping"], "gallery": [["palazzo", "Palazzo terrasoverkapping met tuindeuren"], ["hero-terrace", "Palazzo-profiel in onze showroom"]], "links": [], "refs": [], "videoT": ""}, "en": {"name": "Palazzo patio covers", "short": "Terrace coverings", "tag": "Palazzo", "sub": "Bring the wonderful outdoors inside with a Palazzo patio cover", "cta": "Palazzo patio covers", "intro": ["Aluminium verandas and", "terrace covers"], "lead": ["Palazzo verandas and terrace covers are made of durable aluminium. The brand is known for its sturdiness and high-quality finishing.", "A glass roof with a very large span gives a strong sense of space. You can see a Palazzo profile up close in our showroom."], "feats": [["Holiday at home", "Enjoy the outdoors from a sheltered spot in your own garden."], ["A longer summer", "Sit outside earlier in spring and later into autumn."], ["Room for parties", "Space for parties and barbecues, whatever the weather."], ["Large-span glass roof", "Very wide spans keep the space open and light."]], "chips": ["Aluminium conservatory", "Veranda", "Garden cover", "Terrace cover"], "gallery": [["palazzo", "Palazzo terrace cover with garden doors"], ["hero-terrace", "Palazzo profile in our showroom"]], "links": [], "refs": [], "videoT": ""}}, {"id": "garage-doors", "img": "garage", "hero": "aluport", "thumb": "garage", "ctaHref": "#contact", "video": "", "nl": {"name": "Novoferm garagedeuren", "short": "Novoferm garagedeuren", "tag": "Novoferm dealer", "sub": "Onderhoudsarme, goed geïsoleerde deuren voor nieuwbouw en renovatie", "cta": "Vraag naar de Aluport", "intro": ["Optimaal benutten", "van ruimte"], "lead": ["Steeds meer mensen maken van hun garage extra woon- of werkruimte. Het is een relatief goedkope en snelle manier om ruimte te winnen, maar een standaard garagedeur voldoet dan niet meer.", "De Novoferm Aluport is een geïsoleerde pui die de garage afsluit op de plek waar de garagedeur zat. Als Novoferm-dealer hebben we voor elke garage een oplossing, voor nieuwbouw en renovatie."], "feats": [["Geïsoleerde Aluport", "Een geïsoleerde pui die van de garage een kamer maakt."], ["Onderhoudsarm", "Deuren die vrijwel geen onderhoud vragen."], ["Optimaal geïsoleerd", "Houdt warmte binnen en geluid buiten."], ["Voor elke garage", "Oplossingen voor zowel nieuwbouw als renovatie."], ["RAL-kleur naar keuze", "Vraag naar de kleurmogelijkheden en actuele aanbiedingen."], ["Eersteklas service", "Advies en montage door een Novoferm-dealer."]], "gallery": [["aluport", "Geïsoleerde garagedeur bij een nieuwbouwwoning"], ["garage", "Novoferm sectionaaldeur"]], "links": [], "refs": [], "chips": [], "videoT": ""}, "en": {"name": "Novoferm garage doors", "short": "Novoferm garage doors", "tag": "Novoferm dealer", "sub": "Low-maintenance, well-insulated doors for new build and renovation", "cta": "Ask about the Aluport", "intro": ["Optimal use", "of space"], "lead": ["More and more people turn their garage into extra living or work space. It is a relatively cheap and quick way to gain room, but a standard garage door is no longer good enough.", "The Novoferm Aluport is an insulated door unit that closes off the garage where the garage door used to be. As a Novoferm dealer we have a solution for every garage, for new build and renovation alike."], "feats": [["Insulated Aluport", "An insulated front that turns the garage into a room."], ["Low maintenance", "Doors that need very little upkeep."], ["Optimally insulated", "Keeps warmth in and noise out."], ["Every garage", "Solutions for both new build and renovation."], ["RAL colour of choice", "Ask us about colour options and current offers."], ["First-class service", "Advice and installation from a Novoferm dealer."]], "gallery": [["aluport", "Insulated garage door on a new home"], ["garage", "Novoferm sectional garage door"]], "links": [], "refs": [], "chips": [], "videoT": ""}}, {"id": "dormers", "img": "dormer-roof", "hero": "dormer-showroom", "thumb": "dormer-roof", "ctaHref": "#contact", "video": "", "nl": {"name": "Dakkapellen", "short": "Dakkapellen", "tag": "Dakkapellen", "sub": "Voor iedere hellingshoek, in iedere gewenste breedte, uit één geheel", "cta": "Vraag naar dakkapellen", "intro": ["Onderhoudsvriendelijke", "dakkapellen"], "lead": ["Een dakkapel geeft u bruikbare ruimte onder een schuin dak, precies waar u die wilt. Wij leveren dakkapellen voor iedere hellingshoek en in iedere gewenste breedte, uit één geheel.", "U kiest voor een volledig afgewerkte dakkapel, binnen geschilderd en klaar voor gebruik, of voor casco: buiten wind- en waterdicht, binnen nog af te werken door uzelf of uw aannemer."], "feats": [["Uw kleur", "Standaard crème-wit of wit. Andere kleuren op aanvraag met Trespa- of Keralit-panelen en shingles."], ["KOMO kunststof kozijnen", "Witte kunststof kozijnen en ramen onder KOMO-keur, goed sluitend en met isolerende beglazing."], ["Dakaansluitingen", "Verholen goten, of loodslabben waar de dakkapel op het dak aansluit."], ["Afgewerkt of casco", "Volledig afgewerkt en binnen geschilderd, of als waterdicht casco geleverd."]], "gallery": [["dormer-roof", "Dakkapellen op een pannendak"], ["dormer-showroom", "Dakkapelmodel in onze showroom"]], "links": [], "refs": [], "chips": [], "videoT": ""}, "en": {"name": "Dormers", "short": "Dormers", "tag": "Dormers", "sub": "For every roof pitch, in any width, in one piece", "cta": "Ask about dormers", "intro": ["Low-maintenance", "dormers"], "lead": ["A dormer gives you usable space under a sloping roof, exactly where you want it. We supply dormers for every roof pitch and in any width, built as one whole.", "You choose a fully finished dormer, with the interior painted and ready to use, or a shell: wind- and watertight on the outside, with the inside left for you or your builder to finish."], "feats": [["Your colour", "Standard in cream white or white. Other colours on request with Trespa or Keralit panels and shingles."], ["KOMO uPVC frames", "White plastic frames and windows made under the KOMO quality mark, close-fitting and with insulating glazing."], ["Roof connections", "Concealed gutters, or lead flashing where the dormer meets the roof."], ["Finished or shell", "Fully finished and painted inside, or delivered as a watertight shell."]], "gallery": [["dormer-roof", "Dormers on a tiled roof"], ["dormer-showroom", "Dormer model in our showroom"]], "links": [], "refs": [], "chips": [], "videoT": ""}}], "home": {"checks": {"nl": ["Schilderwerk", "Montagebedrijf", "Glaszetten", "Dealer van Weru kunststof kozijnen"], "en": ["Painting", "Installation company", "Glazing", "Dealer of Weru plastic window frames"]}, "services": {"nl": ["100% opname / inventarisatie en advies bij projecten", "Binnen- en buitenschilderwerk voor onderhoud, renovatie en nieuwbouw", "Glaszetwerk", "Meerjarenonderhoudsplannen", "Prestatiegericht onderhoud (referentielijst op aanvraag)", "Totaalonderhoud", "Houtrotherstel"], "en": ["100% recording / inventory and advice on projects", "Interior and exterior painting for maintenance, renovation and new construction", "Glazing work", "Multi-year maintenance plans", "Performance-oriented maintenance (reference list on request)", "Total maintenance", "Wood restoration work"]}, "images": {"founded": "storefront", "painters": "office", "plan": "floorplan", "space": "aluport", "longBuilding": "long-building", "clients": "team"}, "video": {"url": "https://www.youtube.com/watch?v=QnYYTr1pIuc", "title": {"nl": "Cees Vervat over Weru kozijnen", "en": "Cees Vervat on Weru Frames"}, "thumb": "video-still"}, "gallery1": [["sliding-door-2", 230, 190], ["shutters", 315, 166], ["window-view", 568, 298], ["velux", 327, 230], ["keralit", 270, 200], ["weru-door", 190, 250]], "gallery2": [["dormer-roof", 230, 298], ["garage", 315, 166], ["palazzo", 400, 232], ["glazing-install", 395, 298], ["church", 190, 250], ["hero-painting", 330, 200]]}, "reviews": {"score": "9.3", "count": "4.247", "quotes": [{"text": {"nl": "“Vanaf het eerste gesprek in Breukelen tot en met de laatste levering een fijn contact gehad. Vriendelijke en deskundige medewerkers en we zijn tevreden over de geleverde pui en hor.”", "en": "“From the first conversation in Breukelen to the final delivery, the contact was great. Friendly, knowledgeable staff, and we are happy with the sliding door and insect screen they supplied.”"}, "name": "Bram Claassen, Maarssen", "role": {"nl": "Bedrijfseigenaar", "en": "Company Owner"}, "avatar": "avatar"}]}, "videos": [{"title": {"nl": "Welk raamtype past bij uw woning?", "en": "Which window type suits your home?"}, "url": "https://vimeo.com/625513748", "thumb": "hero-showroom"}, {"title": {"nl": "Hoe kiest u een kozijnkleur?", "en": "How do you choose a window frame colour?"}, "url": "https://vimeo.com/625744241", "thumb": "weru-door"}, {"title": {"nl": "Moet uw voordeur een vast sluitend deel zijn?", "en": "Should your front door be a fixed closing section?"}, "url": "https://vimeo.com/625753140", "thumb": "storefront"}, {"title": {"nl": "Hoe krijgt u een juiste offerte?", "en": "How do you get a correct quote?"}, "url": "https://vimeo.com/625755423", "thumb": "hero-weru"}, {"title": {"nl": "Worden ventilatie en raambekleding vaak vergeten?", "en": "Are ventilation and window treatments often forgotten?"}, "url": "https://vimeo.com/625757618", "thumb": "window-view"}, {"title": {"nl": "Is een hefschuifpui de moeite waard?", "en": "Is a lift-and-slide door worth it?"}, "url": "https://vimeo.com/625797498", "thumb": "sliding-door-2"}, {"title": {"nl": "Welke terras- of achterdeur past bij u?", "en": "Which terrace or back door is right for you?"}, "url": "https://vimeo.com/625804039", "thumb": "sliding-door"}, {"title": {"nl": "Is montage het vergeten deel van een project?", "en": "Is installation the overlooked part of a project?"}, "url": "https://vimeo.com/625812388", "thumb": "glazing-install"}, {"title": {"nl": "Vier slimme budgettips", "en": "Four smart budget tips"}, "url": "https://vimeo.com/625822229", "thumb": "office"}, {"title": {"nl": "Kiezen voor duurzaamheid", "en": "Choosing sustainability"}, "url": "https://vimeo.com/625827699", "thumb": "keralit"}], "aboutVideos": [{"title": {"nl": "Film: onze schilders", "en": "Film: our painters"}, "url": "https://www.youtube.com/watch?v=Z4Ste5Kq2fg", "thumb": "hero-painting"}, {"title": {"nl": "Film: beglazing", "en": "Film: glazing"}, "url": "https://www.youtube.com/watch?v=Ehv9BCeDo2w", "thumb": "glazing-install"}, {"title": {"nl": "Film: Weru kozijnen", "en": "Film: Weru frames"}, "url": "https://www.youtube.com/watch?v=QnYYTr1pIuc", "thumb": "video-still"}], "about": {"feats": {"nl": [["Sinds 1842", "Bijna twee eeuwen schilderservaring in Breukelen en de Vechtstreek."], ["30 jaar Weru dealer", "Gecertificeerd Weru-partner voor kunststof ramen, deuren en schuifpuien."], ["Erkend leerbedrijf", "Wij leiden schilders en glaszetters op en verwelkomen ook leerling-timmerlieden en kozijnmonteurs."], ["KOMO-gecertificeerd", "Glas en kozijnen geleverd onder het KOMO-keurmerk."]], "en": [["Since 1842", "Nearly two centuries of painting experience in Breukelen and the Vecht region."], ["30 years Weru dealer", "Certified Weru partner for plastic windows, doors and sliding doors."], ["Recognised training company", "We train painters and glaziers, and welcome trainee carpenters and frame fitters."], ["KOMO certified", "Glazing and frames delivered under the KOMO quality mark."]]}, "images": {"hero": "storefront", "photo1": "hero-weru", "photo2": "team"}}, "jobs": {"nl": [{"tag": "Schilderwerk", "title": "Schilders", "h1": "Wie zoeken we", "l1": ["Gemotiveerde schilders", "Ervaren schilders, leerlingen en zzp’ers zijn allemaal welkom", "Rijbewijs is handig maar niet verplicht"], "h2": "Wat bieden we", "l2": ["Salaris in overleg, volgens de CAO schilderwerken", "Een vaste plek in een hecht team"]}, {"tag": "Fulltime", "title": "Timmerman / kozijnmonteur", "h1": "Wie zoeken we", "l1": ["Je kunt zelfstandig werken", "Zzp’ers zijn welkom", "Oud-collega’s die terug willen in het vak ook"], "h2": "Wat bieden we", "l2": ["Interessant werk bij een solide, dynamisch bedrijf", "Interne opleiding en ruimte om te groeien", "Een marktconform salaris"]}, {"tag": "Stage", "title": "Stageplaatsen", "h1": "Erkend leerbedrijf", "l1": ["Wij zijn een erkend leerbedrijf voor schilders en glaszetters", "Wil je timmerman of kozijnmonteur worden? Ook dan ben je welkom"], "h2": "Solliciteren", "l2": ["Mail naar info@vervat-breukelen.nl of bel 0346 - 261 959"]}], "en": [{"tag": "Painting", "title": "Painters", "h1": "Who we look for", "l1": ["Motivated painters", "Experienced painters, apprentices and self-employed (zzp) painters are all welcome", "A driving licence is useful but not required"], "h2": "What we offer", "l2": ["Salary by arrangement, following the CAO for painting work", "A permanent place in a close team"]}, {"tag": "Full-time", "title": "Carpenter / frame installer", "h1": "Who we look for", "l1": ["You can work independently", "Self-employed installers are welcome", "Former colleagues who want to return to the trade too"], "h2": "What we offer", "l2": ["Interesting work at a solid, dynamic company", "Internal training and room to develop", "Competitive pay"]}, {"tag": "Internship", "title": "Internships", "h1": "Recognised training company", "l1": ["We are a recognised training company for painters and glaziers", "Want to train as a carpenter or frame installer? You are welcome too"], "h2": "How to apply", "l2": ["Email info@vervat-breukelen.nl or call 0346 - 261 959"]}]}, "brands": ["Weru", "Novoferm", "Palazzo", "Keralit", "VELUX", "Trespa"], "texts": {"home": {"nl": "Home", "en": "Home"}, "products": {"nl": "Producten", "en": "Products"}, "about": {"nl": "Over ons", "en": "About us"}, "vacancies": {"nl": "Vacatures", "en": "Vacancies"}, "showroom": {"nl": "Virtuele showroom", "en": "Virtual showroom"}, "contact": {"nl": "Contact", "en": "Contact us"}, "callUs": {"nl": "Bel ons", "en": "Call us Phone"}, "contactBtn": {"nl": "Contact", "en": "Contact Us"}, "search": {"nl": "Zoeken op de site", "en": "Search the site"}, "searchPh": {"nl": "Zoek producten en pagina’s…", "en": "Search products and pages…"}, "noRes": {"nl": "Geen resultaten. Probeer “glas”, “deur” of “verf”.", "en": "No results. Try “glass”, “door” or “paint”."}, "menu": {"nl": "Menu openen", "en": "Open menu"}, "close": {"nl": "Sluiten", "en": "Close"}, "years": {"nl": "30+ <br>Jaar", "en": "30+ <br>Years"}, "dealer": {"nl": "Vervat &amp; de Jong<br>Weru dealer", "en": "Vervat &amp; de Jong<br>Weru dealer"}, "fast": {"nl": "Snel en betrouwbaar", "en": "Fast and reliable"}, "more": {"nl": "MEER", "en": "MORE"}, "newsPill": {"nl": "Schrijf je in voor de nieuwsbrief", "en": "Subscribe to the newsletter"}, "newsTitle": {"nl": "Meld je aan voor <span class=\"y\">onze nieuwsbrief<\/span><br><span class=\"y\">Blijf<\/span> op de hoogte", "en": "Join <span class=\"y\">Our Newsletter<\/span><br><span class=\"y\">Stay<\/span> Up To Date"}, "newsText": {"nl": "Ontvang nieuws, exclusieve aanbiedingen en de laatste ontwikkelingen in de branche. We sturen hem maximaal één keer per maand.", "en": "Join our newsletter. Learn something new, gain access to exclusive offers, and stay informed with the latest updates in the industry. We send it at most once a month."}, "emailPh": {"nl": "E-mailadres..", "en": "Email address.."}, "subscribe": {"nl": "Aanmelden", "en": "Subscribe"}, "newsBad": {"nl": "Vul een geldig e-mailadres in, bijvoorbeeld naam@voorbeeld.nl.", "en": "Enter a valid email address, for example name@example.nl."}, "ftrVisit": {"nl": "Bezoek onze showroom, bekijk onze producten en ontvang persoonlijk deskundig advies.", "en": "Visit our showroom to discover our products and receive personalized expert advice."}, "ftrHours": {"nl": "Openingstijden showroom", "en": "Showroom opening hours"}, "ftrNote": {"nl": "Alleen op afspraak. Maandag is gereserveerd voor huisbezoeken. Telefonisch: ma–vr 7:30 – 17:00.", "en": "By appointment only. Mondays are reserved for home visits. Phone: Mon–Fri 7:30 AM – 5:00 PM."}, "rights": {"nl": "Alle rechten voorbehouden.", "en": "All rights reserved."}, "ctaTitle": {"nl": "Bezoek onze showroom in Breukelen", "en": "Visit our showroom in Breukelen"}, "ctaText": {"nl": "Bekijk de producten van dichtbij en krijg advies dat past bij uw woning. We trekken ongeveer 1,5 uur uit per bezoek, zodat er tijd is voor al uw vragen.", "en": "See the products up close and get advice that fits your home. We plan about 1.5 hours per visit, so there is time for all your questions."}, "ctaAppt": {"nl": "Afspraak maken", "en": "Make an appointment"}, "ctaHoursT": {"nl": "Showroom, op afspraak", "en": "Showroom, by appointment"}, "ctaCall": {"nl": "Bel 0346 - 261 959", "en": "Call 0346 - 261 959"}, "scroll": {"nl": "Naar de inhoud", "en": "Scroll to content"}, "prev": {"nl": "Vorige producten", "en": "Previous products"}, "next": {"nl": "Volgende producten", "en": "Next products"}, "service": {"nl": "Service", "en": "Service"}, "serviceLong": {"nl": "Reparatie &amp; onderhoud", "en": "Repair &amp; maintenance"}, "copy": {"nl": "Kopieer", "en": "Copy"}, "copied": {"nl": "Gekopieerd", "en": "Copied"}, "wa": {"nl": "Chat via WhatsApp", "en": "Chat on WhatsApp"}, "waShort": {"nl": "WhatsApp", "en": "WhatsApp"}, "waMsg": {"nl": "Hallo Vervat & de Jong, ik heb een vraag:", "en": "Hello Vervat & de Jong, I have a question:"}, "home.whoLabel": {"nl": "Wie wij zijn", "en": "Who we are"}, "home.whoTitle": {"nl": "Allround <span class=\"y\">onderhouds<\/span>­bedrijf", "en": "All-round <span class=\"y\">Maintenance<\/span><br>Company"}, "home.whoText": {"nl": "<p>Vervat &amp; de Jong BV in Breukelen is een service- en klantgericht bedrijf, in 1842 opgericht als schildersbedrijf en inmiddels uitgegroeid tot een allround onderhoudsbedrijf.<\/p><p>In de afgelopen decennia heeft het bedrijf zich ontwikkeld tot een professionele en betrouwbare onderneming met vakkundig personeel in vaste dienst. Oorspronkelijk opgericht als Fa. C. Vervat &amp; Zn, werkt het bedrijf al jaren samen met De Jong Schilderwerken om de continuïteit te waarborgen.<\/p>", "en": "<p>Vervat &amp; de Jong BV in Breukelen is a service- and customer-oriented company, founded in 1842 as a painting company, and has since grown into an all-round maintenance company.<\/p><p>Over the past decades, the company has developed into a professional and reliable enterprise with skilled permanent staff. Originally founded as Fa. C. Vervat &amp; Zn, the company has been working with de Jong Schilderwerken for years to ensure continuity.<\/p>"}, "home.foundedLabel": {"nl": "Opgericht in 1842", "en": "Founded in 1842"}, "home.foundedTitle": {"nl": "Vervat <span class=\"y\">&amp;<\/span><br>de Jong BV", "en": "Vervat <span class=\"y\">&amp;<\/span><br>de Jong BV"}, "home.foundedText": {"nl": "Ons vakkundige personeel bestaat uit schilders, glaszetters en kunststof kozijnmonteurs, allemaal in vaste dienst. Ze werken als team en hebben hart voor hun vak. Dat zie je terug in zeer tevreden klanten; referenties zijn beschikbaar.", "en": "Our skilled staff consists of painters, glaziers, and uPVC window frame fitters, all permanent employees who work together as a team and are passionate about their work. This translates into highly satisfied customers, and references are available."}, "home.rateUs": {"nl": "Beoordeel ons", "en": "Rate us"}, "home.paintersLabel": {"nl": "Schilders", "en": "Painters"}, "home.paintersTitle": {"nl": "Onze <span class=\"y\">schilders<\/span>", "en": "Our <span class=\"y\">Painters<\/span>"}, "home.paintersText": {"nl": "<p>Dankzij onze vakkundige schilders in vaste dienst zijn we gespecialiseerd in duurzaam onderhoud en afwerking. We stellen daarom hoge eisen aan onze dienstverlening. Opdrachtgevers kunnen kiezen uit de volgende categorieën, of een combinatie daarvan:<\/p>", "en": "<p>Thanks to our skilled painters on permanent staff, we specialize in sustainable maintenance and finishing. We therefore set high standards for our services. Clients can choose from the following categories or combinations thereof:<\/p>"}, "home.productsTitle": {"nl": "Onze producten <span class=\"y\">bepalen<\/span><br><span class=\"y\">onze<\/span> stijl", "en": "Our Products <span class=\"y\">That<\/span><br><span class=\"y\">Define<\/span> Our Style"}, "home.productsText": {"nl": "<p>Onze producten en diensten laten het vakmanschap zien van onze schilders, glaszetters en kozijnmonteurs. Hun teamwork en passie zorgen voor blijvende kwaliteit en tevreden klanten.<\/p>", "en": "<p>Our products and services reflect the craftsmanship of our skilled painters, glaziers, and uPVC window frame fitters, whose teamwork and passion deliver lasting quality and customer satisfaction.<\/p>"}, "home.spaceLabel": {"nl": "Ruimtegebruik", "en": "Use of space"}, "home.spaceTitle": {"nl": "Optimaal benutten <span class=\"y\">van ruimte<\/span>", "en": "Optimal Use <span class=\"y\">Of Space<\/span>"}, "home.spaceText": {"nl": "Steeds meer mensen hebben een garage aan huis. Logisch, want het is een relatief goedkope en snelle manier om extra woon- en/of werkruimte te creëren. Een standaard garagedeur voldoet dan niet meer. De Aluport kan een goede oplossing zijn: deze geïsoleerde pui sluit de garage af op de plek waar eerst de garagedeur zat. Interesse in een geïsoleerde Aluport? Profiteer nu.", "en": "More and more people are adding garages to their homes. This isn't surprising, as it's a relatively inexpensive and quick way to create more living and/or work space. A standard garage door is no longer sufficient. The Aluport could be a good solution. This insulated doorway closes off the garage where the garage door used to be. Interested in an insulated Aluport? Take advantage now."}, "home.clientsLabel": {"nl": "Wat klanten zeggen", "en": "Our clients say"}, "home.clientsTitle": {"nl": "Dit zijn de <span class=\"y\">warme woorden<\/span><br>van <span class=\"y\">onze klanten<\/span>", "en": "Here’s What <span class=\"y\">Warm Words<\/span><br><span class=\"y\">Our Clients<\/span> Say"}, "home.reviews": {"nl": "beoordelingen", "en": "reviews"}, "home.galleryWord": {"nl": "galerij", "en": "gallery"}, "products.text": {"nl": "<p>Van Weru ramen en deuren tot schilderwerk, glaszetten en gevelbekleding: alles voor het onderhoud en de verbetering van uw woning, bij één bedrijf in Breukelen.<\/p>", "en": "<p>From Weru windows and doors to painting, glazing and facade cladding: everything for the maintenance and improvement of your home, from one company in Breukelen.<\/p>"}, "product.refsLabel": {"nl": "Referenties", "en": "References"}, "product.refsTitle": {"nl": "Een selectie <span class=\"y\">projecten<\/span>", "en": "Selected <span class=\"y\">projects<\/span>"}, "product.refsText": {"nl": "<p>Een volledige referentielijst is op aanvraag beschikbaar.<\/p>", "en": "<p>A full reference list is available on request.<\/p>"}, "product.moreLabel": {"nl": "Meer producten", "en": "More products"}, "product.moreTitle": {"nl": "Ontdek <span class=\"y\">meer<\/span>", "en": "Explore <span class=\"y\">more<\/span>"}, "about.kicker": {"nl": "Opgericht in 1842", "en": "Founded in 1842"}, "about.sub": {"nl": "Schilders-, glaszet- en montagebedrijf<br>een begrip in de regio", "en": "Painting, glazing and installation company<br>a household name in the region"}, "about.title": {"nl": "Allround <span class=\"y\">onderhouds<\/span>­bedrijf", "en": "All-round <span class=\"y\">Maintenance<\/span><br>Company"}, "about.text": {"nl": "<p>Vervat &amp; de Jong BV in Breukelen werd in 1842 opgericht als schildersbedrijf en is uitgegroeid tot een allround onderhoudsbedrijf. Oorspronkelijk opgericht als Fa. C. Vervat &amp; Zn, werkt het bedrijf al jaren samen met De Jong Schilderwerken om de continuïteit te waarborgen. Het bedrijf wordt geleid door Cees Vervat en Erik de Jong.<\/p><p>Ons team bestaat uit schilders, glaszetters en kunststof kozijnmonteurs. Allemaal in vaste dienst, werkend als team en met hart voor het bedrijf. Dat zie je terug in zeer tevreden klanten; referenties zijn op aanvraag beschikbaar.<\/p>", "en": "<p>Vervat &amp; de Jong BV in Breukelen was founded in 1842 as a painting company and has grown into an all-round maintenance company. Originally founded as Fa. C. Vervat &amp; Zn, the company has worked with de Jong Schilderwerken for years to ensure continuity. Today it is run by Cees Vervat and Erik de Jong.<\/p><p>Our team consists of painters, glaziers and uPVC window frame fitters. All of them are permanent employees who work together as a team and care about the company. That shows in very satisfied customers, and references are available on request.<\/p>"}, "about.caption1": {"nl": "Erik de Jong &amp; Cees Vervat", "en": "Erik de Jong &amp; Cees Vervat"}, "about.caption2": {"nl": "Schilders, glaszetters en kozijnmonteurs, allemaal in vaste dienst", "en": "Painters, glaziers and frame fitters, all permanent staff"}, "vac.kicker": {"nl": "Werken bij ons", "en": "Work with us"}, "vac.sub": {"nl": "Kom werken in een solide, dynamisch team van schilders, glaszetters en kozijnmonteurs in Breukelen", "en": "Join a solid, dynamic team of painters, glaziers and frame fitters in Breukelen"}, "vac.btn": {"nl": "Solliciteer per e-mail", "en": "Apply by email"}, "vac.title": {"nl": "Kom bij <span class=\"y\">ons werken<\/span>", "en": "Come and <span class=\"y\">work with us<\/span>"}, "vac.text": {"nl": "<p>Stuur je sollicitatie naar <b>info@vervat-breukelen.nl<\/b> of bel Erik de Jong op <b>0346 - 261 959<\/b>.<\/p>", "en": "<p>Send your application to <b>info@vervat-breukelen.nl<\/b> or call Erik de Jong on <b>0346 - 261 959<\/b>.<\/p>"}, "show.sub": {"nl": "Korte films over de vragen die we in onze showroom het vaakst horen", "en": "Short films that answer the questions we hear most in our showroom"}, "show.btn": {"nl": "Plan een echt bezoek", "en": "Book a real visit"}, "show.title": {"nl": "Tien vragen, <span class=\"y\">tien films<\/span>", "en": "Ten questions, <span class=\"y\">ten films<\/span>"}, "show.text": {"nl": "<p>Bekijk ze thuis en kom daarna naar onze showroom in Breukelen voor persoonlijk advies.<\/p>", "en": "<p>Watch at home, then come to our showroom in Breukelen for personal advice.<\/p>"}, "svc.kicker": {"nl": "Klantenservice", "en": "Customer service"}, "svc.sub": {"nl": "Onderhoud, reparatie en garantie efficiënt geregeld", "en": "Maintenance, repairs and warranty claims, handled efficiently"}, "svc.btn": {"nl": "Service aanvragen", "en": "Request service"}, "svc.title": {"nl": "Efficiënt regelen van <span class=\"y\">onderhoud, reparatie<\/span> en garantie", "en": "Efficiently arrange <span class=\"y\">maintenance, repairs<\/span> and warranty"}, "svc.text": {"nl": "<p>Heeft u een vraag over onderhoud of een reparatie aan uw kozijnen, deuren, schuifpui, garagedeur, dakkapel of ander product? Wij helpen u graag, zowel binnen als buiten de garantieperiode.<\/p><p>Meld uw verzoek aan via het formulier hieronder. Na verzending ontvangt u een bevestiging.<\/p>", "en": "<p>Do you have a question about maintenance or a repair to your window frames, doors, sliding door, garage door, dormer or other product? We are happy to help, both within and after the warranty period.<\/p><p>Submit your request with the form below. You will receive a confirmation once it is sent.<\/p>"}, "svc.busy": {"nl": "Let op: in drukke periodes kan de serviceplanning drie tot vier weken vooruit lopen. Bij spoed? Bel ons op <b>0346 - 261 959<\/b>.", "en": "Please note: in busy periods the service schedule can run three to four weeks ahead. Urgent? Call us on <b>0346 - 261 959<\/b>."}, "svc.formLabel": {"nl": "Serviceverzoek", "en": "Service request"}, "svc.formTitle": {"nl": "Meld uw <span class=\"y\">serviceverzoek<\/span> aan", "en": "Submit your <span class=\"y\">service request<\/span>"}, "svc.formText": {"nl": "<p>Drie korte stappen. Velden met * zijn verplicht.<\/p>", "en": "<p>Three short steps. Fields marked * are required.<\/p>"}, "svc.brandsLabel": {"nl": "Merken", "en": "Brands"}, "svc.brandsTitle": {"nl": "Service op de merken <span class=\"y\">die wij leveren<\/span>", "en": "Service on the brands <span class=\"y\">we supply<\/span>"}, "svc.reviewsTitle": {"nl": "Klantervaringen", "en": "Customer experiences"}, "svc.reviewsText": {"nl": "Lees wat klanten over onze service zeggen, of laat zelf een beoordeling achter.", "en": "Read what customers say about our service, or leave a review yourself."}, "svc.reviewsBtn": {"nl": "Bekijk beoordelingen", "en": "Read reviews"}, "contact.title": {"nl": "Maak een <span class=\"y\">afspraak<\/span>", "en": "Make an <span class=\"y\">appointment<\/span>"}, "contact.text": {"nl": "<p>Onze showroom is open op afspraak. Vertel ons wat u van plan bent, dan nemen we contact met u op om een tijd af te spreken.<\/p>", "en": "<p>Our showroom is open by appointment. Tell us what you are planning and we will get back to you to set a time.<\/p>"}, "form.sent": {"nl": "Bedankt! We hebben uw bericht ontvangen en nemen zo snel mogelijk contact met u op.", "en": "Thank you! We have received your message and will get back to you as soon as possible."}, "form.sending": {"nl": "Bezig met verzenden…", "en": "Sending…"}, "form.failed": {"nl": "Verzenden is niet gelukt. Probeer het opnieuw, of mail naar <b>info@vervat-breukelen.nl<\/b> / bel 0346 - 261 959.", "en": "Sending failed. Please try again, or email <b>info@vervat-breukelen.nl<\/b> / call 0346 - 261 959."}, "form.offline": {"nl": "Dit formulier is nog niet gekoppeld. Mail uw bericht naar <b>info@vervat-breukelen.nl<\/b> of bel 0346 - 261 959.", "en": "This form is not connected yet. Please email your message to <b>info@vervat-breukelen.nl<\/b> or call 0346 - 261 959."}, "news.sent": {"nl": "Bedankt voor uw aanmelding!", "en": "Thanks for subscribing!"}}}</script>
 <script>
-/* ================= LANGUAGE ================= */
+/* =========================================================
+   Vervat & de Jong website
+   All editable content lives in content.json (edited through /admin/).
+   ========================================================= */
 let LANG='nl';
 try{const s=localStorage.getItem('vdj-lang');if(s==='en'||s==='nl')LANG=s;}catch(_){}
-const L=v=>(v&&typeof v==='object'&&!Array.isArray(v)&&('nl' in v))?v[LANG]:v;
+const L=v=>(v&&typeof v==='object'&&!Array.isArray(v)&&('nl' in v))?(v[LANG]??v.nl):v;
 
-const WA_NUMBER='31346261959'; /* WhatsApp number in international format, without + or spaces */
+let C,T,PRODUCTS,byId;
+const P=p=>Object.assign({},p,p[LANG]);
+const A=n=>!n?'':/^https?:|^data:/.test(n)?n:/\.[a-z0-9]{3,4}$/i.test(n)?`assets/${n}`:`assets/${n}.webp`;
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const X=k=>L(T[k])??'';
+
 const WA_ICON='<svg width="26" height="26" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d="M16 3a13 13 0 0 0-11.2 19.6L3 29l6.6-1.7A13 13 0 1 0 16 3zm0 23.6c-2 0-4-.6-5.7-1.6l-.4-.2-3.9 1 1-3.8-.3-.4A10.6 10.6 0 1 1 16 26.6z"/><path d="M21.9 18.8c-.3-.2-1.9-.9-2.2-1-.3-.1-.5-.2-.7.2l-1 1.2c-.2.2-.4.2-.7.1a8.7 8.7 0 0 1-4.3-3.8c-.3-.5.3-.5.9-1.6.1-.2 0-.4 0-.5l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.2 1.4 3.5c.2.2 2.4 3.7 5.8 5.1 2.2.9 3 1 4.1.8.7-.1 1.9-.8 2.2-1.5.3-.8.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4z"/></svg>';
-const waLink=()=>`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(L(T.waMsg))}`;
-const T={
- home:{nl:'Home',en:'Home'},products:{nl:'Producten',en:'Products'},about:{nl:'Over ons',en:'About us'},vacancies:{nl:'Vacatures',en:'Vacancies'},showroom:{nl:'Virtuele showroom',en:'Virtual showroom'},contact:{nl:'Contact',en:'Contact us'},
- callUs:{nl:'Bel ons',en:'Call us Phone'},contactBtn:{nl:'Contact',en:'Contact Us'},
- search:{nl:'Zoeken op de site',en:'Search the site'},searchPh:{nl:'Zoek producten en pagina’s…',en:'Search products and pages…'},noRes:{nl:'Geen resultaten. Probeer “glas”, “deur” of “verf”.',en:'No results. Try “glass”, “door” or “paint”.'},
- menu:{nl:'Menu openen',en:'Open menu'},close:{nl:'Sluiten',en:'Close'},
- years:{nl:'30+ <br>Jaar',en:'30+ <br>Years'},dealer:{nl:'Vervat &amp; de Jong<br>Weru dealer',en:'Vervat &amp; de Jong<br>Weru dealer'},
- fast:{nl:'Snel en betrouwbaar',en:'Fast and reliable'},more:{nl:'MEER',en:'MORE'},
- newsPill:{nl:'Schrijf je in voor de nieuwsbrief',en:'Subscribe to the newsletter'},
- newsTitle:{nl:'Meld je aan voor <span class="y">onze nieuwsbrief</span><br><span class="y">Blijf</span> op de hoogte',en:'Join <span class="y">Our Newsletter</span><br><span class="y">Stay</span> Up To Date'},
- newsText:{nl:'Ontvang nieuws, exclusieve aanbiedingen en de laatste ontwikkelingen in de branche. We sturen hem maximaal één keer per maand.',en:'Join our newsletter. Learn something new, gain access to exclusive offers, and stay informed with the latest updates in the industry. We send it at most once a month.'},
- emailPh:{nl:'E-mailadres..',en:'Email address..'},subscribe:{nl:'Aanmelden',en:'Subscribe'},
- newsBad:{nl:'Vul een geldig e-mailadres in, bijvoorbeeld naam@voorbeeld.nl.',en:'Enter a valid email address, for example name@example.nl.'},
- newsOk:{nl:'Aanmelden voor de nieuwsbrief is nog niet gekoppeld. Mail naar info@vervat-breukelen.nl om je aan te melden.',en:'Newsletter sign-up is not connected yet. Please email info@vervat-breukelen.nl to subscribe.'},
- ftrVisit:{nl:'Bezoek onze showroom, bekijk onze producten en ontvang persoonlijk deskundig advies.',en:'Visit our showroom to discover our products and receive personalized expert advice.'},
- ftrHours:{nl:'Openingstijden showroom',en:'Showroom opening hours'},
- ftrNote:{nl:'Alleen op afspraak. Maandag is gereserveerd voor huisbezoeken. Telefonisch: ma–vr 7:30 – 17:00.',en:'By appointment only. Mondays are reserved for home visits. Phone: Mon–Fri 7:30 AM – 5:00 PM.'},
- rights:{nl:'Alle rechten voorbehouden.',en:'All rights reserved.'},
- ctaTitle:{nl:'Bezoek onze showroom in Breukelen',en:'Visit our showroom in Breukelen'},
- ctaText:{nl:'Bekijk de producten van dichtbij en krijg advies dat past bij uw woning. We trekken ongeveer 1,5 uur uit per bezoek, zodat er tijd is voor al uw vragen.',en:'See the products up close and get advice that fits your home. We plan about 1.5 hours per visit, so there is time for all your questions.'},
- ctaAppt:{nl:'Afspraak maken',en:'Make an appointment'},ctaHoursT:{nl:'Showroom, op afspraak',en:'Showroom, by appointment'},ctaCall:{nl:'Bel 0346 - 261 959',en:'Call 0346 - 261 959'},
- scroll:{nl:'Naar de inhoud',en:'Scroll to content'},prev:{nl:'Vorige producten',en:'Previous products'},next:{nl:'Volgende producten',en:'Next products'},
- service:{nl:'Service',en:'Service'},serviceLong:{nl:'Reparatie &amp; onderhoud',en:'Repair &amp; maintenance'},
- copy:{nl:'Kopieer',en:'Copy'},copied:{nl:'Gekopieerd',en:'Copied'},
- wa:{nl:'Chat via WhatsApp',en:'Chat on WhatsApp'},waShort:{nl:'WhatsApp',en:'WhatsApp'},
- waMsg:{nl:'Hallo Vervat & de Jong, ik heb een vraag:',en:'Hello Vervat & de Jong, I have a question:'}
-};
-const HOURS={nl:[['Di','10:00 – 17:00'],['Wo','10:00 – 17:00'],['Do','10:00 – 17:00'],['Vr','10:00 – 17:00'],['Za','10:00 – 13:00'],['Ma','Alleen huisbezoeken']],
- en:[['Tue','10:00 AM – 5:00 PM'],['Wed','10:00 AM – 5:00 PM'],['Thu','10:00 AM – 5:00 PM'],['Fri','10:00 AM – 5:00 PM'],['Sat','10:00 AM – 1:00 PM'],['Mon','Home visits only']]};
-
+const waLink=()=>`https://wa.me/${C.site.whatsapp}?text=${encodeURIComponent(X('waMsg'))}`;
 const ARROW='<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3.5 10.5l7-7M4.5 3.5h6v6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const PLAY='<svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
 const PLAYS='<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
 const DOWN='<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M8 2v11M3.5 8.5 8 13l4.5-4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const XICON='<svg width="16" height="16" viewBox="0 0 16 16" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m3 3 10 10M13 3 3 13"/></svg>';
-
-/* ================= PRODUCTS ================= */
-const PRODUCTS=[
- {id:'keralit',img:'keralit',hero:'hero-keralit',thumb:'keralit',
-  nl:{name:'Keralit geveldelen',short:'Gevelbekleding',tag:'Gevelbekleding',sub:'Kunststof geveldelen van Keralit®, niet van echt hout te onderscheiden',cta:'Keralit geveldelen',
-   intro:['Onderhoudsarme','gevelbekleding'],
-   lead:['Kunststof geveldelen zijn niet nieuw, maar glad kunststof mist vaak de warme uitstraling van hout. Keralit® lost dat op: de panelen hebben een natuurlijke houtnerf en zijn nauwelijks van echt hout te onderscheiden.','Wij leveren en monteren Keralit® voor gevels, topgevels en dakkapellen, zodat u jarenlang verlost bent van schuren en schilderen.'],
-   feats:[['Natuurlijke houtnerf','Een realistische houtstructuur die uw gevel de warmte van hout geeft.'],['Veel RAL-kleuren','Leverbaar in veel RAL-kleuren, met de uitstraling van geschilderde of gebeitste houten delen.'],['Kleurvast','De kleur verbleekt niet, zodat de gevel er fris uit blijft zien.'],['Bestand tegen rot','Bestand tegen schimmels, bacteriën en andere rottingsprocessen.'],['Trekt niet krom','De panelen blijven recht, hoe vochtig of warm het ook wordt.'],['10 jaar garantie','Op Keralit® geveldelen krijgt u 10 jaar garantie.']],
-   gallery:[['keralit','Keralit gevelbekleding op een topgevel'],['dormer-roof','Dakkapellen afgewerkt met geveldelen']]},
-  en:{name:'Keralit facade parts',short:'Facade cladding',tag:'Facade cladding',sub:'Plastic facade panels from Keralit®, indistinguishable from real wood',cta:'Keralit facade parts',
-   intro:['Low-maintenance','facade cladding'],
-   lead:['Plastic facade panels are nothing new, but smooth plastic often misses the warm look of wood. Keralit® panels solve that: they have a natural wood grain and are hard to tell apart from real timber.','We supply and fit Keralit® cladding for facades, gables and dormers, so you are done with scraping and repainting for years.'],
-   feats:[['Natural wood grain','A realistic wood texture that gives your facade the warmth of a timber finish.'],['Many RAL colours','Available in a wide range of RAL colours, with the look of painted or stained wooden boards.'],['Colourfast','The colour does not fade, so the facade keeps looking fresh.'],['Resists rot','Resistant to mould, bacteria and other rotting processes.'],['Does not warp','The panels stay straight, however humid or warm it gets.'],['10-year guarantee','Keralit® facade panels come with a 10-year guarantee.']],
-   gallery:[['keralit','Keralit cladding on a gable'],['dormer-roof','Dormers finished with facade panels']]}},
- {id:'weru-windows',img:'weru-door',hero:'hero-weru',thumb:'hero-weru',ctaHref:'https://weru.nl/vakbedrijven-kunststof-kozijnen/over-vervat-de-jong/',video:'https://www.youtube.com/watch?v=QnYYTr1pIuc',
-  nl:{name:'Weru ramen en deuren',short:'Weru ramen en deuren',tag:'Weru dealer',sub:'Kunststof kozijnen in Breukelen, Maarssen, Utrecht, Loenen, Hilversum en Loosdrecht',cta:'Weru website',
-   intro:['Weru kunststof kozijnen bij','Vervat &amp; de Jong'],
-   lead:['In onze showroom in Breukelen laten we u het complete Weru-assortiment kunststof kozijnen en deuren zien, en adviseren we u over de kozijnen en andere producten die bij uw woning passen.','U krijgt een transparante offerte zonder verrassingen, en garantie en service na montage via het Weru Partner Garant®-programma.'],
-   feats:[['De nummer 1 in kunststof kozijnen','Weru is al 40 jaar marktleider en produceerde de afgelopen vijf jaar meer dan 20 miljoen kozijnen.'],['De charme van een houten kozijn','Weru-ontwerpen zijn gebaseerd op traditionele houten kozijnen en combineren daardoor goed met de bestaande houten kozijnen in uw woning.'],['Hoogste kwaliteit, betaalbaar','Sinds 1960 op maat gemaakt in de eigen fabriek in Duitsland, met eigen R&amp;D en strenge Duitse kwaliteits- en testnormen.'],['Comfortabeler en energiezuiniger','De kozijnen voldoen aan hoge Duitse isolatienormen. Triple glas (3-dubbelglas) is mogelijk voor extra comfort en jaarlijkse energiebesparing.'],['Inwendige stalen versterking','Alle Weru-kozijnen hebben standaard een inwendige stalen versterking. Dat maakt ze steviger en voorkomt doorbuigen.'],['Weru Partner Garant®','Garantie en service van een gecertificeerde Weru-partner met 30 jaar Weru-ervaring.']],
-   links:[['Blader door de Weru-brochure','https://weru.nl/'],['Subsidie op energiezuinige kozijnen','https://weru.nl/waarom-weru/subsidie-kunststof-kozijnen-2022/']],
-   videoT:'Bedrijfsfilm over Weru kozijnen',
-   gallery:[['weru-door','Weru voordeur in antraciet'],['window-view','Weru hoekraam, van binnenuit gezien'],['hero-showroom','Weru deuren en kozijnen in onze showroom in Breukelen']]},
-  en:{name:'Weru windows and doors',short:'Weru windows and doors',tag:'Weru dealer',sub:'Plastic window frames in Breukelen, Maarssen, Utrecht, Loenen, Hilversum and Loosdrecht',cta:'Weru website',
-   intro:['Weru uPVC frames at','Vervat &amp; de Jong'],
-   lead:['In our showroom in Breukelen we show you the full Weru range of plastic window frames and doors, and advise you on the frames and other products that suit your home.','You get a transparent quote without surprises, and warranty and service after installation through the Weru Partner Garant® programme.'],
-   feats:[['The number 1 in uPVC frames','Weru has been a market leader for 40 years and produced more than 20 million frames in the last five years.'],['The charm of a wooden frame','Weru designs are based on traditional wooden frames, so they combine well with the existing wooden frames in your home.'],['Top quality, made affordable','Made to measure in Weru’s own factory in Germany since 1960, with in-house R&amp;D and strict German quality and testing standards.'],['More comfort, lower energy bills','The frames meet high German insulation standards. Triple glazing is available for extra comfort and yearly energy savings.'],['Internal steel reinforcement','Every Weru frame has an internal steel reinforcement as standard. It makes the frame sturdier and prevents sagging.'],['Weru Partner Garant®','Warranty and after-sales service from a certified Weru partner, with 30 years of Weru experience.']],
-   links:[['Browse the Weru brochure','https://weru.nl/'],['Subsidies for energy-saving frames','https://weru.nl/waarom-weru/subsidie-kunststof-kozijnen-2022/']],
-   videoT:'Company film about Weru frames',
-   gallery:[['weru-door','Weru front door in anthracite'],['window-view','Weru corner window, seen from the inside'],['hero-showroom','Weru doors and frames in our Breukelen showroom']]}},
- {id:'weru-sliding-doors',img:'sliding-door',hero:'sliding-door',thumb:'sliding-door-2',ctaHref:'#contact',
-  nl:{name:'Weru schuifpuien',short:'Weru schuifpuien',tag:'Schuifpuien',sub:'Meer licht, meer ruimte en zo de tuin in',cta:'Plan een showroombezoek',
-   intro:['Creëer ruimte met een','stijlvolle schuifpui'],
-   lead:['Weru kunststof schuifpuien zijn duurzaam en van hoge kwaliteit. De constructie heeft geen bewegende delen, dus slijtage is minimaal. Een schuifpui kan ook op de plek van een bestaand raam worden geplaatst.','De pui schuift soepel en geruisloos open, laat frisse tuinlucht binnen en brengt u zo op het terras, zonder openstaande deuren in de weg.'],
-   feats:[['Soepele, lichte bediening','De pui loopt zo licht dat kinderen en ouderen hem moeiteloos openen.'],['Kies uw opening','Met de bedieningsgreep laat u de pui zakken tijdens het schuiven, zodat u precies de gewenste opening kiest.'],['Rondom afgedicht','De puien sluiten rondom luchtdicht af en isoleren daardoor zeer goed.'],['Politiekeurmerk Veilig Wonen','Standaard voorzien van inbraakwerend beslag.'],['Minimale slijtage','Een constructie zonder bewegende delen houdt het onderhoud jarenlang laag.'],['Op de plek van een raam','We kunnen een bestaand raam vervangen door een schuifpui.']],
-   gallery:[['sliding-door','4-delige schuifpui met dubbele plissé hor'],['sliding-door-2','Weru schuifpui naar de tuin']]},
-  en:{name:'Weru sliding doors',short:'Weru sliding doors',tag:'Sliding doors',sub:'More light, more space and an easy step into your garden',cta:'Plan a showroom visit',
-   intro:['Create space with a','stylish sliding door'],
-   lead:['Weru plastic sliding doors are durable and of high quality. The construction has no moving parts, so there is hardly any wear. A sliding door can also be fitted in the place of an existing window.','The door slides open smoothly and quietly, lets fresh garden air into the house and takes you straight onto the terrace, without open doors getting in the way.'],
-   feats:[['Smooth, light operation','The door runs so lightly that children and older people can open it without effort.'],['Choose your opening','With the operating handle you lower the door while sliding it, so you set the exact opening you want.'],['Fully sealed','The doors close airtight all round, which gives very good insulation.'],['Police Safe Living mark','Burglar-resistant hardware is fitted as standard.'],['Minimal wear','A construction without moving parts keeps maintenance low for years.'],['Fits where a window was','We can replace an existing window with a sliding door.']],
-   gallery:[['sliding-door','Four-part sliding door with a double pleated insect screen'],['sliding-door-2','Weru sliding door onto the garden']]}},
- {id:'painting',img:'hero-painting',hero:'hero-painting',thumb:'shutters',ctaHref:'#contact',video:'https://www.youtube.com/watch?v=Z4Ste5Kq2fg',
-  nl:{name:'Schilderwerk',short:'Schilderwerk',tag:'Schilders sinds 1842',sub:'Van kasteel tot rijtjeshuis: kwaliteitsschilderwerk door een erkend schildersbedrijf',cta:'Schilderwerk',
-   intro:['Voor al uw','schilderwerk'],
-   lead:['U kunt bij ons terecht voor al uw schilderwerk, binnen en buiten. Onze schildershistorie gaat terug tot 1842 en onze schilders zijn allemaal in vaste dienst.','We werken voor particulieren, eigenaren van monumentale villa’s en kastelen, groot of klein. Vraag naar een onderhoudsabonnement, zodat uw pand jaar na jaar goed wordt onderhouden.'],
-   feats:[['100% opname en advies','We nemen het hele project op en adviseren u voordat het werk begint.'],['Binnen- en buitenschilderwerk','Schilderwerk voor onderhoud, renovatie en nieuwbouw.'],['Meerjarenonderhoudsplannen','Een vaste planning die de kosten spreidt en uw pand in conditie houdt.'],['Prestatiegericht onderhoud','Onderhoud op basis van afgesproken resultaat. Referentielijst op aanvraag.'],['Totaalonderhoud','Schilderwerk, glaszetten en houtherstel bij één bedrijf.'],['Houtrot herstel','Rot hout vakkundig hersteld voordat er geschilderd wordt.']],
-   refs:['Kasteel Nijenrode','Paulus- en Pieterskerk, Breukelen','Gemeentehuis Breukelen','Huis Groenevecht','Huis Leeuwenburg','De Breukelse Vechtbrug','Brandspuithuisje, Breukelen','Luiken van Nijenrode'],
-   videoT:'Film over onze schilders',
-   gallery:[['hero-painting','Buitenschilderwerk aan een rietgedekte boerderij'],['shutters','Kozijnen en luiken opnieuw geschilderd'],['church','Restauratie van een kerk']]},
-  en:{name:'Paint',short:'Painting work',tag:'Painters since 1842',sub:'From castles to terraced houses: quality painting by a recognised painting company',cta:'Painting work',
-   intro:['All your','painting work'],
-   lead:['You can come to us for all your painting work, interior and exterior. Our painting history goes back to 1842, and our painters are permanent staff.','We work for private homeowners, owners of monumental villas and castles alike, big jobs or small. Ask us about a maintenance subscription so your property is looked after year after year.'],
-   feats:[['100% inventory and advice','We record and inspect the full project and advise you before any work starts.'],['Interior and exterior','Painting for maintenance, renovation and new construction.'],['Multi-year maintenance plans','A planned schedule that spreads cost and keeps your property in condition.'],['Performance-oriented maintenance','Maintenance agreed on results. A reference list is available on request.'],['Total maintenance','Painting, glazing and wood repair from one company.'],['Wood restoration','Rotten wood repaired and restored before painting.']],
-   refs:['Nijenrode Castle','Paulus- en Pieterskerk, Breukelen','Former town hall, Breukelen','Huis Groenevecht','Huis Leeuwenburg','Vecht bridge, Breukelen','Fire engine house, Breukelen','Shutters of Nijenrode'],
-   videoT:'Film about our painters',
-   gallery:[['hero-painting','Exterior painting on a thatched farmhouse'],['shutters','Windows and shutters repainted'],['church','Church restoration project']]}},
- {id:'glazing',img:'glazing-install',hero:'glazing-install',thumb:'window-view',ctaHref:'#contact',video:'https://www.youtube.com/watch?v=Ehv9BCeDo2w',
-  nl:{name:'Glaszetten',short:'Glaszetten',tag:'KOMO-gecertificeerd',sub:'Van enkel glas tot isolatieglas HR++',cta:'Vraag naar glaswerk',
-   intro:['Wij plaatsen en leveren','alle soorten glas'],
-   lead:['Onze glaszetters plaatsen en leveren alle soorten glas, van enkel glas tot HR++ isolatieglas. Vervat &amp; de Jong is KOMO-gecertificeerd en een erkend leerbedrijf voor glaszetters.','Geen ruit is te groot of te klein: van een grote etalageruit tot het glaasje in een fotolijst.'],
-   feats:[['Enkel glas tot HR++','Vervang oude beglazing door isolatieglas voor een warmer en stiller huis.'],['Hardglasdeuren','Sterke deuren van gehard glas voor woning en bedrijf.'],['Glas in lood','Plaatsen en vervangen van glas-in-loodramen.'],['Kleine ruitjes op maat','Glas voor fotolijsten, koelkastplaten en andere kleine klussen.'],['KOMO-gecertificeerd','Werk uitgevoerd onder het KOMO-keurmerk.'],['Eigen glaszetters','Alle glaszetters zijn in vaste dienst en werken samen met onze schilders.']],
-   videoT:'Bedrijfsfilm over beglazing',
-   gallery:[['glazing-install','Onze glaszetters plaatsen een grote ruit'],['window-view','Nieuw isolatieglas in een hoekraam']]},
-  en:{name:'Glazing',short:'Glazing',tag:'KOMO certified',sub:'From single glazing to HR++ insulating glass',cta:'Ask about glazing',
-   intro:['We supply and fit','all types of glass'],
-   lead:['Our glaziers place and supply every type of glass, from single glazing to HR++ insulating glass. Vervat &amp; de Jong is KOMO certified and a recognised training company for glaziers.','No pane is too big or too small: from a large shop window to the glass in a picture frame.'],
-   feats:[['Single glazing to HR++','Replace old glazing with insulating glass for a warmer, quieter home.'],['Tempered glass doors','Strong toughened-glass doors for homes and businesses.'],['Leaded glass','Fitting and replacing leaded glass panels.'],['Small custom panes','Glass for picture frames, fridge shelves and other small jobs.'],['KOMO certified','Work carried out under the KOMO quality mark.'],['Our own glaziers','All glaziers are permanent staff who work together with our painters.']],
-   videoT:'Company film about glazing',
-   gallery:[['glazing-install','Our glaziers fitting a large pane'],['window-view','New insulating glass in a corner window']]}},
- {id:'velux',img:'velux',hero:'velux',thumb:'velux',ctaHref:'#contact',
-  nl:{name:'Velux dakramen',short:'Velux dakramen',tag:'Dakramen',sub:'Vakkundige montage van VELUX dakramen',cta:'Plan een bezoek',
-   intro:['Vakkundige montage van','VELUX dakramen'],
-   lead:['VELUX is een toonaangevende fabrikant van dakramen, lichtkoepels, dakdoorgangen, zonwering en rolluiken. Voor veel mensen is het de eerste naam die opkomt bij een raam in een schuin dak.','VELUX heeft ruim drie decennia ervaring met ramen voor schuine daken. Het assortiment begon met één dakraam in één maat en is uitgegroeid tot een ruime keuze. Wij helpen u kiezen en plaatsen het juiste raam.'],
-   feats:[['Dakramen','Daglicht en frisse lucht op uw zolder.'],['Lichtkoepels en dakdoorgangen','Oplossingen voor platte en schuine daken.'],['Zonwering en rolluiken','Houd warmte en licht buiten wanneer u wilt.'],['Vakkundige montage','Waterdicht geplaatst door onze eigen monteurs.']],
-   gallery:[['velux','VELUX dakramen in een zolderwerkplek'],['dormer-roof','Dakramen en dakkapellen op één dak']]},
-  en:{name:'Velux roof windows',short:'Velux roof windows',tag:'Roof windows',sub:'Professional installation of VELUX roof windows',cta:'Plan a visit',
-   intro:['Expert installation of','VELUX roof windows'],
-   lead:['VELUX is a leading manufacturer of roof windows, skylights, roof openings, shading and roller shutters. For many people it is the first name that comes to mind for a window in a sloping roof.','VELUX has more than three decades of experience with windows for sloping roofs. The range started with one roof window in one size and has grown into a wide choice. We help you choose and fit the right one.'],
-   feats:[['Roof windows','Bring daylight and fresh air into your attic.'],['Skylights and roof openings','Solutions for flat and sloping roofs.'],['Shading and roller shutters','Keep heat and light out when you want to.'],['Professional installation','Fitted watertight by our own installers.']],
-   gallery:[['velux','VELUX roof windows in an attic study'],['dormer-roof','Roof windows and dormers on one roof']]}},
- {id:'terrace-covers',img:'palazzo',hero:'hero-terrace',thumb:'palazzo',ctaHref:'#contact',
-  nl:{name:'Palazzo terrasoverkappingen',short:'Terrasoverkappingen',tag:'Palazzo',sub:'Haal het heerlijke buitenleven naar binnen met een Palazzo terrasoverkapping',cta:'Palazzo terrasoverkappingen',
-   intro:['Aluminium veranda’s en','terrasoverkappingen'],
-   lead:['Palazzo veranda’s en terrasoverkappingen zijn gemaakt van duurzaam aluminium. Het merk staat bekend om zijn stevigheid en hoogwaardige afwerking.','Een glazen dak met een zeer grote overspanning geeft een sterk gevoel van ruimte. In onze showroom ziet u een Palazzo-profiel van dichtbij.'],
-   feats:[['Vakantie in eigen tuin','Geniet van buiten vanaf een beschutte plek in uw eigen tuin.'],['Een langere zomer','Eerder in het voorjaar en langer in het najaar buiten zitten.'],['Ruimte voor feestjes','Plaats voor feestjes en barbecues, wat het weer ook doet.'],['Glazen dak, grote overspanning','Zeer grote overspanningen houden de ruimte open en licht.']],
-   chips:['Aluminium serre','Veranda','Tuinoverkapping','Terrasoverkapping'],
-   gallery:[['palazzo','Palazzo terrasoverkapping met tuindeuren'],['hero-terrace','Palazzo-profiel in onze showroom']]},
-  en:{name:'Palazzo patio covers',short:'Terrace coverings',tag:'Palazzo',sub:'Bring the wonderful outdoors inside with a Palazzo patio cover',cta:'Palazzo patio covers',
-   intro:['Aluminium verandas and','terrace covers'],
-   lead:['Palazzo verandas and terrace covers are made of durable aluminium. The brand is known for its sturdiness and high-quality finishing.','A glass roof with a very large span gives a strong sense of space. You can see a Palazzo profile up close in our showroom.'],
-   feats:[['Holiday at home','Enjoy the outdoors from a sheltered spot in your own garden.'],['A longer summer','Sit outside earlier in spring and later into autumn.'],['Room for parties','Space for parties and barbecues, whatever the weather.'],['Large-span glass roof','Very wide spans keep the space open and light.']],
-   chips:['Aluminium conservatory','Veranda','Garden cover','Terrace cover'],
-   gallery:[['palazzo','Palazzo terrace cover with garden doors'],['hero-terrace','Palazzo profile in our showroom']]}},
- {id:'garage-doors',img:'garage',hero:'aluport',thumb:'garage',ctaHref:'#contact',
-  nl:{name:'Novoferm garagedeuren',short:'Novoferm garagedeuren',tag:'Novoferm dealer',sub:'Onderhoudsarme, goed geïsoleerde deuren voor nieuwbouw en renovatie',cta:'Vraag naar de Aluport',
-   intro:['Optimaal benutten','van ruimte'],
-   lead:['Steeds meer mensen maken van hun garage extra woon- of werkruimte. Het is een relatief goedkope en snelle manier om ruimte te winnen, maar een standaard garagedeur voldoet dan niet meer.','De Novoferm Aluport is een geïsoleerde pui die de garage afsluit op de plek waar de garagedeur zat. Als Novoferm-dealer hebben we voor elke garage een oplossing, voor nieuwbouw en renovatie.'],
-   feats:[['Geïsoleerde Aluport','Een geïsoleerde pui die van de garage een kamer maakt.'],['Onderhoudsarm','Deuren die vrijwel geen onderhoud vragen.'],['Optimaal geïsoleerd','Houdt warmte binnen en geluid buiten.'],['Voor elke garage','Oplossingen voor zowel nieuwbouw als renovatie.'],['RAL-kleur naar keuze','Vraag naar de kleurmogelijkheden en actuele aanbiedingen.'],['Eersteklas service','Advies en montage door een Novoferm-dealer.']],
-   gallery:[['aluport','Geïsoleerde garagedeur bij een nieuwbouwwoning'],['garage','Novoferm sectionaaldeur']]},
-  en:{name:'Novoferm garage doors',short:'Novoferm garage doors',tag:'Novoferm dealer',sub:'Low-maintenance, well-insulated doors for new build and renovation',cta:'Ask about the Aluport',
-   intro:['Optimal use','of space'],
-   lead:['More and more people turn their garage into extra living or work space. It is a relatively cheap and quick way to gain room, but a standard garage door is no longer good enough.','The Novoferm Aluport is an insulated door unit that closes off the garage where the garage door used to be. As a Novoferm dealer we have a solution for every garage, for new build and renovation alike.'],
-   feats:[['Insulated Aluport','An insulated front that turns the garage into a room.'],['Low maintenance','Doors that need very little upkeep.'],['Optimally insulated','Keeps warmth in and noise out.'],['Every garage','Solutions for both new build and renovation.'],['RAL colour of choice','Ask us about colour options and current offers.'],['First-class service','Advice and installation from a Novoferm dealer.']],
-   gallery:[['aluport','Insulated garage door on a new home'],['garage','Novoferm sectional garage door']]}},
- {id:'dormers',img:'dormer-roof',hero:'dormer-showroom',thumb:'dormer-roof',ctaHref:'#contact',
-  nl:{name:'Dakkapellen',short:'Dakkapellen',tag:'Dakkapellen',sub:'Voor iedere hellingshoek, in iedere gewenste breedte, uit één geheel',cta:'Vraag naar dakkapellen',
-   intro:['Onderhoudsvriendelijke','dakkapellen'],
-   lead:['Een dakkapel geeft u bruikbare ruimte onder een schuin dak, precies waar u die wilt. Wij leveren dakkapellen voor iedere hellingshoek en in iedere gewenste breedte, uit één geheel.','U kiest voor een volledig afgewerkte dakkapel, binnen geschilderd en klaar voor gebruik, of voor casco: buiten wind- en waterdicht, binnen nog af te werken door uzelf of uw aannemer.'],
-   feats:[['Uw kleur','Standaard crème-wit of wit. Andere kleuren op aanvraag met Trespa- of Keralit-panelen en shingles.'],['KOMO kunststof kozijnen','Witte kunststof kozijnen en ramen onder KOMO-keur, goed sluitend en met isolerende beglazing.'],['Dakaansluitingen','Verholen goten, of loodslabben waar de dakkapel op het dak aansluit.'],['Afgewerkt of casco','Volledig afgewerkt en binnen geschilderd, of als waterdicht casco geleverd.']],
-   gallery:[['dormer-roof','Dakkapellen op een pannendak'],['dormer-showroom','Dakkapelmodel in onze showroom']]},
-  en:{name:'Dormers',short:'Dormers',tag:'Dormers',sub:'For every roof pitch, in any width, in one piece',cta:'Ask about dormers',
-   intro:['Low-maintenance','dormers'],
-   lead:['A dormer gives you usable space under a sloping roof, exactly where you want it. We supply dormers for every roof pitch and in any width, built as one whole.','You choose a fully finished dormer, with the interior painted and ready to use, or a shell: wind- and watertight on the outside, with the inside left for you or your builder to finish.'],
-   feats:[['Your colour','Standard in cream white or white. Other colours on request with Trespa or Keralit panels and shingles.'],['KOMO uPVC frames','White plastic frames and windows made under the KOMO quality mark, close-fitting and with insulating glazing.'],['Roof connections','Concealed gutters, or lead flashing where the dormer meets the roof.'],['Finished or shell','Fully finished and painted inside, or delivered as a watertight shell.']],
-   gallery:[['dormer-roof','Dormers on a tiled roof'],['dormer-showroom','Dormer model in our showroom']]}}
-];
-const P=p=>Object.assign({},p,p[LANG]);
-const byId=Object.fromEntries(PRODUCTS.map(p=>[p.id,p]));
-
-const SLIDES=[
- {title:{nl:'Vervat &amp; de jong',en:'Vervat &amp; de jong'},sub:{nl:'Schilders-, glaszet- en montagebedrijf<br>een begrip in de regio',en:'Painting, glazing and installation company<br>a household name in the region'},bg:'hero-showroom',thumb:'hero-showroom',btn:{nl:'Weru ramen en deuren',en:'Weru windows and doors'},href:'#weru-windows'},
- {title:{nl:'Weru ramen en deuren',en:'Weru windows and doors'},sub:{nl:'Kunststof kozijnen in Breukelen, Maarssen, Utrecht, Loenen, Hilversum en Loosdrecht',en:'Plastic window frames in Breukelen, Maarssen, Utrecht, Loenen, Hilversum and Loosdrecht'},bg:'hero-weru',thumb:'storefront',btn:{nl:'Weru ramen en deuren',en:'Weru windows and doors'},href:'#weru-windows'},
- {title:{nl:'Schilderwerk',en:'Painting work'},sub:{nl:'Van kasteel tot rijtjeshuis, schilders sinds 1842',en:'From castles to terraced houses, painters since 1842'},bg:'hero-painting',thumb:'shutters',btn:{nl:'Schilderwerk',en:'Painting work'},href:'#painting'},
- {title:{nl:'Terras&shy;overkappingen',en:'Terrace coverings'},sub:{nl:'Haal het heerlijke buitenleven naar binnen met een Palazzo terrasoverkapping',en:'Bring the wonderful outdoors inside with a Palazzo patio cover'},bg:'hero-terrace',thumb:'palazzo',btn:{nl:'Palazzo terrasoverkappingen',en:'Palazzo patio covers'},href:'#terrace-covers'},
- {title:{nl:'Gevel&shy;bekleding',en:'Facade cladding'},sub:{nl:'Kunststof geveldelen van Keralit®<br>niet van echt hout te onderscheiden',en:'Plastic facade panels from Keralit®<br>indistinguishable from real wood'},bg:'hero-keralit',thumb:'keralit',btn:{nl:'Keralit geveldelen',en:'Keralit facade parts'},href:'#keralit'}
-];
-
-const VIDEOS=[
- [{nl:'Welk raamtype past bij uw woning?',en:'Which window type suits your home?'},'625513748'],
- [{nl:'Hoe kiest u een kozijnkleur?',en:'How do you choose a window frame colour?'},'625744241'],
- [{nl:'Moet uw voordeur een vast sluitend deel zijn?',en:'Should your front door be a fixed closing section?'},'625753140'],
- [{nl:'Hoe krijgt u een juiste offerte?',en:'How do you get a correct quote?'},'625755423'],
- [{nl:'Worden ventilatie en raambekleding vaak vergeten?',en:'Are ventilation and window treatments often forgotten?'},'625757618'],
- [{nl:'Is een hefschuifpui de moeite waard?',en:'Is a lift-and-slide door worth it?'},'625797498'],
- [{nl:'Welke terras- of achterdeur past bij u?',en:'Which terrace or back door is right for you?'},'625804039'],
- [{nl:'Is montage het vergeten deel van een project?',en:'Is installation the overlooked part of a project?'},'625812388'],
- [{nl:'Vier slimme budgettips',en:'Four smart budget tips'},'625822229'],
- [{nl:'Kiezen voor duurzaamheid',en:'Choosing sustainability'},'625827699']
-];
-
-const A=n=>`assets/${n}.webp`;
+const tel=()=>C.site.phoneIntl, phone=()=>C.site.phone, mail=()=>C.site.email;
 
 /* ================= SHARED TEMPLATES ================= */
 function langSwitch(){
@@ -633,70 +479,72 @@ function headerHTML(){
   return `<div class="hdr-in">
    <a class="logo" href="#home" aria-label="Vervat &amp; de Jong, home"><img src="assets/logo.webp" alt="Vervat &amp; de Jong bv" width="640" height="223"></a>
    <nav class="nav" aria-label="Main">
-    <a href="#home" data-nav="home">${L(T.home)}</a>
-    <div class="dd"><button type="button" aria-haspopup="true" onclick="location.hash='products'">${L(T.products)}</button>
+    <a href="#home" data-nav="home">${X('home')}</a>
+    <div class="dd"><button type="button" aria-haspopup="true" onclick="location.hash='products'">${X('products')}</button>
      <div class="dd-menu">${PRODUCTS.map(p=>`<a href="#${p.id}">${P(p).short}</a>`).join('')}</div></div>
-    <a href="#about" data-nav="about">${L(T.about)}</a>
-    <a href="#vacancies" data-nav="vacancies">${L(T.vacancies)}</a>
-    <a href="#showroom" data-nav="showroom">${L(T.showroom)}</a>
-    <a href="#service" data-nav="service">${L(T.service)}</a>
+    <a href="#about" data-nav="about">${X('about')}</a>
+    <a href="#vacancies" data-nav="vacancies">${X('vacancies')}</a>
+    <a href="#showroom" data-nav="showroom">${X('showroom')}</a>
+    <a href="#service" data-nav="service">${X('service')}</a>
    </nav>
    <div class="hdr-actions">
-    <a class="hdr-call" href="tel:+31346261959"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8.5 3.5 6 3c-1 .2-2.6 1.6-2.4 3.4.6 6 6.4 12 13.5 14 1.6.4 3-1 3.3-2l-.4-2.6-3.7-1.4-1.6 1.6c-2.2-1-4.4-3.2-5.4-5.4l1.6-1.6L9.5 5.3z"/><path d="M15 3.5v2.3M19.6 5.4 18 7M21.5 10h-2.3" stroke-linecap="round"/></svg>
-     <span><small>${L(T.callUs)}</small><b>0346 - 261 959</b></span></a>
+    <a class="hdr-call" href="tel:${tel()}"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8.5 3.5 6 3c-1 .2-2.6 1.6-2.4 3.4.6 6 6.4 12 13.5 14 1.6.4 3-1 3.3-2l-.4-2.6-3.7-1.4-1.6 1.6c-2.2-1-4.4-3.2-5.4-5.4l1.6-1.6L9.5 5.3z"/><path d="M15 3.5v2.3M19.6 5.4 18 7M21.5 10h-2.3" stroke-linecap="round"/></svg>
+     <span><small>${X('callUs')}</small><b>${phone()}</b></span></a>
     ${langSwitch()}
-    <a class="btn-yellow" href="#contact">${L(T.contactBtn)}</a>
-    <button class="icon-btn" type="button" data-act="search" aria-label="${L(T.search)}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5" stroke-linecap="round"/></svg></button>
-    <button class="icon-btn" type="button" data-act="menu" aria-label="${L(T.menu)}"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><circle cx="4" cy="4" r="2"/><circle cx="12" cy="4" r="2"/><circle cx="4" cy="12" r="2"/><circle cx="12" cy="12" r="2"/></svg></button>
+    <a class="btn-yellow" href="#contact">${X('contactBtn')}</a>
+    <button class="icon-btn" type="button" data-act="search" aria-label="${esc(X('search'))}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5" stroke-linecap="round"/></svg></button>
+    <button class="icon-btn" type="button" data-act="menu" aria-label="${esc(X('menu'))}"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><circle cx="4" cy="4" r="2"/><circle cx="12" cy="4" r="2"/><circle cx="4" cy="12" r="2"/><circle cx="12" cy="12" r="2"/></svg></button>
    </div></div>`;
 }
-function hoursDl(){return HOURS[LANG].map(([d,h])=>`<dt>${d}</dt><dd>${h}</dd>`).join('')}
+function hoursDl(skipMon){return (C.site.hours[LANG]||[]).filter(r=>!(skipMon&&/^(ma|mon)/i.test(r[0]))).map(([d,h])=>`<dt>${d}</dt><dd>${h}</dd>`).join('')}
 function shellHTML(){
+  const s=C.site;
   return `<section class="news" aria-labelledby="newsTitle"><div class="ghost-img" aria-hidden="true"></div><div class="wrap">
-    <span class="pill">${L(T.newsPill)}</span><h2 id="newsTitle">${L(T.newsTitle)}</h2><p>${L(T.newsText)}</p>
+    <span class="pill">${X('newsPill')}</span><h2 id="newsTitle">${X('newsTitle')}</h2><p>${X('newsText')}</p>
     <form id="newsForm" novalidate><label for="newsEmail" style="position:absolute;left:-9999px">E-mail</label>
-     <input id="newsEmail" type="email" placeholder="${L(T.emailPh)}" autocomplete="email" required>
-     <button type="submit" aria-label="${L(T.subscribe)}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></form>
+     <input id="newsEmail" type="email" placeholder="${esc(X('emailPh'))}" autocomplete="email" required>
+     <button type="submit" aria-label="${esc(X('subscribe'))}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></form>
     <div class="form-msg" id="newsMsg" role="status"></div></div></section>
   <footer class="ftr"><div class="bg" aria-hidden="true"></div><div class="wrap ftr-in">
     <div><a class="logo" href="#home"><img src="assets/logo.webp" alt="Vervat &amp; de Jong bv" width="640" height="223"></a>
-     <p>${L(T.ftrVisit)}</p><p>Vervat &amp; de Jong<br>Keulschevaart 3a1<br>3621 MX Breukelen</p></div>
-    <div><h4>${L(T.ftrHours)}</h4><dl class="hours">${hoursDl().replace(/<dt>(Ma|Mon)<\/dt><dd>[^<]*<\/dd>/,'')}</dl><p class="note">${L(T.ftrNote)}</p></div>
-    <nav aria-label="Footer"><a href="#home">${L(T.home)}</a><a href="#products">${L(T.products)}</a><a href="#about">${L(T.about)}</a><a href="#vacancies">${L(T.vacancies)}</a><a href="#showroom">${L(T.showroom)}</a><a href="#service">${L(T.serviceLong)}</a><a href="#contact">${L(T.contact)}</a></nav>
-    <div class="big"><a class="ph" href="tel:+31346261959">0346 - 261 959</a><a class="em" href="mailto:info@vervat-breukelen.nl">info@vervat-breukelen.nl</a>
-     <div class="soc"><a href="https://www.facebook.com/vervatbreukelen.nl" target="_blank" rel="noopener">Facebook</a> &nbsp;-&nbsp; <a href="https://www.instagram.com/vervatendejong/" target="_blank" rel="noopener">Instagram</a></div></div>
+     <p>${X('ftrVisit')}</p><p>${s.address.join('<br>')}</p></div>
+    <div><h4>${X('ftrHours')}</h4><dl class="hours">${hoursDl(true)}</dl><p class="note">${X('ftrNote')}</p></div>
+    <nav aria-label="Footer"><a href="#home">${X('home')}</a><a href="#products">${X('products')}</a><a href="#about">${X('about')}</a><a href="#vacancies">${X('vacancies')}</a><a href="#showroom">${X('showroom')}</a><a href="#service">${X('serviceLong')}</a><a href="#contact">${X('contact')}</a></nav>
+    <div class="big"><a class="ph" href="tel:${tel()}">${phone()}</a><a class="em" href="mailto:${mail()}">${mail()}</a>
+     <div class="soc"><a href="${s.facebook}" target="_blank" rel="noopener">Facebook</a> &nbsp;-&nbsp; <a href="${s.instagram}" target="_blank" rel="noopener">Instagram</a></div></div>
    </div>
-   <div class="copy wrap">© Copyright ${new Date().getFullYear()} <span class="y">Vervat &amp; de Jong</span>. ${L(T.rights)}</div>
-   <span class="ghost-word" aria-hidden="true">Vervat</span></footer>`;
+   <div class="copy wrap">© Copyright ${new Date().getFullYear()} <span class="y">Vervat &amp; de Jong</span>. ${X('rights')}</div>
+   <span class="ghost-word" aria-hidden="true">Vervat</span></footer>
+  <a class="wa" href="${waLink()}" target="_blank" rel="noopener" aria-label="${esc(X('wa'))}">${WA_ICON}<span>${X('waShort')}</span></a>`;
 }
 function drawerHTML(){
   return `<div class="drawer-in" role="dialog" aria-label="Menu">
-   <div style="display:flex;justify-content:space-between;align-items:center">${langSwitch()}<button class="icon-btn close" type="button" data-act="close" aria-label="${L(T.close)}" style="background:rgba(255,255,255,.12)">${XICON}</button></div>
-   <a href="#home">${L(T.home)}</a><a href="#products">${L(T.products)}</a>
+   <div style="display:flex;justify-content:space-between;align-items:center">${langSwitch()}<button class="icon-btn close" type="button" data-act="close" aria-label="${esc(X('close'))}" style="background:rgba(255,255,255,.12)">${XICON}</button></div>
+   <a href="#home">${X('home')}</a><a href="#products">${X('products')}</a>
    ${PRODUCTS.map(p=>`<a class="sub" href="#${p.id}">${P(p).short}</a>`).join('')}
-   <a href="#about">${L(T.about)}</a><a href="#vacancies">${L(T.vacancies)}</a><a href="#showroom">${L(T.showroom)}</a><a href="#service">${L(T.serviceLong)}</a><a href="#contact">${L(T.contact)}</a>
-   <div class="contact-mini">${L(T.callUs)}<b>0346 - 261 959</b>info@vervat-breukelen.nl<br>Keulschevaart 3a1, 3621 MX Breukelen</div></div>`;
+   <a href="#about">${X('about')}</a><a href="#vacancies">${X('vacancies')}</a><a href="#showroom">${X('showroom')}</a><a href="#service">${X('serviceLong')}</a><a href="#contact">${X('contact')}</a>
+   <div class="contact-mini">${X('callUs')}<b>${phone()}</b>${mail()}<br>${C.site.address.slice(1).join(', ')}</div></div>`;
 }
 function searchHTML(){
-  return `<button class="icon-btn close" type="button" data-act="close" aria-label="${L(T.close)}">${XICON}</button>
-   <div class="search-in"><label for="q" style="position:absolute;left:-9999px">${L(T.search)}</label>
-   <input id="q" type="search" placeholder="${L(T.searchPh)}" autocomplete="off"><ul id="results"></ul></div>`;
+  return `<button class="icon-btn close" type="button" data-act="close" aria-label="${esc(X('close'))}">${XICON}</button>
+   <div class="search-in"><label for="q" style="position:absolute;left:-9999px">${X('search')}</label>
+   <input id="q" type="search" placeholder="${esc(X('searchPh'))}" autocomplete="off"><ul id="results"></ul></div>`;
 }
 
 /* ================= PAGE TEMPLATES ================= */
 function hero(slides){
   return `<section class="hero" id="hero" aria-roledescription="carousel">
    ${slides.map((s,i)=>`<div class="slide${i?'':' on'}" aria-hidden="${i?'true':'false'}">
-     <div class="bg" style="background-image:url(${A(s.bg)})"></div>
+     <div class="bg" style="background-image:url('${A(s.bg)}')"></div>
      <div class="hero-grid"><div>
-       <span class="pill">${L(s.kicker||T.fast)}</span>
+       <span class="pill">${L(s.kicker)||X('fast')}</span>
        <h1>${L(s.title)}</h1><p class="sub">${L(s.sub)}</p>
-       <a class="btn-ghost" href="${s.href}" ${s.href.startsWith('http')?'target="_blank" rel="noopener"':''}>${L(s.btn)}<span class="arr">${ARROW}</span></a>
+       <a class="btn-ghost" href="${esc(s.href)}" ${/^http/.test(s.href)?'target="_blank" rel="noopener"':''}>${L(s.btn)}<span class="arr">${ARROW}</span></a>
       </div>
-      <div class="hero-cards"><div class="years"><b>${L(T.years)}</b><span>${L(T.dealer)}</span></div>
+      <div class="hero-cards"><div class="years"><b>${X('years')}</b><span>${X('dealer')}</span></div>
        <div class="thumb"><img src="${A(s.thumb)}" alt="" loading="lazy"></div></div>
      </div></div>`).join('')}
-   <button class="hero-down" type="button" aria-label="${L(T.scroll)}" onclick="document.getElementById('after-hero').scrollIntoView()">${DOWN}</button>
+   <button class="hero-down" type="button" aria-label="${esc(X('scroll'))}" onclick="document.getElementById('after-hero').scrollIntoView()">${DOWN}</button>
    ${slides.length>1?`<div class="hero-dots">${slides.map((s,i)=>`<button type="button" aria-label="Slide ${i+1}" class="${i?'':'on'}" data-i="${i}"></button>`).join('')}</div>`:''}
   </section><span id="after-hero"></span>`;
 }
@@ -704,164 +552,153 @@ function head(label,title,lead){
   return `<div class="split"><div class="lbl"><span class="pill">${label}</span></div><div><h2>${title}</h2>${lead?`<div class="lead">${lead}</div>`:''}</div></div>`;
 }
 function card(p,withSub){p=P(p);
-  return `<a class="card" href="#${p.id}"><div class="im"><img src="${A(p.img)}" alt="${p.name}" loading="lazy"><span class="more">${L(T.more)}</span></div><h3>${p.name}</h3>${withSub?`<p>${p.sub}</p>`:''}</a>`;
+  return `<a class="card" href="#${p.id}"><div class="im"><img src="${A(p.img)}" alt="${esc(p.name)}" loading="lazy"><span class="more">${X('more')}</span></div><h3>${p.name}</h3>${withSub?`<p>${p.sub}</p>`:''}</a>`;
+}
+function vidCard(v,i,num){
+  return `<a class="vid" href="${esc(v.url)}" target="_blank" rel="noopener" style="--img:url('${A(v.thumb)}')"><span class="n">${num?String(i+1).padStart(2,'0'):'&nbsp;'}</span><b>${L(v.title)}</b><span class="pl">${PLAY}</span></a>`;
 }
 function ctaBand(){
   return `<section class="cta-band"><div class="wrap cta-in">
-    <div><h2>${L(T.ctaTitle)}</h2><p>${L(T.ctaText)}</p>
-    <div class="links"><a class="btn-line" href="#contact">${L(T.ctaAppt)}</a><a class="btn-line" href="#showroom">${L(T.showroom)}</a></div></div>
-    <div class="cta-hours"><h4>${L(T.ctaHoursT)}</h4><dl>${hoursDl()}</dl><a class="btn-yellow" href="tel:+31346261959">${L(T.ctaCall)}</a></div>
+    <div><h2>${X('ctaTitle')}</h2><p>${X('ctaText')}</p>
+    <div class="links"><a class="btn-line" href="#contact">${X('ctaAppt')}</a><a class="btn-line" href="#showroom">${X('showroom')}</a></div></div>
+    <div class="cta-hours"><h4>${X('ctaHoursT')}</h4><dl>${hoursDl()}</dl><a class="btn-yellow" href="tel:${tel()}">${X('ctaCall')}</a></div>
   </div></section>`;
 }
-const PREV_NEXT=()=>`<div class="wrap car-ctrl"><button type="button" aria-label="${L(T.prev)}" data-dir="-1"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button type="button" aria-label="${L(T.next)}" data-dir="1"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>`;
+const PREV_NEXT=()=>`<div class="wrap car-ctrl"><button type="button" aria-label="${esc(X('prev'))}" data-dir="-1"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button type="button" aria-label="${esc(X('next'))}" data-dir="1"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>`;
 
 const VIEWS={
  home(){
-  const svc={nl:['100% opname / inventarisatie en advies bij projecten','Binnen- en buitenschilderwerk voor onderhoud, renovatie en nieuwbouw','Glaszetwerk','Meerjarenonderhoudsplannen','Prestatiegericht onderhoud (referentielijst op aanvraag)','Totaalonderhoud','Houtrotherstel'],
-   en:['100% recording / inventory and advice on projects','Interior and exterior painting for maintenance, renovation and new construction','Glazing work','Multi-year maintenance plans','Performance-oriented maintenance (reference list on request)','Total maintenance','Wood restoration work']}[LANG];
-  const gal1=[['sliding-door-2',230,190],['shutters',315,166],['window-view',568,298],['velux',327,230],['keralit',270,200],['weru-door',190,250]];
-  const gal2=[['dormer-roof',230,298],['garage',315,166],['palazzo',400,232],['glazing-install',395,298],['church',190,250],['hero-painting',330,200]];
+  const H=C.home,im=H.images,R=C.reviews;
   const row=(g,c)=>`<div class="row ${c}">${[...g,...g].map(([n,w,h],i)=>`<figure style="width:${w}px;height:${h}px"${i>=g.length?' aria-hidden="true"':''}><img src="${A(n)}" alt="" loading="lazy"></figure>`).join('')}</div>`;
-  const nl=LANG==='nl';
-  return hero(SLIDES)+`
+  const garage=byId['garage-doors'];
+  return hero(C.slides)+`
   <section class="sec who"><img class="ghost-img" src="${A('wire-tower')}" alt="" aria-hidden="true"><div class="wrap">
-   ${nl?head('Wie wij zijn','Allround <span class="y">onderhouds</span>­bedrijf',`<p>Vervat &amp; de Jong BV in Breukelen is een service- en klantgericht bedrijf, in 1842 opgericht als schildersbedrijf en inmiddels uitgegroeid tot een allround onderhoudsbedrijf.</p><p>In de afgelopen decennia heeft het bedrijf zich ontwikkeld tot een professionele en betrouwbare onderneming met vakkundig personeel in vaste dienst. Oorspronkelijk opgericht als Fa. C. Vervat &amp; Zn, werkt het bedrijf al jaren samen met De Jong Schilderwerken om de continuïteit te waarborgen.</p>`)
-     :head('Who we are','All-round <span class="y">Maintenance</span><br>Company',`<p>Vervat &amp; de Jong BV in Breukelen is a service- and customer-oriented company, founded in 1842 as a painting company, and has since grown into an all-round maintenance company.</p><p>Over the past decades, the company has developed into a professional and reliable enterprise with skilled permanent staff. Originally founded as Fa. C. Vervat &amp; Zn, the company has been working with de Jong Schilderwerken for years to ensure continuity.</p>`)}
+   ${head(X('home.whoLabel'),X('home.whoTitle'),X('home.whoText'))}
   </div></section>
 
-  <section class="founded"><div class="bgimg" aria-hidden="true"></div><div class="wrap founded-grid">
-   <div><span class="pill">${nl?'Opgericht in 1842':'Founded in 1842'}</span>
-    <h2>Vervat <span class="y">&amp;</span><br>de Jong BV</h2>
-    <ul class="checks">${(nl?['Schilderwerk','Montagebedrijf','Glaszetten','Dealer van Weru kunststof kozijnen']:['Painting','Installation company','Glazing','Dealer of Weru plastic window frames']).map(x=>`<li>${x}</li>`).join('')}</ul>
-    <p>${nl?'Ons vakkundige personeel bestaat uit schilders, glaszetters en kunststof kozijnmonteurs, allemaal in vaste dienst. Ze werken als team en hebben hart voor hun vak. Dat zie je terug in zeer tevreden klanten; referenties zijn beschikbaar.':'Our skilled staff consists of painters, glaziers, and uPVC window frame fitters, all permanent employees who work together as a team and are passionate about their work. This translates into highly satisfied customers, and references are available.'}</p>
-    <a class="btn-ghost" href="https://www.klantenvertellen.nl/reviews/1037906/" target="_blank" rel="noopener">${nl?'Beoordeel ons':'Rate us'}<span class="arr">${ARROW}</span></a>
+  <section class="founded"><div class="bgimg" aria-hidden="true" style="background-image:url('${A(im.founded)}')"></div><div class="wrap founded-grid">
+   <div><span class="pill">${X('home.foundedLabel')}</span>
+    <h2>${X('home.foundedTitle')}</h2>
+    <ul class="checks">${L(H.checks).map(x=>`<li>${x}</li>`).join('')}</ul>
+    <p>${X('home.foundedText')}</p>
+    <a class="btn-ghost" href="${esc(C.site.reviewsUrl)}" target="_blank" rel="noopener">${X('home.rateUs')}<span class="arr">${ARROW}</span></a>
    </div>
-   <div class="photo"><img src="${A('storefront')}" alt="Cees Vervat &amp; Erik de Jong" loading="lazy"></div>
+   <div class="photo"><img src="${A(im.founded)}" alt="Vervat &amp; de Jong" loading="lazy"></div>
   </div><span class="ghost-word" aria-hidden="true">Vervat</span></section>
 
   <section class="sec"><div class="wrap">
-   ${head(nl?'Schilders':'Painters',nl?'Onze <span class="y">schilders</span>':'Our <span class="y">Painters</span>',nl?'<p>Dankzij onze vakkundige schilders in vaste dienst zijn we gespecialiseerd in duurzaam onderhoud en afwerking. We stellen daarom hoge eisen aan onze dienstverlening. Opdrachtgevers kunnen kiezen uit de volgende categorieën, of een combinatie daarvan:</p>':'<p>Thanks to our skilled painters on permanent staff, we specialize in sustainable maintenance and finishing. We therefore set high standards for our services. Clients can choose from the following categories or combinations thereof:</p>')}
-   <div class="painters-grid"><div class="photo"><img src="${A('office')}" alt="" loading="lazy"></div>
-    <ol class="svc">${svc.map((s,i)=>`<li><span>0${i+1}</span><b>${s}</b></li>`).join('')}</ol></div>
+   ${head(X('home.paintersLabel'),X('home.paintersTitle'),X('home.paintersText'))}
+   <div class="painters-grid"><div class="photo"><img src="${A(im.painters)}" alt="" loading="lazy"></div>
+    <ol class="svc">${L(H.services).map((s,i)=>`<li><span>${String(i+1).padStart(2,'0')}</span><b>${s}</b></li>`).join('')}</ol></div>
   </div></section>
 
-  <section class="plan" aria-hidden="true"><span class="ghost-word">Verv</span><img src="${A('floorplan')}" alt="" loading="lazy"></section>
+  <section class="plan" aria-hidden="true"><span class="ghost-word">Verv</span><img src="${A(im.plan)}" alt="" loading="lazy"></section>
 
   <section class="sec prods" style="padding-bottom:40px"><img class="ghost-img" src="${A('wire-building')}" alt="" aria-hidden="true"><div class="wrap">
-   ${head(nl?'Producten':'Products',nl?'Onze producten <span class="y">bepalen</span><br><span class="y">onze</span> stijl':'Our Products <span class="y">That</span><br><span class="y">Define</span> Our Style',nl?'<p>Onze producten en diensten laten het vakmanschap zien van onze schilders, glaszetters en kozijnmonteurs. Hun teamwork en passie zorgen voor blijvende kwaliteit en tevreden klanten.</p>':'<p>Our products and services reflect the craftsmanship of our skilled painters, glaziers, and uPVC window frame fitters, whose teamwork and passion deliver lasting quality and customer satisfaction.</p>')}
+   ${head(X('products'),X('home.productsTitle'),X('home.productsText'))}
    </div>
    <div class="carousel"><div class="track" id="track">${PRODUCTS.map(p=>card(p)).join('')}</div>${PREV_NEXT()}</div>
   </section>
 
   <section class="sec alt"><div class="wrap">
-   <div class="center-head"><span class="pill">${nl?'Ruimtegebruik':'Use of space'}</span><h2>${nl?'Optimaal benutten <span class="y">van ruimte</span>':'Optimal Use <span class="y">Of Space</span>'}</h2>
-   <p>${nl?'Steeds meer mensen hebben een garage aan huis. Logisch, want het is een relatief goedkope en snelle manier om extra woon- en/of werkruimte te creëren. Een standaard garagedeur voldoet dan niet meer. De Aluport kan een goede oplossing zijn: deze geïsoleerde pui sluit de garage af op de plek waar eerst de garagedeur zat. Interesse in een geïsoleerde Aluport? Profiteer nu.':'More and more people are adding garages to their homes. This isn\'t surprising, as it\'s a relatively inexpensive and quick way to create more living and/or work space. A standard garage door is no longer sufficient. The Aluport could be a good solution. This insulated doorway closes off the garage where the garage door used to be. Interested in an insulated Aluport? Take advantage now.'}</p>
-   <a class="btn-yellow" href="#garage-doors">${P(byId['garage-doors']).name}</a></div>
-   <div class="wide-img"><img src="${A('aluport')}" alt="" loading="lazy"></div>
+   <div class="center-head"><span class="pill">${X('home.spaceLabel')}</span><h2>${X('home.spaceTitle')}</h2>
+   <p>${X('home.spaceText')}</p>
+   ${garage?`<a class="btn-yellow" href="#garage-doors">${P(garage).name}</a>`:''}</div>
+   <div class="wide-img"><img src="${A(im.space)}" alt="" loading="lazy"></div>
   </div></section>
 
-  <section class="longb" aria-hidden="true"><span class="ghost-word">Jong bv</span><div class="wrap"><img src="${A('long-building')}" alt="" loading="lazy"></div></section>
+  <section class="longb" aria-hidden="true"><span class="ghost-word">Jong bv</span><div class="wrap"><img src="${A(im.longBuilding)}" alt="" loading="lazy"></div></section>
 
   <section class="sec alt" style="padding-top:90px"><div class="wrap">
-   ${head(nl?'Wat klanten zeggen':'Our clients say',nl?'Dit zijn de <span class="y">warme woorden</span><br>van <span class="y">onze klanten</span>':'Here’s What <span class="y">Warm Words</span><br><span class="y">Our Clients</span> Say','')}
-   <div class="testi"><div class="photo"><img src="${A('team')}" alt="" loading="lazy"></div>
-    <div><div class="score"><b>9.3</b><div><span class="stars" aria-hidden="true">★★★★★</span><small>4.247 ${nl?'beoordelingen':'reviews'}</small></div></div>
-     <div class="quotes"><div class="quote"><blockquote>${nl?'“Vanaf het eerste gesprek in Breukelen tot en met de laatste levering een fijn contact gehad. Vriendelijke en deskundige medewerkers en we zijn tevreden over de geleverde pui en hor.”':'“From the first conversation in Breukelen to the final delivery, the contact was great. Friendly, knowledgeable staff, and we are happy with the sliding door and insect screen they supplied.”'}</blockquote>
-      <div class="who-said"><div class="av"><img src="${A('avatar')}" alt=""></div><div><b>Bram Claassen, Maarssen</b><small>${nl?'Bedrijfseigenaar':'Company Owner'}</small></div></div></div></div>
+   ${head(X('home.clientsLabel'),X('home.clientsTitle'),'')}
+   <div class="testi"><div class="photo"><img src="${A(im.clients)}" alt="" loading="lazy"></div>
+    <div><div class="score"><b>${esc(R.score)}</b><div><span class="stars" aria-hidden="true">★★★★★</span><small>${esc(R.count)} ${X('home.reviews')}</small></div></div>
+     <div class="quotes">${R.quotes.map((q,i)=>`<div class="quote"${i?' hidden':''}><blockquote>${L(q.text)}</blockquote>
+      <div class="who-said"><div class="av">${q.avatar?`<img src="${A(q.avatar)}" alt="">`:esc((q.name||'?')[0])}</div><div><b>${esc(q.name)}</b><small>${L(q.role)||''}</small></div></div></div>`).join('')}</div>
+     ${R.quotes.length>1?`<div class="q-nav">${R.quotes.map((q,i)=>`<button type="button" aria-label="Review ${i+1}" class="${i?'':'on'}" data-q="${i}"></button>`).join('')}</div>`:''}
     </div></div>
   </div></section>
 
-  <section class="video"><div class="bg" aria-hidden="true"></div>
-   <a class="play" href="https://www.youtube.com/watch?v=QnYYTr1pIuc" target="_blank" rel="noopener" aria-label="${nl?'Cees Vervat over Weru kozijnen':'Cees Vervat on Weru Frames'}">${PLAY}</a>
-   <div class="wrap" style="width:100%"><h2>${nl?'Cees Vervat over Weru kozijnen':'Cees Vervat on Weru Frames'}</h2></div></section>
+  <section class="video"><div class="bg" aria-hidden="true" style="background-image:url('${A(H.video.thumb)}')"></div>
+   <a class="play" href="${esc(H.video.url)}" target="_blank" rel="noopener" aria-label="${esc(L(H.video.title))}">${PLAY}</a>
+   <div class="wrap" style="width:100%"><h2>${L(H.video.title)}</h2></div></section>
 
-  <section class="gallery" aria-label="${nl?'Projectfoto’s':'Project gallery'}"><span class="ghost-word" aria-hidden="true">${nl?'galerij':'gallery'}</span>
-   <div class="rows">${row(gal1,'r1')}${row(gal2,'r2')}</div></section>`;
+  <section class="gallery" aria-label="Gallery"><span class="ghost-word" aria-hidden="true">${X('home.galleryWord')}</span>
+   <div class="rows">${row(H.gallery1,'r1')}${row(H.gallery2,'r2')}</div></section>`;
  },
 
- products(){const nl=LANG==='nl';
+ products(){
   return `<section class="sec"><div class="wrap">
-   ${head(L(T.products),nl?'Onze producten <span class="y">bepalen</span><br><span class="y">onze</span> stijl':'Our Products <span class="y">That</span><br><span class="y">Define</span> Our Style',nl?'<p>Van Weru ramen en deuren tot schilderwerk, glaszetten en gevelbekleding: alles voor het onderhoud en de verbetering van uw woning, bij één bedrijf in Breukelen.</p>':'<p>From Weru windows and doors to painting, glazing and facade cladding: everything for the maintenance and improvement of your home, from one company in Breukelen.</p>')}
+   ${head(X('products'),X('home.productsTitle'),X('products.text'))}
    <div class="prod-list">${PRODUCTS.map(p=>card(p,true)).join('')}</div></div></section>${ctaBand()}`;
  },
 
- product(raw){const p=P(raw),nl=LANG==='nl';
+ product(raw){const p=P(raw);
   const s={kicker:p.tag,title:p.short,sub:p.sub,bg:p.hero,thumb:p.thumb,btn:p.cta,href:p.ctaHref||'#contact'};
   const others=PRODUCTS.filter(x=>x.id!==p.id);
-  const linkBtns=((p.links||p.video)?`<div class="links">${(p.links||[]).map(([t,h])=>`<a class="btn-line" href="${h}" target="_blank" rel="noopener">${t} ${ARROW}</a>`).join('')}${p.video?`<a class="btn-line" href="${p.video}" target="_blank" rel="noopener">${PLAYS} ${p.videoT}</a>`:''}</div>`:'');
+  const links=p.links||[],refs=p.refs||[],chips=p.chips||[];
+  const linkBtns=((links.length||p.video)?`<div class="links">${links.map(([t,h])=>`<a class="btn-line" href="${esc(h)}" target="_blank" rel="noopener">${t} ${ARROW}</a>`).join('')}${p.video?`<a class="btn-line" href="${esc(p.video)}" target="_blank" rel="noopener">${PLAYS} ${p.videoT||'Video'}</a>`:''}</div>`:'');
   return hero([s])+`
   <section class="sec"><div class="wrap">
-   ${head(p.tag,`${p.intro[0]} <span class="y">${p.intro[1]}</span>`,p.lead.map(t=>`<p>${t}</p>`).join('')+(p.chips?`<div class="chips">${p.chips.map(c=>`<span>${c}</span>`).join('')}</div>`:'')+linkBtns)}
+   ${head(p.tag,`${p.intro[0]} <span class="y">${p.intro[1]}</span>`,p.lead.map(t=>`<p>${t}</p>`).join('')+(chips.length?`<div class="chips">${chips.map(c=>`<span>${c}</span>`).join('')}</div>`:'')+linkBtns)}
    <div class="feat-grid">${p.feats.map(([h,t])=>`<div class="feat"><h3>${h}</h3><p>${t}</p></div>`).join('')}</div>
-   ${p.refs?`<div style="margin-top:80px">${head(nl?'Referenties':'References',nl?'Een selectie <span class="y">projecten</span>':'Selected <span class="y">projects</span>',nl?'<p>Een volledige referentielijst is op aanvraag beschikbaar.</p>':'<p>A full reference list is available on request.</p>')}<ul class="refs">${p.refs.map(r=>`<li>${r}</li>`).join('')}</ul></div>`:''}
-   <div class="duo">${p.gallery.map(([n,c])=>`<figure class="cap"><div class="ib"><img src="${A(n)}" alt="${c}" loading="lazy"></div><figcaption>${c}</figcaption></figure>`).join('')}</div>
+   ${refs.length?`<div style="margin-top:80px">${head(X('product.refsLabel'),X('product.refsTitle'),X('product.refsText'))}<ul class="refs">${refs.map(r=>`<li>${r}</li>`).join('')}</ul></div>`:''}
+   <div class="duo">${(p.gallery||[]).map(([n,c])=>`<figure class="cap"><div class="ib"><img src="${A(n)}" alt="${esc(c)}" loading="lazy"></div><figcaption>${c}</figcaption></figure>`).join('')}</div>
   </div></section>${ctaBand()}
-  <section class="sec prods" style="padding-bottom:40px"><div class="wrap">${head(nl?'Meer producten':'More products',nl?'Ontdek <span class="y">meer</span>':'Explore <span class="y">more</span>','')}</div>
+  <section class="sec prods" style="padding-bottom:40px"><div class="wrap">${head(X('product.moreLabel'),X('product.moreTitle'),'')}</div>
    <div class="carousel"><div class="track" id="track">${others.map(x=>card(x)).join('')}</div></div></section>`;
  },
 
- about(){const nl=LANG==='nl';
-  return hero([{kicker:nl?'Opgericht in 1842':'Founded in 1842',title:L(T.about),sub:nl?'Schilders-, glaszet- en montagebedrijf<br>een begrip in de regio':'Painting, glazing and installation company<br>a household name in the region',bg:'storefront',thumb:'hero-weru',btn:L(T.contact),href:'#contact'}])+`
+ about(){const im=C.about.images;
+  return hero([{kicker:X('about.kicker'),title:X('about'),sub:X('about.sub'),bg:im.hero,thumb:im.photo1,btn:X('contact'),href:'#contact'}])+`
   <section class="sec who"><img class="ghost-img" src="${A('wire-tower')}" alt="" aria-hidden="true"><div class="wrap">
-   ${nl?head('Wie wij zijn','Allround <span class="y">onderhouds</span>­bedrijf','<p>Vervat &amp; de Jong BV in Breukelen werd in 1842 opgericht als schildersbedrijf en is uitgegroeid tot een allround onderhoudsbedrijf. Oorspronkelijk opgericht als Fa. C. Vervat &amp; Zn, werkt het bedrijf al jaren samen met De Jong Schilderwerken om de continuïteit te waarborgen. Het bedrijf wordt geleid door Cees Vervat en Erik de Jong.</p><p>Ons team bestaat uit schilders, glaszetters en kunststof kozijnmonteurs. Allemaal in vaste dienst, werkend als team en met hart voor het bedrijf. Dat zie je terug in zeer tevreden klanten; referenties zijn op aanvraag beschikbaar.</p>')
-     :head('Who we are','All-round <span class="y">Maintenance</span><br>Company','<p>Vervat &amp; de Jong BV in Breukelen was founded in 1842 as a painting company and has grown into an all-round maintenance company. Originally founded as Fa. C. Vervat &amp; Zn, the company has worked with de Jong Schilderwerken for years to ensure continuity. Today it is run by Cees Vervat and Erik de Jong.</p><p>Our team consists of painters, glaziers and uPVC window frame fitters. All of them are permanent employees who work together as a team and care about the company. That shows in very satisfied customers, and references are available on request.</p>')}
-   <div class="feat-grid">${(nl?[['Sinds 1842','Bijna twee eeuwen schilderservaring in Breukelen en de Vechtstreek.'],['30 jaar Weru dealer','Gecertificeerd Weru-partner voor kunststof ramen, deuren en schuifpuien.'],['Erkend leerbedrijf','Wij leiden schilders en glaszetters op en verwelkomen ook leerling-timmerlieden en kozijnmonteurs.'],['KOMO-gecertificeerd','Glas en kozijnen geleverd onder het KOMO-keurmerk.']]:[['Since 1842','Nearly two centuries of painting experience in Breukelen and the Vecht region.'],['30 years Weru dealer','Certified Weru partner for plastic windows, doors and sliding doors.'],['Recognised training company','We train painters and glaziers, and welcome trainee carpenters and frame fitters.'],['KOMO certified','Glazing and frames delivered under the KOMO quality mark.']]).map(([h,t])=>`<div class="feat"><h3>${h}</h3><p>${t}</p></div>`).join('')}</div>
-   <div class="duo"><figure class="cap"><div class="ib"><img src="${A('hero-weru')}" alt="Erik de Jong &amp; Cees Vervat" loading="lazy"></div><figcaption>Erik de Jong &amp; Cees Vervat</figcaption></figure><figure class="cap"><div class="ib"><img src="${A('team')}" alt="" loading="lazy"></div><figcaption>${nl?'Schilders, glaszetters en kozijnmonteurs, allemaal in vaste dienst':'Painters, glaziers and frame fitters, all permanent staff'}</figcaption></figure></div>
-   <div class="links" style="margin-top:40px"><a class="btn-line" href="https://www.youtube.com/watch?v=Z4Ste5Kq2fg" target="_blank" rel="noopener">${nl?'Film: onze schilders':'Film: our painters'} ${ARROW}</a><a class="btn-line" href="https://www.youtube.com/watch?v=Ehv9BCeDo2w" target="_blank" rel="noopener">${nl?'Film: beglazing':'Film: glazing'} ${ARROW}</a><a class="btn-line" href="https://www.youtube.com/watch?v=QnYYTr1pIuc" target="_blank" rel="noopener">${nl?'Film: Weru kozijnen':'Film: Weru frames'} ${ARROW}</a></div>
+   ${head(X('home.whoLabel'),X('about.title'),X('about.text'))}
+   <div class="feat-grid">${L(C.about.feats).map(([h,t])=>`<div class="feat"><h3>${h}</h3><p>${t}</p></div>`).join('')}</div>
+   <div class="duo"><figure class="cap"><div class="ib"><img src="${A(im.photo1)}" alt="" loading="lazy"></div><figcaption>${X('about.caption1')}</figcaption></figure><figure class="cap"><div class="ib"><img src="${A(im.photo2)}" alt="" loading="lazy"></div><figcaption>${X('about.caption2')}</figcaption></figure></div>
+   ${C.aboutVideos.length?`<div class="vids" style="margin-top:40px">${C.aboutVideos.map((v,i)=>vidCard(v,i,false)).join('')}</div>`:''}
   </div></section>${ctaBand()}`;
  },
 
- vacancies(){const nl=LANG==='nl';
-  const jobs=nl?[
-   ['Schilderwerk','Schilders','Wie zoeken we',['Gemotiveerde schilders','Ervaren schilders, leerlingen en zzp’ers zijn allemaal welkom','Rijbewijs is handig maar niet verplicht'],'Wat bieden we',['Salaris in overleg, volgens de CAO schilderwerken','Een vaste plek in een hecht team']],
-   ['Fulltime','Timmerman / kozijnmonteur','Wie zoeken we',['Je kunt zelfstandig werken','Zzp’ers zijn welkom','Oud-collega’s die terug willen in het vak ook'],'Wat bieden we',['Interessant werk bij een solide, dynamisch bedrijf','Interne opleiding en ruimte om te groeien','Een marktconform salaris']],
-   ['Stage','Stageplaatsen','Erkend leerbedrijf',['Wij zijn een erkend leerbedrijf voor schilders en glaszetters','Wil je timmerman of kozijnmonteur worden? Ook dan ben je welkom'],'Solliciteren',['Mail naar info@vervat-breukelen.nl of bel 0346 - 261 959']]]
-   :[
-   ['Painting','Painters','Who we look for',['Motivated painters','Experienced painters, apprentices and self-employed (zzp) painters are all welcome','A driving licence is useful but not required'],'What we offer',['Salary by arrangement, following the CAO for painting work','A permanent place in a close team']],
-   ['Full-time','Carpenter / frame installer','Who we look for',['You can work independently','Self-employed installers are welcome','Former colleagues who want to return to the trade too'],'What we offer',['Interesting work at a solid, dynamic company','Internal training and room to develop','Competitive pay']],
-   ['Internship','Internships','Recognised training company',['We are a recognised training company for painters and glaziers','Want to train as a carpenter or frame installer? You are welcome too'],'How to apply',['Email info@vervat-breukelen.nl or call 0346 - 261 959']]];
-  return hero([{kicker:nl?'Werken bij ons':'Work with us',title:L(T.vacancies),sub:nl?'Kom werken in een solide, dynamisch team van schilders, glaszetters en kozijnmonteurs in Breukelen':'Join a solid, dynamic team of painters, glaziers and frame fitters in Breukelen',bg:'hero-painting',thumb:'team',btn:nl?'Solliciteer per e-mail':'Apply by email',href:'#contact'}])+`
+ vacancies(){
+  return hero([{kicker:X('vac.kicker'),title:X('vacancies'),sub:X('vac.sub'),bg:'hero-painting',thumb:'team',btn:X('vac.btn'),href:'#contact'}])+`
   <section class="sec"><div class="wrap">
-   ${head(L(T.vacancies),nl?'Kom bij <span class="y">ons werken</span>':'Come and <span class="y">work with us</span>',nl?'<p>Stuur je sollicitatie naar <b>info@vervat-breukelen.nl</b> of bel Erik de Jong op <b>0346 - 261 959</b>.</p>':'<p>Send your application to <b>info@vervat-breukelen.nl</b> or call Erik de Jong on <b>0346 - 261 959</b>.</p>')}
-   <div class="jobs">${jobs.map(([tag,t,h1,l1,h2,l2])=>`<article class="job"><span class="tag">${tag}</span><h3>${t}</h3><h4>${h1}</h4><ul>${l1.map(x=>`<li>${x}</li>`).join('')}</ul><h4>${h2}</h4><ul>${l2.map(x=>`<li>${x}</li>`).join('')}</ul></article>`).join('')}</div>
+   ${head(X('vacancies'),X('vac.title'),X('vac.text'))}
+   <div class="jobs">${L(C.jobs).map(j=>`<article class="job"><span class="tag">${j.tag}</span><h3>${j.title}</h3><h4>${j.h1}</h4><ul>${j.l1.map(x=>`<li>${x}</li>`).join('')}</ul><h4>${j.h2}</h4><ul>${j.l2.map(x=>`<li>${x}</li>`).join('')}</ul></article>`).join('')}</div>
   </div></section>`;
  },
 
- showroom(){const nl=LANG==='nl';
-  return hero([{kicker:L(T.showroom),title:L(T.showroom),sub:nl?'Korte films over de vragen die we in onze showroom het vaakst horen':'Short films that answer the questions we hear most in our showroom',bg:'hero-showroom',thumb:'hero-terrace',btn:nl?'Plan een echt bezoek':'Book a real visit',href:'#contact'}])+`
+ showroom(){
+  return hero([{kicker:X('showroom'),title:X('showroom'),sub:X('show.sub'),bg:'hero-showroom',thumb:'hero-terrace',btn:X('show.btn'),href:'#contact'}])+`
   <section class="sec"><div class="wrap">
-   ${head(L(T.showroom),nl?'Tien vragen, <span class="y">tien films</span>':'Ten questions, <span class="y">ten films</span>',nl?'<p>Bekijk ze thuis en kom daarna naar onze showroom in Breukelen voor persoonlijk advies. De films openen op Vimeo.</p>':'<p>Watch at home, then come to our showroom in Breukelen for personal advice. The films open on Vimeo.</p>')}
-   <div class="vids">${VIDEOS.map(([t,id],i)=>`<a class="vid" href="https://vimeo.com/${id}" target="_blank" rel="noopener"><span class="n">${String(i+1).padStart(2,'0')}</span><b>${L(t)}</b><span class="pl">${PLAY}</span></a>`).join('')}</div>
+   ${head(X('showroom'),X('show.title'),X('show.text'))}
+   <div class="vids">${C.videos.map((v,i)=>vidCard(v,i,true)).join('')}</div>
   </div></section>${ctaBand()}`;
  },
 
  service(){const nl=LANG==='nl';
-  const brands=['Weru','Novoferm','Palazzo','Keralit','VELUX','Trespa'];
   const steps=nl?[['Aanvraag indienen','Vul het formulier in met uw gegevens, het product en een omschrijving. Voeg gerust foto’s toe.'],['Bevestiging','U ontvangt een bevestiging. Wij beoordelen uw aanvraag en registreren de gegevens.'],['Inplannen','Onze planner neemt contact met u op om een afspraak te maken voor inspectie of reparatie.'],['Uitvoering','Onze eigen monteurs, schilders of glaszetters lossen het probleem vakkundig op.']]
    :[['Submit a request','Fill in the form with your details, the product and a description. Feel free to add photos.'],['Confirmation','You receive a confirmation. We review your request and register the details.'],['Scheduling','Our planner contacts you to arrange an appointment for an inspection or repair.'],['The work','Our own installers, painters or glaziers fix the problem properly.']];
   const opt=(id,arr)=>arr.map(([v,t],i)=>`<label class="radio"><input type="radio" name="${id}" value="${v}" ${i===0&&id!=='sDeliv'?'checked':''} ${id==='sDeliv'?'required':''}> ${t}</label>`).join('');
-  return hero([{kicker:nl?'Klantenservice':'Customer service',title:nl?'Reparatie &amp; onderhoud':'Repair &amp; maintenance',sub:nl?'Onderhoud, reparatie en garantie efficiënt geregeld':'Maintenance, repairs and warranty claims, handled efficiently',bg:'glazing-install',thumb:'weru-door',btn:nl?'Service aanvragen':'Request service',href:'#service-form'}])+`
+  return hero([{kicker:X('svc.kicker'),title:X('serviceLong'),sub:X('svc.sub'),bg:'glazing-install',thumb:'weru-door',btn:X('svc.btn'),href:'#service-form'}])+`
   <section class="sec"><div class="wrap">
-   ${head(nl?'Service':'Service',nl?'Efficiënt regelen van <span class="y">onderhoud, reparatie</span> en garantie':'Efficiently arrange <span class="y">maintenance, repairs</span> and warranty',nl?'<p>Heeft u een vraag over onderhoud of een reparatie aan uw kozijnen, deuren, schuifpui, garagedeur, dakkapel of ander product? Wij helpen u graag, zowel binnen als buiten de garantieperiode.</p><p>Meld uw verzoek aan via het formulier hieronder. Na verzending ontvangt u een bevestiging.</p>':'<p>Do you have a question about maintenance or a repair to your window frames, doors, sliding door, garage door, dormer or other product? We are happy to help, both within and after the warranty period.</p><p>Submit your request with the form below. You will receive a confirmation once it is sent.</p>')}
+   ${head(X('service'),X('svc.title'),X('svc.text'))}
    <ol class="process">${steps.map(([h,t],i)=>`<li><span class="num">${i+1}</span><h3>${h}</h3><p>${t}</p></li>`).join('')}</ol>
-   <p class="busy">${nl?'Let op: in drukke periodes kan de serviceplanning drie tot vier weken vooruit lopen. Bij spoed? Bel ons op <b>0346 - 261 959</b>.':'Please note: in busy periods the service schedule can run three to four weeks ahead. Urgent? Call us on <b>0346 - 261 959</b>.'}</p>
+   <p class="busy">${X('svc.busy')}</p>
   </div></section>
 
   <section class="sec alt" id="service-form"><div class="wrap">
-   ${head(nl?'Serviceverzoek':'Service request',nl?'Meld uw <span class="y">serviceverzoek</span> aan':'Submit your <span class="y">service request</span>',nl?'<p>Drie korte stappen. Velden met * zijn verplicht.</p>':'<p>Three short steps. Fields marked * are required.</p>')}
+   ${head(X('svc.formLabel'),X('svc.formTitle'),X('svc.formText'))}
    <form class="sform" id="sform" novalidate>
     <ol class="stepper" aria-label="${nl?'Stappen':'Steps'}">${(nl?['Uw gegevens','Product en vraag','Foto’s en bevestigen']:['Your details','Product and question','Photos and confirm']).map((t,i)=>`<li class="${i?'':'on'}" data-st="${i}"><span>${i+1}</span>${t}</li>`).join('')}</ol>
-
     <fieldset class="fstep" data-step="0">
      <legend>${nl?'Uw gegevens':'Your details'}</legend>
      <div class="radios" role="radiogroup" aria-label="${nl?'Aanhef':'Salutation'}">${opt('sSal',nl?[['dhr','Dhr.'],['mevr','Mevr.'],['fam','Fam.']]:[['mr','Mr'],['mrs','Mrs'],['fam','Family']])}</div>
      <div class="three"><label for="sInit">${nl?'Voorletters':'Initials'}<input id="sInit" autocomplete="given-name"></label><label for="sInfix">${nl?'Tussenvoegsel':'Infix'}<input id="sInfix"></label><label for="sLast">${nl?'Achternaam':'Last name'} *<input id="sLast" required autocomplete="family-name"></label></div>
      <label for="sCompany">${nl?'Bedrijf (optioneel)':'Company (optional)'}<input id="sCompany" autocomplete="organization"></label>
-     <div class="three"><label for="sStreet" class="span2">${nl?'Straat en huisnummer':'Street and house number'} *<input id="sStreet" required autocomplete="street-address"></label><label for="sZip">${nl?'Postcode':'Postcode'} *<input id="sZip" required autocomplete="postal-code" pattern="[1-9][0-9]{3} ?[A-Za-z]{2}" placeholder="3621 MX"></label></div>
+     <div class="three"><label for="sStreet" class="span2">${nl?'Straat en huisnummer':'Street and house number'} *<input id="sStreet" required autocomplete="street-address"></label><label for="sZip">Postcode *<input id="sZip" required autocomplete="postal-code" pattern="[1-9][0-9]{3} ?[A-Za-z]{2}" placeholder="3621 MX"></label></div>
      <div class="two"><label for="sCity">${nl?'Plaats':'Town'} *<input id="sCity" required autocomplete="address-level2"></label><label for="sPhone">${nl?'Telefoon':'Phone'} *<input id="sPhone" type="tel" required autocomplete="tel"></label></div>
      <label for="sEmail">E-mail *<input id="sEmail" type="email" required autocomplete="email"></label>
     </fieldset>
-
     <fieldset class="fstep" data-step="1" hidden>
      <legend>${nl?'Product en vraag':'Product and question'}</legend>
      <div class="two"><label for="sProd">${nl?'Om welk product gaat het?':'Which product is it about?'} *<select id="sProd" required><option value="">${nl?'Kies een product':'Choose a product'}</option>${PRODUCTS.map(p=>`<option>${P(p).short}</option>`).join('')}<option>${nl?'Anders':'Other'}</option></select></label>
@@ -870,7 +707,6 @@ const VIEWS={
       <div class="radios" role="radiogroup">${opt('sDeliv',nl?[['ja','Ja'],['nee','Nee'],['weet-niet','Weet ik niet']]:[['yes','Yes'],['no','No'],['unsure','Not sure']])}</div></div>
      <label for="sDesc">${nl?'Omschrijving van het probleem of uw vraag':'Describe the problem or your question'} *<textarea id="sDesc" required placeholder="${nl?'Bijvoorbeeld: de schuifpui in de woonkamer sluit niet goed meer en tocht.':'For example: the living-room sliding door no longer closes properly and is draughty.'}"></textarea></label>
     </fieldset>
-
     <fieldset class="fstep" data-step="2" hidden>
      <legend>${nl?'Foto’s en bevestigen':'Photos and confirm'}</legend>
      <label class="drop" for="sFiles"><input id="sFiles" type="file" accept=".jpg,.jpeg,.png,.pdf,image/jpeg,image/png,application/pdf" multiple>
@@ -879,44 +715,43 @@ const VIEWS={
      <label class="check"><input type="checkbox" id="sCost" required> <span>${nl?'Ik begrijp dat werkzaamheden buiten de garantie in rekening worden gebracht op basis van nacalculatie. Het uurtarief wordt vooraf gecommuniceerd.':'I understand that work outside the warranty is charged on actual cost. The hourly rate is communicated in advance.'} *</span></label>
      <label class="check"><input type="checkbox" id="sPriv" required> <span>${nl?'Ik ga akkoord met het privacybeleid van Vervat &amp; de Jong.':'I agree to the Vervat &amp; de Jong privacy policy.'} *</span></label>
     </fieldset>
-
     <div class="sform-nav"><button type="button" class="btn-line" id="sPrev" hidden>${nl?'Vorige':'Previous'}</button><button type="button" class="btn-yellow" id="sNext">${nl?'Volgende':'Next'}</button><button type="submit" class="btn-yellow" id="sSend" hidden>${nl?'Versturen':'Send request'}</button></div>
     <div class="form-msg" id="sMsg" role="status"></div>
    </form>
   </div></section>
 
   <section class="sec"><div class="wrap">
-   ${head(nl?'Merken':'Brands',nl?'Service op de merken <span class="y">die wij leveren</span>':'Service on the brands <span class="y">we supply</span>','')}
-   <ul class="brands">${brands.map(b=>`<li>${b}</li>`).join('')}</ul>
+   ${head(X('svc.brandsLabel'),X('svc.brandsTitle'),'')}
+   <ul class="brands">${C.brands.map(b=>`<li>${esc(b)}</li>`).join('')}</ul>
    <div class="svc-cards">
-    <div class="svc-card"><h3>Vervat &amp; de Jong Breukelen</h3><p>Keulschevaart 3a1<br>3621 MX Breukelen</p>
+    <div class="svc-card"><h3>Vervat &amp; de Jong</h3><p>${C.site.address.slice(1).join('<br>')}</p>
      <dl>${hoursDl()}</dl>
-     <div class="links"><a class="btn-line" href="tel:+31346261959">0346 - 261 959</a><a class="btn-line" href="mailto:info@vervat-breukelen.nl">info@vervat-breukelen.nl</a><a class="btn-line" href="${waLink()}" target="_blank" rel="noopener">${WA_ICON} WhatsApp</a></div></div>
-    <div class="svc-card dark"><h3>${nl?'Klantervaringen':'Customer experiences'}</h3>
-     <div class="score"><b>9.3</b><div><span class="stars" aria-hidden="true">★★★★★</span><small>4.247 ${nl?'beoordelingen':'reviews'}</small></div></div>
-     <p>${nl?'Lees wat klanten over onze service zeggen, of laat zelf een beoordeling achter.':'Read what customers say about our service, or leave a review yourself.'}</p>
-     <a class="btn-ghost" href="https://www.klantenvertellen.nl/reviews/1037906/" target="_blank" rel="noopener">${nl?'Bekijk beoordelingen':'Read reviews'}<span class="arr">${ARROW}</span></a></div>
+     <div class="links"><a class="btn-line" href="tel:${tel()}">${phone()}</a><a class="btn-line" href="mailto:${mail()}">${mail()}</a><a class="btn-line" href="${waLink()}" target="_blank" rel="noopener">${WA_ICON} WhatsApp</a></div></div>
+    <div class="svc-card dark"><h3>${X('svc.reviewsTitle')}</h3>
+     <div class="score"><b>${esc(C.reviews.score)}</b><div><span class="stars" aria-hidden="true">★★★★★</span><small>${esc(C.reviews.count)} ${X('home.reviews')}</small></div></div>
+     <p>${X('svc.reviewsText')}</p>
+     <a class="btn-ghost" href="${esc(C.site.reviewsUrl)}" target="_blank" rel="noopener">${X('svc.reviewsBtn')}<span class="arr">${ARROW}</span></a></div>
    </div>
   </div></section>`;
  },
 
  contact(){const nl=LANG==='nl';
-  return hero([{kicker:'Contact',title:L(T.contact),sub:'Keulschevaart 3a1, 3621 MX Breukelen<br>'+(nl?'Telefoon':'Phone')+' 0346 - 261 959',bg:'storefront',thumb:'hero-showroom',btn:L(T.ctaCall),href:'tel:+31346261959'}])+`
+  return hero([{kicker:'Contact',title:X('contact'),sub:C.site.address.slice(1).join(', ')+'<br>'+(nl?'Telefoon ':'Phone ')+phone(),bg:'storefront',thumb:'hero-showroom',btn:X('ctaCall'),href:'tel:'+tel()}])+`
   <section class="sec"><div class="wrap">
-   ${head('Contact',nl?'Maak een <span class="y">afspraak</span>':'Make an <span class="y">appointment</span>',nl?'<p>Onze showroom is open op afspraak. Vertel ons wat u van plan bent, dan nemen we contact met u op om een tijd af te spreken.</p>':'<p>Our showroom is open by appointment. Tell us what you are planning and we will get back to you to set a time.</p>')}
+   ${head('Contact',X('contact.title'),X('contact.text'))}
    <div class="contact-grid">
     <div class="cinfo">
-     <div><h4>${nl?'Telefoon':'Phone'}</h4><span class="v">0346 - 261 959</span><button class="copybtn" type="button" data-copy="0346 261 959">${L(T.copy)}</button></div>
-     <div><h4>WhatsApp</h4><a class="btn-line" href="${waLink()}" target="_blank" rel="noopener">${WA_ICON} ${L(T.wa)}</a></div>
-     <div><h4>E-mail</h4><span class="v">info@vervat-breukelen.nl</span><button class="copybtn" type="button" data-copy="info@vervat-breukelen.nl">${L(T.copy)}</button></div>
-     <div><h4>${nl?'Adres':'Address'}</h4><span class="v">Vervat &amp; de Jong<br>Keulschevaart 3a1<br>3621 MX Breukelen</span></div>
-     <div><h4>${L(T.ctaHoursT)}</h4><dl>${hoursDl()}</dl></div>
-     <div><h4>${nl?'Telefonisch bereikbaar':'Phone hours'}</h4><span>${nl?'Maandag t/m vrijdag, 7:30 – 17:00':'Monday to Friday, 7:30 AM – 5:00 PM'}</span></div>
+     <div><h4>${nl?'Telefoon':'Phone'}</h4><span class="v">${phone()}</span><button class="copybtn" type="button" data-copy="${esc(phone())}">${X('copy')}</button></div>
+     <div><h4>WhatsApp</h4><a class="btn-line" href="${waLink()}" target="_blank" rel="noopener">${WA_ICON} ${X('wa')}</a></div>
+     <div><h4>E-mail</h4><span class="v">${mail()}</span><button class="copybtn" type="button" data-copy="${esc(mail())}">${X('copy')}</button></div>
+     <div><h4>${nl?'Adres':'Address'}</h4><span class="v">${C.site.address.join('<br>')}</span></div>
+     <div><h4>${X('ctaHoursT')}</h4><dl>${hoursDl()}</dl></div>
+     <div><h4>${nl?'Telefonisch bereikbaar':'Phone hours'}</h4><span>${L(C.site.phoneHours)}</span></div>
     </div>
-    <form class="cform" id="cform">
+    <form class="cform" id="cform" novalidate>
      <div class="two"><label for="cName">${nl?'Naam':'Name'}<input id="cName" required autocomplete="name"></label><label for="cPhone">${nl?'Telefoon':'Phone'}<input id="cPhone" type="tel" autocomplete="tel"></label></div>
      <label for="cEmail">E-mail<input id="cEmail" type="email" required autocomplete="email"></label>
-     <label for="cTopic">${nl?'Onderwerp':'Subject'}<select id="cTopic"><option>${nl?'Afspraak showroom':'Showroom appointment'}</option>${PRODUCTS.map(p=>`<option>${P(p).short}</option>`).join('')}<option>${L(T.vacancies)}</option><option>${nl?'Overig':'Other'}</option></select></label>
+     <label for="cTopic">${nl?'Onderwerp':'Subject'}<select id="cTopic"><option>${nl?'Afspraak showroom':'Showroom appointment'}</option>${PRODUCTS.map(p=>`<option>${P(p).short}</option>`).join('')}<option>${X('vacancies')}</option><option>${nl?'Overig':'Other'}</option></select></label>
      <label for="cMsg">${nl?'Bericht':'Message'}<textarea id="cMsg" required></textarea></label>
      <button class="btn-yellow" type="submit">${nl?'Verstuur bericht':'Send message'}</button>
      <div class="form-msg" id="cMsgOut" role="status"></div>
@@ -925,16 +760,31 @@ const VIEWS={
  }
 };
 
+/* ================= FORM SENDING ================= */
+const fileToB64=f=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result).split(',')[1]);r.onerror=rej;r.readAsDataURL(f)});
+async function sendForm(type,data,files){
+  const url=C.site.formEndpoint;if(!url)return 'offline';
+  try{
+    const fl=[];for(const f of (files||[]).slice(0,3))fl.push({name:f.name,type:f.type||'application/octet-stream',data:await fileToB64(f)});
+    const r=await fetch(url,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({type,lang:LANG,page:location.href,...data,files:fl})});
+    const j=await r.json();return j&&j.ok?'sent':'failed';
+  }catch(e){return 'failed'}
+}
+function showResult(el,res){el.innerHTML=res==='sent'?X('form.sent'):res==='offline'?X('form.offline'):X('form.failed');el.classList.toggle('ok',res==='sent')}
+
 /* ================= ROUTER & UI ================= */
 const view=document.getElementById('view'),hdr=document.getElementById('hdr'),shell=document.getElementById('shell'),drawer=document.getElementById('drawer'),search=document.getElementById('search');
 let timer=null;
-const TITLES={service:T.serviceLong,products:T.products,about:T.about,vacancies:T.vacancies,showroom:T.showroom,contact:T.contact};
+const TITLES={service:'serviceLong',products:'products',about:'about',vacancies:'vacancies',showroom:'showroom',contact:'contact'};
 function renderChrome(){
   document.documentElement.lang=LANG;
-  hdr.innerHTML=headerHTML();shell.innerHTML=shellHTML()+`<a class="wa" href="${waLink()}" target="_blank" rel="noopener" aria-label="${L(T.wa)}">${WA_ICON}<span>${L(T.waShort)}</span></a>`;drawer.innerHTML=drawerHTML();search.innerHTML=searchHTML();
+  hdr.innerHTML=headerHTML();shell.innerHTML=shellHTML();drawer.innerHTML=drawerHTML();search.innerHTML=searchHTML();
   document.getElementById('q').addEventListener('input',doSearch);
-  document.getElementById('newsForm').addEventListener('submit',e=>{e.preventDefault();const em=document.getElementById('newsEmail'),m=document.getElementById('newsMsg');
-    m.textContent=(!em.value||!em.checkValidity())?L(T.newsBad):L(T.newsOk);});
+  const nf=document.getElementById('newsForm');
+  nf.addEventListener('submit',async e=>{e.preventDefault();const em=document.getElementById('newsEmail'),m=document.getElementById('newsMsg');
+    if(!em.value||!em.checkValidity()){m.textContent=X('newsBad');return}
+    m.textContent=X('form.sending');const r=await sendForm('newsletter',{email:em.value,name:'',phone:'',fields:{}});
+    if(r==='sent'){m.textContent=X('news.sent');nf.reset()}else showResult(m,r);});
 }
 function render(keepScroll){
   const h=(location.hash||'#home').slice(1);
@@ -947,10 +797,10 @@ function render(keepScroll){
   view.innerHTML=html;
   hdr.classList.toggle('solid',!view.querySelector('.hero'));
   hdr.querySelectorAll('.nav [data-nav]').forEach(a=>a.classList.toggle('on',a.dataset.nav===key));
-  const t=byId[h]?P(byId[h]).short:(TITLES[key]?L(TITLES[key]):'');
+  const t=byId[h]?P(byId[h]).short:(TITLES[key]?X(TITLES[key]).replace('&amp;','&'):'');
   document.title=(t?t+' | ':'')+'Vervat & de Jong';
   if(!keepScroll)window.scrollTo(0,0);
-  initHero();initCarousel();initForms();initService();
+  initHero();initCarousel();initForms();initService();initQuotes();
   if(h==='service-form'){const t=document.getElementById('service-form');if(t)setTimeout(()=>t.scrollIntoView(),50)}
 }
 function setLang(l){if(l===LANG)return;LANG=l;try{localStorage.setItem('vdj-lang',l)}catch(_){}
@@ -963,6 +813,10 @@ function initHero(){
   const restart=()=>{clearInterval(timer);if(!reduce)timer=setInterval(()=>go(i+1),6500)};
   dots.forEach(d=>d.onclick=()=>{go(+d.dataset.i);restart()});
   restart();
+}
+function initQuotes(){
+  const qs=[...view.querySelectorAll('.quote')],dots=[...view.querySelectorAll('.q-nav button')];if(qs.length<2)return;
+  dots.forEach(d=>d.onclick=()=>{qs.forEach((q,k)=>q.hidden=k!==+d.dataset.q);dots.forEach(x=>x.classList.toggle('on',x===d))});
 }
 function initCarousel(){
   const tr=view.querySelector('#track');if(!tr)return;
@@ -985,33 +839,41 @@ function initService(){
   fi.onchange=()=>{const fs=[...fi.files];filesOk=true;
     fl.innerHTML=fs.map((x,k)=>{const big=x.size>5*1024*1024,ty=!/\.(jpe?g|png|pdf)$/i.test(x.name),many=k>=3;const err=big||ty||many;if(err)filesOk=false;
       const why=many?(nl?'max. 3 bestanden':'max. 3 files'):big?(nl?'groter dan 5 MB':'larger than 5 MB'):ty?(nl?'alleen JPG, PNG of PDF':'JPG, PNG or PDF only'):(x.size/1048576).toFixed(1)+' MB';
-      return `<li class="${err?'err':''}"><span>${x.name.replace(/[<>&]/g,'')}</span><span>${why}</span></li>`}).join('')};
-  f.addEventListener('submit',e=>{e.preventDefault();if(!valid(cur))return;
+      return `<li class="${err?'err':''}"><span>${esc(x.name)}</span><span>${why}</span></li>`}).join('')};
+  const v=id=>(f.querySelector('#'+id)||{}).value||'';const r=n=>(f.querySelector(`input[name=${n}]:checked`)||{}).value||'';
+  f.addEventListener('submit',async e=>{e.preventDefault();if(!valid(cur))return;
     if(!filesOk){msg.textContent=nl?'Verwijder of vervang de bestanden met een foutmelding.':'Remove or replace the files marked with an error.';return}
-    msg.innerHTML=nl?'Dit formulier is nog niet gekoppeld aan een mailbox. Stuur uw serviceverzoek voorlopig naar <b>info@vervat-breukelen.nl</b> of bel 0346 - 261 959.':'This form is not connected to a mailbox yet. For now, please email your service request to <b>info@vervat-breukelen.nl</b> or call 0346 - 261 959.'});
+    send.disabled=true;msg.textContent=X('form.sending');
+    const res=await sendForm('service',{name:[r('sSal'),v('sInit'),v('sInfix'),v('sLast')].filter(Boolean).join(' '),email:v('sEmail'),phone:v('sPhone'),
+      fields:{company:v('sCompany'),street:v('sStreet'),postcode:v('sZip'),city:v('sCity'),product:v('sProd'),year:v('sYear'),suppliedByUs:r('sDeliv'),description:v('sDesc')}},[...fi.files]);
+    send.disabled=false;showResult(msg,res);
+    if(res==='sent'){f.reset();fl.innerHTML='';setTimeout(()=>show(0),4000)}});
   show(0);
 }
 function initForms(){
   const cf=view.querySelector('#cform');
-  if(cf)cf.addEventListener('submit',e=>{e.preventDefault();const out=view.querySelector('#cMsgOut');const nl=LANG==='nl';
+  if(cf)cf.addEventListener('submit',async e=>{e.preventDefault();const out=view.querySelector('#cMsgOut');const nl=LANG==='nl';
     if(!cf.checkValidity()){out.textContent=nl?'Vul uw naam, een geldig e-mailadres en een bericht in.':'Please fill in your name, a valid email address and a message.';return}
-    out.innerHTML=nl?'Dit formulier is nog niet gekoppeld aan een mailbox. Mail uw bericht naar <b>info@vervat-breukelen.nl</b> of bel 0346 - 261 959.':'This form is not connected to a mailbox yet. Please email your message to <b>info@vervat-breukelen.nl</b> or call 0346 - 261 959.';});
+    const btn=cf.querySelector('button[type=submit]');btn.disabled=true;out.textContent=X('form.sending');
+    const g=id=>cf.querySelector('#'+id).value;
+    const res=await sendForm('contact',{name:g('cName'),email:g('cEmail'),phone:g('cPhone'),fields:{subject:g('cTopic'),message:g('cMsg')}});
+    btn.disabled=false;showResult(out,res);if(res==='sent')cf.reset();});
   view.querySelectorAll('[data-copy]').forEach(b=>b.onclick=()=>{const v=b.dataset.copy;
-    const done=()=>{b.textContent=L(T.copied);setTimeout(()=>b.textContent=L(T.copy),1500)};
+    const done=()=>{b.textContent=X('copied');setTimeout(()=>b.textContent=X('copy'),1500)};
     try{navigator.clipboard.writeText(v).then(done,()=>sel(b))}catch(_){sel(b)}});
   function sel(b){const r=document.createRange();r.selectNodeContents(b.previousElementSibling);const s=getSelection();s.removeAllRanges();s.addRange(r)}
 }
 function doSearch(){
   const nl=LANG==='nl';
   const idx=[...PRODUCTS.map(r=>{const p=P(r);return {h:p.id,t:p.short,d:p.sub,k:[p.name,p.sub,...p.lead,...p.feats.flat(),r.nl.name,r.en.name].join(' ')}}),
-   {h:'about',t:L(T.about),d:nl?'Opgericht in 1842 in Breukelen':'Founded in 1842 in Breukelen',k:'history geschiedenis team 1842 vervat de jong'},
-   {h:'vacancies',t:L(T.vacancies),d:nl?'Schilders, timmerman / kozijnmonteur, stages':'Painters, carpenter / frame installer, internships',k:'jobs werk schilder painter timmerman carpenter stage internship'},
-   {h:'showroom',t:L(T.showroom),d:nl?'Tien korte films':'Ten short films',k:'video films showroom'},
-   {h:'service',t:L(T.serviceLong).replace('&amp;','&'),d:nl?'Serviceverzoek, garantie en reparaties':'Service requests, warranty and repairs',k:'service reparatie repair onderhoud maintenance garantie warranty storing defect klacht'},
-   {h:'contact',t:L(T.contact),d:'Keulschevaart 3a1, Breukelen · 0346 - 261 959',k:'telefoon phone email adres address openingstijden hours afspraak appointment'}];
+   {h:'about',t:X('about'),d:nl?'Opgericht in 1842 in Breukelen':'Founded in 1842 in Breukelen',k:'history geschiedenis team 1842 vervat de jong'},
+   {h:'vacancies',t:X('vacancies'),d:nl?'Vacatures en stages':'Jobs and internships',k:'jobs werk schilder painter timmerman carpenter stage internship'},
+   {h:'showroom',t:X('showroom'),d:nl?'Korte films':'Short films',k:'video films showroom'},
+   {h:'service',t:X('serviceLong').replace('&amp;','&'),d:nl?'Serviceverzoek, garantie en reparaties':'Service requests, warranty and repairs',k:'service reparatie repair onderhoud maintenance garantie warranty storing defect klacht'},
+   {h:'contact',t:X('contact'),d:C.site.address.slice(1).join(', ')+' · '+phone(),k:'telefoon phone email adres address openingstijden hours afspraak appointment'}];
   const v=document.getElementById('q').value.trim().toLowerCase();
   const hits=idx.filter(x=>!v||(x.t+' '+x.k).toLowerCase().includes(v));
-  document.getElementById('results').innerHTML=hits.length?hits.map(x=>`<li><a href="#${x.h}">${x.t}<small>${x.d}</small></a></li>`).join(''):`<li style="color:#bbb;padding:14px 16px">${L(T.noRes)}</li>`;
+  document.getElementById('results').innerHTML=hits.length?hits.map(x=>`<li><a href="#${x.h}">${x.t}<small>${x.d}</small></a></li>`).join(''):`<li style="color:#bbb;padding:14px 16px">${X('noRes')}</li>`;
 }
 document.addEventListener('click',e=>{
   const lb=e.target.closest('[data-lang]');if(lb){setLang(lb.dataset.lang);return}
@@ -1025,9 +887,9 @@ document.addEventListener('click',e=>{
 });
 /* in-page video player */
 const vmodal=document.getElementById('vmodal'),vframe=document.getElementById('vframe');let vReturn=null;
-function videoFrom(href){let m=href.match(/youtube\.com\/watch\?v=([\w-]{6,})/)||href.match(/youtu\.be\/([\w-]{6,})/);
+function videoFrom(href){let m=href.match(/youtube\.com\/watch\?v=([\w-]{6,})/)||href.match(/youtu\.be\/([\w-]{6,})/)||href.match(/youtube\.com\/(?:embed|shorts)\/([\w-]{6,})/);
   if(m)return 'https://www.youtube-nocookie.com/embed/'+m[1]+'?autoplay=1&rel=0&modestbranding=1&playsinline=1';
-  m=href.match(/vimeo\.com\/(\d+)/);if(m)return 'https://player.vimeo.com/video/'+m[1]+'?autoplay=1&dnt=1';return null}
+  m=href.match(/vimeo\.com\/(?:video\/)?(\d+)/);if(m)return 'https://player.vimeo.com/video/'+m[1]+'?autoplay=1&dnt=1';return null}
 function openVideo(a){const src=videoFrom(a.href);if(!src)return false;const nl=LANG==='nl';vReturn=a;
   vframe.innerHTML='<iframe src="'+src+'" title="Video" allow="autoplay; fullscreen; picture-in-picture; encrypted-media" allowfullscreen></iframe>';
   const t=((a.querySelector('b')||{}).textContent||a.getAttribute('aria-label')||a.textContent||'').trim();document.getElementById('vtitle').textContent=t.length>2&&t.length<90?t:'';
@@ -1042,8 +904,19 @@ document.addEventListener('click',e=>{if(e.defaultPrevented||e.button!==0||e.met
 addEventListener('keydown',e=>{if(e.key==='Escape'){search.hidden=true;drawer.hidden=true;closeVideo()}});
 const onScroll=()=>hdr.classList.toggle('scrolled',scrollY>40);
 addEventListener('scroll',onScroll,{passive:true});
-addEventListener('hashchange',()=>{render();onScroll()});
-renderChrome();render();
+
+/* ================= BOOT ================= */
+function useContent(c){C=c;T=C.texts;PRODUCTS=C.products;byId=Object.fromEntries(PRODUCTS.map(p=>[p.id,p]));}
+async function boot(){
+  let draft=null;
+  if(/[?&]preview=1/.test(location.search)){try{const d=JSON.parse(localStorage.getItem('vdj-admin-draft')||'null');if(d&&d.content)draft=d.content}catch(_){}}
+  if(draft){useContent(draft);const bar=document.createElement('div');bar.className='preview-bar';bar.innerHTML='Voorbeeld van niet-gepubliceerde wijzigingen · <a href="./">Bekijk live versie</a>';document.body.appendChild(bar);}
+  else{try{const r=await fetch('content.json?v='+Date.now(),{cache:'no-store'});if(!r.ok)throw 0;useContent(await r.json());}
+  catch(_){useContent(JSON.parse(document.getElementById('content-fallback').textContent));}}
+  renderChrome();render();onScroll();
+  addEventListener('hashchange',()=>{render();onScroll()});
+}
+boot();
 </script>
 
 </body>
