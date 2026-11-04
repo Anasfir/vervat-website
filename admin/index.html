@@ -439,8 +439,10 @@ const VIEW={
     <ol class="steps">
      <li>Maak een nieuwe Google Sheet: <a href="https://sheets.new" target="_blank" rel="noopener">sheets.new</a>. Noem hem bijv. <i>Vervat website inzendingen</i>.</li>
      <li>Klik in de Sheet op <b>Extensies → Apps Script</b>. Verwijder de voorbeeldcode en plak de code hieronder.</li>
-     <li>Vervang bovenaan <code>CHANGE-ME-to-a-long-secret</code> door een lange geheime sleutel (knop <b>Maak sleutel</b> hieronder). Vul eventueel bij <code>NOTIFY_EMAIL</code> een e-mailadres in voor een melding per inzending. Klik <b>Opslaan</b>.</li>
-     <li>Klik <b>Implementeren → Nieuwe implementatie</b> → type <b>Web-app</b>. Uitvoeren als: <b>Ik</b>. Wie heeft toegang: <b>Iedereen</b>. Klik <b>Implementeren</b> en geef toestemming.</li>
+     <li>Vervang bovenaan <code>CHANGE-ME-to-a-long-secret</code> door een lange geheime sleutel (knop <b>Maak sleutel</b> hieronder). Controleer <code>NOTIFY_EMAIL</code>: elke inzending wordt naar dit adres gemaild, met de foto’s als bijlage. Klik <b>Opslaan</b> (het schijfje).</li>
+     <li><b>WhatsApp-kopie (optioneel):</b> open <a href="https://www.callmebot.com/blog/free-api-whatsapp-messages/" target="_blank" rel="noopener">callmebot.com (WhatsApp)</a>, sla het CallMeBot-nummer dat daar staat op in de telefoon die de berichten moet krijgen, en stuur het via WhatsApp het bericht <code>I allow callmebot to send me messages</code>. U krijgt een <i>apikey</i> terug. Zet die bij <code>CALLMEBOT_APIKEY</code> en controleer <code>WHATSAPP_PHONE</code>. Klik <b>Opslaan</b>.</li>
+     <li>Kies bovenin de functie <b>testNotify</b> en klik <b>Uitvoeren</b>. Geef Google toestemming. U ontvangt nu een test-e-mail (en WhatsApp-bericht).</li>
+     <li>Klik <b>Implementeren → Nieuwe implementatie</b> → type <b>Web-app</b>. Uitvoeren als: <b>Ik</b>. Wie heeft toegang: <b>Iedereen</b>. Klik <b>Implementeren</b> en geef toestemming.<br><span class="hint">Later de code aangepast? Kies <b>Implementeren → Implementaties beheren</b> → potlood → Versie: <b>Nieuwe versie</b> → Implementeren. De URL blijft hetzelfde.</span></li>
      <li>Kopieer de <b>Web-app-URL</b> (eindigt op <code>/exec</code>) en plak hem hieronder, met dezelfde geheime sleutel. Klik daarna rechtsboven op <b>Publiceren</b>.</li>
     </ol>
     ${fld('Web-app-URL (Apps Script)','site.formEndpoint',{type:'url',mono:true,ph:'https://script.google.com/macros/s/…/exec',hint:'Wordt opgeslagen in de website, zodat de formulieren hiernaartoe versturen.'})}
