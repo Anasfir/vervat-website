@@ -170,6 +170,9 @@ pre.code{background:var(--dark);color:#EDEBE4;border-radius:12px;padding:16px;ov
 .steps{margin:0;padding-left:20px;display:grid;gap:8px}
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:99px;font-weight:500;z-index:80;box-shadow:0 10px 30px rgba(0,0,0,.25)}
 .hint{font-size:12px;color:var(--muted)}
+.nl-wrap{display:grid;grid-template-columns:minmax(0,1fr);gap:16px}
+@media (min-width:1280px){.nl-wrap{grid-template-columns:minmax(0,1fr) 440px}.main.wide{max-width:1500px}}
+.nl-prev{min-width:0}
 .sep{height:1px;background:var(--line);margin:4px 0}
 </style>
 </head>
@@ -330,13 +333,13 @@ function videoFields(p,o={}){
 const TABS=[
  ['products','Producten'],['home','Homepagina'],['slides','Hero-slides'],['videos','Video’s'],['reviews','Reviews'],
  ['pages','Over ons & vacatures'],['contact','Contact & openingstijden'],['texts','Alle teksten'],['photos','Foto’s'],
- ['inbox','Inzendingen'],['settings','Instellingen']];
+ ['inbox','Inzendingen'],['newsletter','Nieuwsbrief'],['settings','Instellingen']];
 let INBOX_NEW=0;
 function renderNav(){$('#navList').innerHTML=TABS.map(([k,t])=>`<button type="button" class="nav ${k===TAB?'on':''}" data-tab="${k}"><span>${t}</span>${k==='inbox'&&INBOX_NEW?`<span class="badge">${INBOX_NEW}</span>`:''}</button>`).join('')}
 function go(tab){TAB=tab;$('#side').classList.remove('open');render(true)}
 function render(top){
   const y=scrollY;renderNav();$('#pageTitle').textContent=(TABS.find(t=>t[0]===TAB)||[])[1]||'';
-  $('#main').innerHTML=VIEW[TAB]();
+  $('#main').innerHTML=VIEW[TAB]();$('#main').classList.toggle('wide',TAB==='newsletter');
   if(VIEW_INIT[TAB])VIEW_INIT[TAB]();
   scrollTo(0,top?0:y);
 }
@@ -479,6 +482,7 @@ function scriptWithSettings(){
   t=setc(t,'NOTIFY_EMAIL',SC.email.trim());
   t=setc(t,'WHATSAPP_PHONE',SC.phone.trim().replace(/[^+\d]/g,''));
   t=setc(t,'CALLMEBOT_APIKEY',SC.api.trim());
+  t=setc(t,'SITE_URL',location.href.replace(/[?#].*$/,'').replace(/admin\/(index\.html)?$/,''));
   return t;
 }
 function fillScript(){const c=$('#scriptCode');if(c&&SCRIPT_SRC)c.textContent=scriptWithSettings()}
@@ -514,7 +518,8 @@ async function processImage(file){
   const bmp=await createImageBitmap(file);const max=2000;const s=Math.min(1,max/Math.max(bmp.width,bmp.height));
   const cv=document.createElement('canvas');cv.width=Math.round(bmp.width*s);cv.height=Math.round(bmp.height*s);
   cv.getContext('2d').drawImage(bmp,0,0,cv.width,cv.height);
-  let blob=await new Promise(r=>cv.toBlob(r,'image/webp',.82));let ext='webp';
+  const forceJpeg=!!(PICK&&PICK.path&&PICK.path[0]==='@'&&!$('#modal').hidden);
+  let blob=forceJpeg?null:await new Promise(r=>cv.toBlob(r,'image/webp',.82));let ext='webp';
   if(!blob||blob.type!=='image/webp'){blob=await new Promise(r=>cv.toBlob(r,'image/jpeg',.85));ext='jpg'}
   const buf=new Uint8Array(await blob.arrayBuffer());let bin='';for(let i=0;i<buf.length;i+=0x8000)bin+=String.fromCharCode.apply(null,buf.subarray(i,i+0x8000));
   return {b64:btoa(bin),ext,size:buf.length};
@@ -548,7 +553,7 @@ async function openPicker(path,mirror){
   try{await loadMedia();fillPick()}catch(e){$('#pickGrid').innerHTML=`<div class="notice err">${esc(e.message)}</div>`}
 }
 function fillPick(){const g=$('#pickGrid');if(g)g.innerHTML=MEDIA.map(m=>`<button type="button" class="mitem" data-act="choose" data-ref="${esc(m.ref)}"><div class="pv" style="background-image:url('${esc(m.url)}')"></div><span>${esc(m.ref)}</span></button>`).join('')}
-function choose(ref){set(PICK.path,ref);if(PICK.mirror)set(PICK.mirror,ref);closeModal();markDirty();render()}
+function choose(ref){if(PICK.path[0]==='@'){nset(PICK.path.slice(1),ref);closeModal();nlTouch();render();return}set(PICK.path,ref);if(PICK.mirror)set(PICK.mirror,ref);closeModal();markDirty();render()}
 function openModal(html,sm){$('#modalBox').className='modal-box'+(sm?' sm':'');$('#modalBox').innerHTML=html;$('#modal').hidden=false}
 function closeModal(){$('#modal').hidden=true;$('#modalBox').innerHTML=''}
 function confirmBox(title,text,okLabel,fn){openModal(`<div class="modal-head"><h2>${title}</h2></div><p>${text}</p><div style="display:flex;gap:8px;justify-content:flex-end"><button type="button" class="btn" data-act="closeModal">Annuleren</button><button type="button" class="btn dark" id="cfOk">${okLabel}</button></div>`,true);$('#cfOk').onclick=()=>{closeModal();fn()}}
@@ -628,6 +633,153 @@ function exportCsv(){
   openModal(`<div class="modal-head"><h2>Export (CSV)</h2><button type="button" class="btn" data-act="closeModal">Sluiten</button></div><p class="hint">Kopieer en plak in Excel of Google Sheets. Alles staat ook al in uw Google Sheet.</p><textarea style="min-height:300px" class="mono" readonly>${esc(csv)}</textarea>`);
 }
 
+/* ================= NEWSLETTER ================= */
+const SITE_BASE=location.href.replace(/[?#].*$/,'').replace(/admin\/(index\.html)?$/,'');
+const NLS={state:null,src:null,lang:'nl',subs:null,dirty:false,err:''};
+const NL_DAYS=[['MONDAY','maandag'],['TUESDAY','dinsdag'],['WEDNESDAY','woensdag'],['THURSDAY','donderdag'],['FRIDAY','vrijdag'],['SATURDAY','zaterdag'],['SUNDAY','zondag']];
+const nlBlank=()=>({subject:{nl:'',en:''},preheader:{nl:'',en:''},intro:{nl:'Beste lezer,\n\n',en:'Dear reader,\n\n'},blocks:[]});
+const nget=p=>p.split('.').reduce((o,k)=>o==null?o:o[k],NLS.src);
+function nset(p,v){const ks=p.split('.');let o=NLS.src;for(let i=0;i<ks.length-1;i++){if(o[ks[i]]==null)o[ks[i]]=/^\d+$/.test(ks[i+1])?[]:{};o=o[ks[i]]}o[ks[ks.length-1]]=v}
+function nlTouch(){NLS.dirty=true;store.set('vdj-nl-draft',NLS.src);clearTimeout(nlTouch._t);nlTouch._t=setTimeout(nlPreview,300);const s=$('#nlSaveState');if(s)s.textContent='Niet opgeslagen wijzigingen'}
+async function nlCall(action,data={}){
+  const r=await fetch(C.site.formEndpoint,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action,key:store.get('vdj-admin-formkey',''),...data})});
+  const j=await r.json();if(!j.ok)throw new Error(j.error==='unauthorized'?'De geheime sleutel klopt niet. Controleer Instellingen.':j.error||'onbekende fout');return j;
+}
+const ehtml=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const paras=(s,style)=>String(s||'').trim().split(/\n\s*\n/).filter(Boolean).map(p=>`<p style="${style}">${ehtml(p).replace(/\n/g,'<br>').replace(/\*\*(.+?)\*\*/g,'<b>$1</b>')}</p>`).join('');
+function emailImg(ref){if(!ref)return'';if(/^https?:/.test(ref))return ref;if(!/\.[a-z0-9]{3,4}$/i.test(ref))return SITE_BASE+'assets/email/'+ref+'.jpg';return SITE_BASE+'assets/'+ref}
+function absUrl(u){u=String(u||'').trim();if(!u)return SITE_BASE;if(/^https?:|^mailto:|^tel:/.test(u))return u;if(u[0]==='#')return SITE_BASE+u;return SITE_BASE+u.replace(/^\//,'')}
+function buildEmail(src,lang){
+  const L=o=>(o&&(o[lang]||o.nl))||'';const s=C.site;const F='font-family:Arial,Helvetica,sans-serif;';
+  const blocks=(src.blocks||[]).map(b=>`<tr><td style="padding:14px 32px 22px">
+     ${b.img?`<a href="${ehtml(absUrl(b.url))}"><img src="${ehtml(emailImg(b.img))}" width="536" alt="${ehtml(L(b.title))}" style="display:block;width:100%;max-width:536px;height:auto;border-radius:10px;border:0"></a>`:''}
+     ${L(b.title)?`<h2 style="${F}font-size:21px;line-height:1.25;color:#1B1B1A;margin:${b.img?'18px':'0'} 0 8px">${ehtml(L(b.title))}</h2>`:''}
+     ${paras(L(b.text),F+'font-size:15px;line-height:1.6;color:#3A3A38;margin:0 0 12px')}
+     ${L(b.btn)?`<table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:6px"><tr><td style="background:#F9C41E;border-radius:99px"><a href="${ehtml(absUrl(b.url))}" style="${F}display:inline-block;padding:12px 24px;font-size:15px;font-weight:bold;color:#1B1B1A;text-decoration:none">${ehtml(L(b.btn))} &rarr;</a></td></tr></table>`:''}
+    </td></tr>`).join('<tr><td style="padding:0 32px"><div style="height:1px;background:#E6E5DF"></div></td></tr>');
+  const unsub=lang==='en'?'Unsubscribe':'Afmelden';const why=lang==='en'?'You receive this email because you subscribed to our newsletter at the website.':'U ontvangt deze e-mail omdat u zich via de website heeft aangemeld voor onze nieuwsbrief.';
+  return `<!doctype html><html lang="${lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${ehtml(L(src.subject))}</title></head>
+<body style="margin:0;padding:0;background:#F3F3F0">
+<div style="display:none;max-height:0;overflow:hidden;opacity:0">${ehtml(L(src.preheader))}</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F3F3F0"><tr><td align="center" style="padding:24px 10px">
+<table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:100%;max-width:600px;background:#FFFFFF;border-radius:14px;overflow:hidden">
+ <tr><td style="background:#232322;padding:22px 32px"><a href="${ehtml(SITE_BASE)}"><img src="${ehtml(SITE_BASE)}assets/email/logo.png" width="150" alt="Vervat &amp; de Jong" style="display:block;border:0"></a></td></tr>
+ <tr><td style="height:6px;line-height:6px;font-size:0;background:#F9C41E">&nbsp;</td></tr>
+ <tr><td style="padding:30px 32px 8px">${paras(L(src.intro),F+'font-size:16px;line-height:1.6;color:#1B1B1A;margin:0 0 14px')}</td></tr>
+ ${blocks}
+ <tr><td style="padding:10px 32px 30px"><table role="presentation" cellpadding="0" cellspacing="0"><tr><td style="border:2px solid #1B1B1A;border-radius:99px"><a href="${ehtml(SITE_BASE)}#contact" style="${F}display:inline-block;padding:11px 22px;font-size:14px;font-weight:bold;color:#1B1B1A;text-decoration:none">${lang==='en'?'Plan a showroom visit':'Plan een showroombezoek'}</a></td></tr></table></td></tr>
+ <tr><td style="background:#232322;padding:26px 32px;${F}font-size:13px;line-height:1.6;color:#CFCFCA">
+  <b style="color:#FFFFFF">Vervat &amp; de Jong</b><br>${(s.address||[]).slice(1).map(ehtml).join(' · ')}<br>
+  <a href="tel:${ehtml(s.phoneIntl)}" style="color:#F9C41E;text-decoration:none">${ehtml(s.phone)}</a> · <a href="mailto:${ehtml(s.email)}" style="color:#F9C41E;text-decoration:none">${ehtml(s.email)}</a><br>
+  <a href="${ehtml(SITE_BASE)}" style="color:#CFCFCA">${lang==='en'?'Website':'Website'}</a> · <a href="${ehtml(s.facebook)}" style="color:#CFCFCA">Facebook</a> · <a href="${ehtml(s.instagram)}" style="color:#CFCFCA">Instagram</a>
+  <p style="margin:16px 0 0;font-size:12px;color:#9C9B95">${why} <a href="{{UNSUBSCRIBE_URL}}" style="color:#CFCFCA">${unsub}</a></p>
+ </td></tr>
+</table></td></tr></table></body></html>`;
+}
+function nlPreview(){const f=$('#nlFrame');if(!f||!NLS.src)return;f.srcdoc=buildEmail(NLS.src,NLS.lang).replace('{{UNSUBSCRIBE_URL}}','#')}
+function nf(label,path,o={}){const v=nget(path)??'';const long=o.long;
+  const inp=long?`<textarea data-npath="${path}" style="min-height:${o.h||110}px">${esc(v)}</textarea>`:`<input type="text" data-npath="${path}" value="${esc(v)}" ${o.ph?`placeholder="${esc(o.ph)}"`:''}>`;
+  return `<label class="f"><span>${label}${o.lang?` <i class="lng">${o.lang}</i>`:''}</span>${inp}${o.hint?`<small>${o.hint}</small>`:''}</label>`}
+const nbi=(label,base,o={})=>`<div class="bi">${nf(label,base+'.nl',{...o,lang:'NL'})}${nf(label,base+'.en',{...o,lang:'EN'})}</div>`;
+function nimg(path){const v=nget(path)||'';return `<div class="f"><span>Foto</span><div class="imgf"><div class="pv" style="background-image:url('${esc(v?emailImg(v):'')}')"></div><div class="meta"><code>${esc(v)||'geen foto'}</code><div style="display:flex;gap:6px"><button type="button" class="btn sm" data-act="pick" data-path="@${path}">Kies foto</button>${v?`<button type="button" class="btn sm" data-act="nlNoImg" data-path="${path}">Geen foto</button>`:''}</div></div></div></div>`}
+function fmtNext(n){if(!n)return'';const [d]=n.split('|');const dt=new Date(d);return dt.toLocaleDateString('nl-NL',{weekday:'long',day:'numeric',month:'long'})+' om '+String(dt.getHours()).padStart(2,'0')+':00'}
+
+VIEW.newsletter=function(){
+  const ep=C.site.formEndpoint,key=store.get('vdj-admin-formkey','');
+  if(!ep||!key)return `<div class="notice warn"><b>De nieuwsbrief gebruikt dezelfde Google-koppeling als de formulieren.</b> Volg eerst de stappen onder <a href="#" data-tab="settings">Instellingen → Formulieren koppelen</a>.</div>`;
+  if(NLS.err)return `<div class="notice err">${esc(NLS.err)}</div><p style="margin-top:12px"><button type="button" class="btn" data-act="nlReload">Opnieuw proberen</button></p>`;
+  if(!NLS.state)return `<p class="hint">Nieuwsbrief laden…</p>`;
+  const st=NLS.state,sc=st.schedule||{},src=NLS.src;const iss=st.issue;
+  const status=st.sending!=null?`<span class="pill progress">Wordt verstuurd (${st.sending} verzonden)</span>`:iss&&iss.status==='scheduled'?`<span class="pill done">Klaargezet</span>`:`<span class="pill new">Concept</span>`;
+  const nextTxt=sc.enabled?(iss&&iss.status==='scheduled'?`Wordt automatisch verstuurd op <b>${fmtNext(st.nextRun)}</b>.`:`Volgende verzendmoment: <b>${fmtNext(st.nextRun)}</b>. Er is nog <b>geen</b> nieuwsbrief klaargezet: dan wordt die week niets verstuurd.`):'Automatisch versturen staat uit.';
+  const prodOpts=C.products.map((p,i)=>`<option value="${i}">${esc(p.nl.short||p.nl.name)}</option>`).join('');
+  return `<p class="intro">Schrijf de nieuwsbrief, bekijk het voorbeeld en zet hem klaar. Op het ingestelde moment wordt hij automatisch naar alle bevestigde abonnees gestuurd, in hun eigen taal. Wordt er een week niets klaargezet, dan wordt er niets verstuurd.</p>
+  <div class="grid3" style="margin-bottom:16px">
+   <div class="card" style="margin:0"><h2>Abonnees</h2><div style="font-size:30px;font-weight:700">${st.counts.active}</div><small class="hint">${st.counts.pending} wachten op bevestiging · ${st.counts.unsubscribed} afgemeld</small></div>
+   <div class="card" style="margin:0"><h2>Volgende verzending</h2><div>${nextTxt}</div></div>
+   <div class="card" style="margin:0"><h2>Vandaag nog te versturen</h2><div style="font-size:30px;font-weight:700">${st.quota}</div><small class="hint">E-mails die Google vandaag nog toestaat. Meer abonnees? Dan gaat de rest de volgende dag automatisch.</small></div>
+  </div>
+  <div class="card"><h2>Schema</h2>
+   <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:end">
+    <label class="f" style="flex-direction:row"><span>Automatisch versturen</span><select id="nlEnabled"><option value="1" ${sc.enabled?'selected':''}>Aan</option><option value="0" ${sc.enabled?'':'selected'}>Uit</option></select></label>
+    <label class="f"><span>Dag</span><select id="nlDay">${NL_DAYS.map(([v,t])=>`<option value="${v}" ${sc.day===v?'selected':''}>${t}</option>`).join('')}</select></label>
+    <label class="f"><span>Tijd (NL-tijd)</span><select id="nlHour">${Array.from({length:24},(_,h)=>`<option value="${h}" ${+sc.hour===h?'selected':''}>${String(h).padStart(2,'0')}:00</option>`).join('')}</select></label>
+    <button type="button" class="btn" data-act="nlSchedule">Schema opslaan</button>
+   </div>
+   ${st.lastRun?`<small class="hint">Laatste automatische ronde: ${new Date(st.lastRun.at).toLocaleString('nl-NL')} — ${st.lastRun.result==='sent'?'verstuurd naar '+st.lastRun.recipients:'niets klaargezet, overgeslagen'}.</small>`:''}
+  </div>
+  <div class="nl-wrap">
+   <div style="min-width:0">
+    <div class="card"><h2>Deze nieuwsbrief ${status}</h2>
+     ${nbi('Onderwerp',`subject`,{ph:'Bijv. Nieuw in de showroom: Weru schuifpuien'})}
+     ${nbi('Voorvertoningstekst',`preheader`,{hint:'Korte tekst die in de inbox naast het onderwerp staat.'})}
+     ${nbi('Introductie',`intro`,{long:true,hint:'Lege regel = nieuwe alinea. **tekst** = vet.'})}
+    </div>
+    <div class="card"><h2>Blokken <small>${src.blocks.length}</small></h2>
+     <div class="rows">${src.blocks.map((b,i)=>`<div class="row"><div style="display:grid;gap:10px;min-width:0"><span class="num">Blok ${i+1}</span>${nimg(`blocks.${i}.img`)}${nbi('Titel',`blocks.${i}.title`)}${nbi('Tekst',`blocks.${i}.text`,{long:true,h:90})}<div class="grid2">${nf('Knoptekst NL',`blocks.${i}.btn.nl`)}${nf('Knoptekst EN',`blocks.${i}.btn.en`)}</div>${nf('Link (knop en foto)',`blocks.${i}.url`,{ph:'#painting of https://…',hint:'Een #-link gaat naar een pagina van de website.'})}</div>
+      <div class="ctl"><button type="button" class="btn icon sm" data-act="nlUp" data-i="${i}" ${i?'':'disabled'} aria-label="Omhoog">↑</button><button type="button" class="btn icon sm" data-act="nlDown" data-i="${i}" ${i<src.blocks.length-1?'':'disabled'} aria-label="Omlaag">↓</button><button type="button" class="btn icon sm danger" data-act="nlDel" data-i="${i}" aria-label="Verwijderen">✕</button></div></div>`).join('')||'<p class="hint">Nog geen blokken. Voeg een tekstblok toe, of kies een product.</p>'}</div>
+     <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button type="button" class="btn sm" data-act="nlAdd">+ Tekstblok</button><span class="hint">of</span><select id="nlProd" style="width:auto"><option value="">Product toevoegen…</option>${prodOpts}</select></div>
+    </div>
+    <div class="card"><h2>Opslaan en versturen <small id="nlSaveState">${NLS.dirty?'Niet opgeslagen wijzigingen':''}</small></h2>
+     <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button type="button" class="btn" data-act="nlSaveDraft">Opslaan als concept</button>
+      <button type="button" class="btn primary" data-act="nlReady">${sc.enabled?'Klaarzetten voor '+fmtNext(st.nextRun):'Klaarzetten'}</button>
+      ${iss&&iss.status==='scheduled'?`<button type="button" class="btn" data-act="nlCancel">Niet versturen</button>`:''}
+      <button type="button" class="btn dark" data-act="nlSendNow" style="margin-left:auto">Nu versturen…</button>
+     </div>
+     <div class="sep"></div>
+     <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:end"><label class="f" style="flex:1;min-width:200px"><span>Test sturen naar</span><input type="email" id="nlTestTo" value="${esc(store.get('vdj-nl-testto','')||C.site.email)}"></label><button type="button" class="btn" data-act="nlTest">Test sturen (${NLS.lang.toUpperCase()})</button></div>
+     <div id="nlMsg" role="status"></div>
+    </div>
+   </div>
+   <div class="nl-prev"><div class="card" style="position:sticky;top:80px;padding:12px">
+     <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><b>Voorbeeld</b><div class="lang-t">${['nl','en'].map(l=>`<button type="button" class="btn sm ${NLS.lang===l?'dark':''}" data-act="nlLang" data-l="${l}">${l.toUpperCase()}</button>`).join('')}</div></div>
+     <iframe id="nlFrame" title="Voorbeeld nieuwsbrief" style="width:100%;height:calc(100vh - 170px);min-height:520px;border:1px solid var(--line);border-radius:10px;background:#F3F3F0"></iframe>
+   </div></div>
+  </div>
+  <div class="card"><h2>Verstuurde nieuwsbrieven</h2>${st.history.length?`<div class="table-wrap" style="border:0"><table><thead><tr><th>Datum</th><th>Onderwerp</th><th>Ontvangers</th><th></th></tr></thead><tbody>${st.history.map((h,i)=>`<tr style="cursor:default"><td class="date">${h.sentAt?new Date(h.sentAt).toLocaleString('nl-NL',{dateStyle:'medium',timeStyle:'short'}):''}</td><td>${esc(h.subject.nl)}</td><td>${h.recipients}</td><td><button type="button" class="btn sm" data-act="nlReuse" data-i="${i}">Als basis gebruiken</button></td></tr>`).join('')}</tbody></table></div>`:'<p class="hint">Nog niets verstuurd.</p>'}</div>
+  <div class="card"><h2>Abonnees <small>${NLS.subs?NLS.subs.length+' in totaal':''}</small></h2>
+   <div class="filters" style="margin:0"><input type="search" id="subQ" placeholder="Zoek e-mail…"><select id="subF"><option value="">Iedereen</option><option value="active">Actief</option><option value="pending">Wacht op bevestiging</option><option value="unsubscribed">Afgemeld</option></select>${NLS.subs?'':`<button type="button" class="btn" data-act="subsLoad">Toon abonnees</button>`}<button type="button" class="btn" data-act="subsCsv">Exporteer CSV</button></div>
+   <div id="subsBox"></div>
+   <div class="sep"></div>
+   <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:end"><label class="f" style="flex:1;min-width:200px"><span>Abonnee toevoegen</span><input type="email" id="subNew" placeholder="naam@voorbeeld.nl"></label><label class="f"><span>Taal</span><select id="subLang"><option value="nl">NL</option><option value="en">EN</option></select></label>
+    <label class="check" style="display:flex;gap:8px;align-items:center;font-size:13px;padding-bottom:10px"><input type="checkbox" id="subOk"> heeft al toestemming gegeven</label><button type="button" class="btn" data-act="subAdd">Toevoegen</button></div>
+   <small class="hint">Zonder vinkje krijgt de persoon eerst een bevestigingsmail (verplicht volgens de AVG, tenzij u al aantoonbaar toestemming heeft).</small>
+  </div>`;
+};
+VIEW_INIT.newsletter=function(){
+  if(!C.site.formEndpoint||!store.get('vdj-admin-formkey',''))return;
+  if(!NLS.state&&!NLS.err){nlLoad();return}
+  nlPreview();if(NLS.subs)drawSubs();
+};
+async function nlLoad(){
+  try{const st=await nlCall('nl.state');NLS.state=st;NLS.err='';
+    if(!NLS.src){const local=store.get('vdj-nl-draft',null);let server=null;try{server=st.issue&&st.issue.source?JSON.parse(st.issue.source):null}catch(_){}
+      NLS.src=local||server||nlBlank();NLS.dirty=!!local&&JSON.stringify(local)!==JSON.stringify(server);}
+  }catch(e){NLS.err='Nieuwsbrief laden mislukt: '+e.message+'. Heeft u de nieuwste Apps Script-code geplakt en een nieuwe versie geïmplementeerd? (Instellingen → stap 2)'}
+  if(TAB==='newsletter')render();
+}
+function nlPayload(){return {source:JSON.stringify(NLS.src),subject:{nl:NLS.src.subject.nl,en:NLS.src.subject.en||NLS.src.subject.nl},html:{nl:buildEmail(NLS.src,'nl'),en:buildEmail(NLS.src,'en')}}}
+function nlCheck(){const s=NLS.src;if(!s.subject.nl.trim())return 'Vul een onderwerp in (NL).';if(!s.intro.nl.trim()&&!s.blocks.length)return 'De nieuwsbrief is nog leeg.';return ''}
+function nlMsg(html,kind){const m=$('#nlMsg');if(m)m.innerHTML=`<div class="notice ${kind||'info'}" style="margin-top:10px">${html}</div>`}
+function drawSubs(){const box=$('#subsBox');if(!box||!NLS.subs)return;const q=($('#subQ').value||'').toLowerCase(),f=$('#subF').value;
+  const rows=NLS.subs.filter(s=>(!f||s.status===f)&&(!q||s.email.toLowerCase().includes(q)));const SL={active:'Actief',pending:'Wacht op bevestiging',unsubscribed:'Afgemeld'},SC2={active:'done',pending:'new',unsubscribed:'progress'};
+  box.innerHTML=rows.length?`<div class="table-wrap" style="margin-top:10px"><table><thead><tr><th>E-mail</th><th>Taal</th><th>Status</th><th>Aangemeld</th><th></th></tr></thead><tbody>${rows.slice(0,300).map(s=>`<tr style="cursor:default"><td>${esc(s.email)}</td><td>${esc(String(s.lang).toUpperCase())}</td><td><span class="pill ${SC2[s.status]||''}">${SL[s.status]||esc(s.status)}</span></td><td class="date">${s.signedUp?new Date(s.signedUp).toLocaleDateString('nl-NL'):''}</td><td style="white-space:nowrap">${s.status==='unsubscribed'?'':`<button type="button" class="btn sm" data-act="subSet" data-e="${esc(s.email)}" data-s="unsubscribed">Afmelden</button>`} <button type="button" class="btn sm danger" data-act="subDel" data-e="${esc(s.email)}">Verwijderen</button></td></tr>`).join('')}</tbody></table></div>${rows.length>300?'<p class="hint">Eerste 300 getoond. Gebruik zoeken.</p>':''}`:'<p class="hint" style="margin-top:10px">Geen abonnees gevonden.</p>'}
+async function subsLoad(){try{NLS.subs=(await nlCall('subs.list')).items;render()}catch(e){toast(e.message,4000)}}
+async function nlRefreshState(){try{NLS.state=await nlCall('nl.state')}catch(_){}render()}
+async function nlAction(a){
+  const msgs={};const btns=document.querySelectorAll('[data-act^=nl]');btns.forEach(b=>b.disabled=true);
+  try{
+    if(a==='save'){await nlCall('nl.save',{...nlPayload(),ready:false});NLS.dirty=false;store.del('vdj-nl-draft');toast('Concept opgeslagen');await nlRefreshState()}
+    if(a==='ready'){const c=nlCheck();if(c){nlMsg(c,'warn');return}await nlCall('nl.save',{...nlPayload(),ready:true});NLS.dirty=false;store.del('vdj-nl-draft');toast('Klaargezet');await nlRefreshState()}
+    if(a==='cancel'){await nlCall('nl.cancel');toast('Niet meer klaargezet');await nlRefreshState()}
+    if(a==='test'){const to=$('#nlTestTo').value.trim();store.set('vdj-nl-testto',to);const p=nlPayload();await nlCall('nl.test',{...p,to,lang:NLS.lang});nlMsg(`Test (${NLS.lang.toUpperCase()}) verstuurd naar <b>${esc(to)}</b>. Kijk ook in de map Spam.`,'ok')}
+    if(a==='sendNow'){await nlCall('nl.sendNow',nlPayload());NLS.dirty=false;store.del('vdj-nl-draft');NLS.src=nlBlank();toast('De nieuwsbrief wordt verstuurd',4000);await nlRefreshState()}
+    if(a==='schedule'){const sched={enabled:$('#nlEnabled').value==='1',day:$('#nlDay').value,hour:+$('#nlHour').value};await nlCall('nl.schedule',{schedule:sched});toast('Schema opgeslagen');await nlRefreshState()}
+  }catch(e){nlMsg('Mislukt: '+esc(e.message),'err')}
+  finally{document.querySelectorAll('[data-act^=nl]').forEach(b=>b.disabled=false)}
+}
+
 /* ---------------- events ---------------- */
 document.addEventListener('input',e=>{
   const el=e.target;
@@ -635,11 +787,15 @@ document.addEventListener('input',e=>{
     if(el.dataset.path.endsWith('.id')&&el.dataset.path.startsWith('products.')){const c=v.toLowerCase().replace(/[^a-z0-9-]/g,'');if(c!==v){el.value=c;set(el.dataset.path,c)}}}
   if(el.dataset.lines){set(el.dataset.lines,el.value.split('\n').map(s=>s.trim()).filter(Boolean));markDirty()}
   if(el.id==='fType'||el.id==='fStatus'||el.id==='fQ')drawInbox();
+  if(el.dataset.npath){nset(el.dataset.npath,el.value);nlTouch()}
+  if(el.id==='subQ'||el.id==='subF')drawSubs();
   if(el.dataset.sc){if(el.dataset.sc==='key')store.set('vdj-admin-formkey',el.value.trim());else{SC[el.dataset.sc]=el.value;store.set('vdj-admin-script',SC)}fillScript()}
 });
 document.addEventListener('change',async e=>{
   const el=e.target;
   if(el.id==='fType'||el.id==='fStatus')drawInbox();
+  if(el.id==='subF')drawSubs();
+  if(el.id==='nlProd'&&el.value!==''){const p=C.products[+el.value];NLS.src.blocks.push({img:p.img,title:{nl:p.nl.name,en:p.en.name},text:{nl:p.nl.sub,en:p.en.sub},btn:{nl:'Meer informatie',en:'Learn more'},url:'#'+p.id});nlTouch();render()}
   if(el.dataset.upload){const files=[...el.files];if(!files.length)return;const msg=el.closest('label').nextElementSibling;
     const refs=await uploadFiles(files,msg);el.value='';
     if(el.id==='upPick'&&refs.length){choose(refs[0])}else if(TAB==='photos')VIEW_INIT.photos()}
@@ -687,6 +843,25 @@ document.addEventListener('click',async e=>{
    case 'reloadLive':closeModal();store.del('vdj-admin-draft');await loadContent();render(true);break;
    case 'restoreOld':{const d=store.get('vdj-admin-draft-old',null);if(d){C=d.content;store.del('vdj-admin-draft-old');markDirty();go('products')}break}
    case 'dropOld':store.del('vdj-admin-draft-old');render();break;
+   case 'nlLang':NLS.lang=b.dataset.l;render();break;
+   case 'nlAdd':NLS.src.blocks.push({img:'',title:{nl:'',en:''},text:{nl:'',en:''},btn:{nl:'',en:''},url:''});nlTouch();render();break;
+   case 'nlUp':{const B=NLS.src.blocks;if(i>0)[B[i-1],B[i]]=[B[i],B[i-1]];nlTouch();render();break}
+   case 'nlDown':{const B=NLS.src.blocks;if(i<B.length-1)[B[i+1],B[i]]=[B[i],B[i+1]];nlTouch();render();break}
+   case 'nlDel':confirmBox('Blok verwijderen?','Dit blok wordt uit de nieuwsbrief gehaald.','Verwijderen',()=>{NLS.src.blocks.splice(i,1);nlTouch();render()});break;
+   case 'nlNoImg':nset(b.dataset.path,'');nlTouch();render();break;
+   case 'nlSaveDraft':nlAction('save');break;
+   case 'nlReady':nlAction('ready');break;
+   case 'nlCancel':nlAction('cancel');break;
+   case 'nlTest':nlAction('test');break;
+   case 'nlSchedule':nlAction('schedule');break;
+   case 'nlSendNow':{const c=nlCheck();if(c){nlMsg(c,'warn');break}confirmBox('Nu versturen?',`De nieuwsbrief “${esc(NLS.src.subject.nl)}” wordt nu verstuurd naar <b>${NLS.state.counts.active}</b> abonnee(s). Dit kan niet ongedaan worden gemaakt. Stuur eerst een test als u dat nog niet deed.`,'Versturen',()=>nlAction('sendNow'));break}
+   case 'nlReuse':{const h=NLS.state.history[i];try{NLS.src=JSON.parse(h.source)}catch(_){NLS.src=nlBlank()}NLS.src.subject={nl:'',en:''};nlTouch();render(true);toast('Geladen als basis. Pas het onderwerp aan.');break}
+   case 'nlReload':NLS.err='';NLS.state=null;render();break;
+   case 'subsLoad':subsLoad();break;
+   case 'subsCsv':{if(!NLS.subs){await subsLoad()}const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';openModal(`<div class="modal-head"><h2>Abonnees (CSV)</h2><button type="button" class="btn" data-act="closeModal">Sluiten</button></div><textarea style="min-height:300px" class="mono" readonly>${esc(['email;taal;status;aangemeld;bevestigd;afgemeld',...NLS.subs.map(s=>[s.email,s.lang,s.status,s.signedUp,s.confirmed,s.unsubscribed].map(q).join(';'))].join('\n'))}</textarea>`);break}
+   case 'subAdd':{const em=$('#subNew').value.trim();try{await nlCall('subs.add',{email:em,lang:$('#subLang').value,confirm:$('#subOk').checked});toast($('#subOk').checked?'Toegevoegd':'Bevestigingsmail verstuurd');NLS.subs=null;await subsLoad();await nlRefreshState()}catch(err){toast(err.message,4000)}break}
+   case 'subSet':try{await nlCall('subs.set',{email:b.dataset.e,status:b.dataset.s});await subsLoad();await nlRefreshState()}catch(err){toast(err.message,4000)}break;
+   case 'subDel':confirmBox('Abonnee verwijderen?',`${esc(b.dataset.e)} wordt helemaal uit de lijst verwijderd.`,'Verwijderen',async()=>{try{await nlCall('subs.delete',{email:b.dataset.e});await subsLoad();await nlRefreshState()}catch(err){toast(err.message,4000)}});break;
   }
 });
 $('#publishBtn').onclick=()=>publish();

@@ -2036,8 +2036,28 @@
    "en": "This form is not connected yet. Please email your message to <b>info@vervat-breukelen.nl</b> or call 0346 - 261 959."
   },
   "news.sent": {
-   "nl": "Bedankt voor uw aanmelding!",
-   "en": "Thanks for subscribing!"
+   "nl": "Bijna klaar! We hebben u een e-mail gestuurd. Klik op de link in die e-mail om uw aanmelding te bevestigen.",
+   "en": "Almost done! We have sent you an email. Click the link in it to confirm your subscription."
+  },
+  "news.already": {
+   "nl": "U bent al aangemeld voor de nieuwsbrief. Bedankt!",
+   "en": "You are already subscribed to the newsletter. Thank you!"
+  },
+  "news.working": {
+   "nl": "Een moment…",
+   "en": "One moment…"
+  },
+  "news.confirmed": {
+   "nl": "Gelukt! U bent aangemeld voor de nieuwsbrief van Vervat &amp; de Jong.",
+   "en": "Done! You are now subscribed to the Vervat &amp; de Jong newsletter."
+  },
+  "news.unsubscribed": {
+   "nl": "U bent afgemeld. U ontvangt de nieuwsbrief niet meer.",
+   "en": "You have been unsubscribed. You will no longer receive the newsletter."
+  },
+  "news.badlink": {
+   "nl": "Deze link werkt niet (meer). Neem contact met ons op als u zich wilt aan- of afmelden.",
+   "en": "This link does not work (any more). Please contact us if you want to subscribe or unsubscribe."
   }
  }
 }
