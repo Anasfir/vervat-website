@@ -78,7 +78,7 @@ button{font:inherit;cursor:pointer}
 .hdr-actions{display:flex;align-items:center;gap:14px}
 .menu-btn{display:none}
 @media (max-width:1120px){.hdr-call{display:none}}
-@media (max-width:920px){.nav{display:none}.menu-btn{display:grid}.hdr-actions{margin-left:auto}.hdr .btn-yellow{display:none}}
+@media (max-width:1010px){.nav{display:none}.menu-btn{display:grid}.hdr-actions{margin-left:auto}.hdr .btn-yellow{display:none}}
 
 /* drawer */
 .drawer{position:fixed;inset:0;z-index:80;background:rgba(20,20,20,.5);display:flex;justify-content:flex-end}
@@ -351,6 +351,61 @@ button{font:inherit;cursor:pointer}
 .cform .two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .cform .btn-yellow{justify-self:start}
 @media (max-width:860px){.contact-grid{grid-template-columns:1fr}.cform .two{grid-template-columns:1fr}}
+/* service page */
+#service-form,.sform,#after-hero{scroll-margin-top:72px}
+.process{position:relative;z-index:1;list-style:none;margin:60px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:0;border-top:1px solid var(--yellow)}
+.process li{padding:28px 26px 30px 0;border-bottom:1px solid var(--line)}
+.process .num{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:var(--yellow);font-weight:700;margin-bottom:16px}
+.process h3{font-size:19px;margin-bottom:8px}
+.process p{color:var(--ink-2);font-size:14.5px}
+.busy{margin-top:28px;background:var(--white);border:1px solid var(--line);border-left:4px solid var(--yellow);border-radius:10px;padding:16px 20px;max-width:760px;color:var(--ink-2)}
+.sform{position:relative;z-index:1;margin-top:50px;background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:clamp(22px,4vw,44px);display:grid;gap:22px;max-width:900px}
+.stepper{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.stepper li{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px;color:var(--muted);padding-bottom:12px;border-bottom:3px solid var(--line);min-width:0}
+.stepper li span{flex:none;display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--paper-2);font-size:13px}
+.stepper li.on{color:var(--ink);border-color:var(--yellow)}
+.stepper li.on span,.stepper li.done span{background:var(--yellow);color:var(--ink)}
+.stepper li.done{border-color:var(--yellow-dk)}
+@media (max-width:600px){.stepper li{font-size:0;gap:0}.stepper li span{font-size:13px}}
+.fstep{border:0;margin:0;padding:0;display:grid;gap:18px;min-width:0}
+.fstep legend{font-size:22px;font-weight:700;margin-bottom:6px;padding:0}
+.sform label{display:grid;gap:6px;font-size:13px;font-weight:700;min-width:0}
+.sform input:not([type=radio]):not([type=checkbox]):not([type=file]),.sform select,.sform textarea{font:400 15px var(--font);color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:12px 14px;width:100%}
+.sform textarea{min-height:140px;resize:vertical}
+.sform .two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.sform .three{display:grid;grid-template-columns:1fr 1fr 1.4fr;gap:16px}
+.sform .three .span2{grid-column:span 2}
+.sform .invalid{border-color:#C0392B!important;background:#FDF3F2!important}
+.radios{display:flex;flex-wrap:wrap;gap:10px}
+.sform .radio{display:inline-flex;grid-auto-flow:column;align-items:center;gap:8px;border:1px solid var(--line);border-radius:99px;padding:9px 16px;font-weight:500;font-size:14px;cursor:pointer;background:var(--paper)}
+.sform .radio:has(input:checked){border-color:var(--ink);background:var(--yellow)}
+.radios.invalid .radio{border-color:#C0392B}
+.q{display:grid;gap:10px;font-size:13px;font-weight:700}
+.drop{border:2px dashed var(--line);border-radius:14px;padding:26px;text-align:center;cursor:pointer;background:var(--paper);justify-items:center}
+.drop:hover{border-color:var(--yellow-dk)}
+.drop input{position:absolute;width:1px;height:1px;opacity:0}
+.drop:focus-within{outline:3px solid var(--yellow);outline-offset:3px}
+.drop b{font-size:16px}
+.drop small{color:var(--muted);font-weight:400}
+.files{list-style:none;margin:0;padding:0;display:grid;gap:6px;font-size:14px}
+.files li{display:flex;justify-content:space-between;gap:10px;background:var(--paper-2);border-radius:8px;padding:8px 12px;overflow-wrap:anywhere}
+.files li.err{background:#FDF3F2;color:#9B2C1F}
+.sform .check{display:flex;gap:12px;align-items:flex-start;font-weight:400;font-size:14px;line-height:1.5}
+.sform .check input{margin-top:4px;width:18px;height:18px;flex:none;accent-color:var(--ink)}
+.sform-nav{display:flex;gap:12px;justify-content:flex-end;flex-wrap:wrap}
+@media (max-width:700px){.sform .two,.sform .three{grid-template-columns:1fr}.sform .three .span2{grid-column:auto}}
+.brands{position:relative;z-index:1;list-style:none;margin:40px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:12px}
+.brands li{display:grid;place-items:center;height:84px;border:1px solid var(--line);border-radius:14px;background:var(--white);font-weight:900;font-size:22px;letter-spacing:-.01em;color:var(--ink-2)}
+.svc-cards{position:relative;z-index:1;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:24px;margin-top:40px}
+.svc-card{border:1px solid var(--line);border-radius:var(--radius);padding:34px;background:var(--white);display:grid;gap:16px;align-content:start}
+.svc-card h3{font-size:24px}
+.svc-card dl{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;margin:0;font-variant-numeric:tabular-nums;font-size:14.5px}
+.svc-card dt,.svc-card dd{margin:0}
+.svc-card .links{margin-top:6px}
+.svc-card.dark{background:var(--dark);color:var(--white);border-color:var(--dark)}
+.svc-card.dark .score{border-color:rgba(255,255,255,.4);padding-bottom:24px}
+.svc-card.dark p{color:#dcdbd5}
+.svc-card.dark .btn-ghost{justify-self:start}
 
 .view{display:block}
 .lang{display:inline-flex;border:1px solid rgba(255,255,255,.55);border-radius:99px;padding:3px;gap:2px}
@@ -404,6 +459,7 @@ const T={
  ctaText:{nl:'Bekijk de producten van dichtbij en krijg advies dat past bij uw woning. We trekken ongeveer 1,5 uur uit per bezoek, zodat er tijd is voor al uw vragen.',en:'See the products up close and get advice that fits your home. We plan about 1.5 hours per visit, so there is time for all your questions.'},
  ctaAppt:{nl:'Afspraak maken',en:'Make an appointment'},ctaHoursT:{nl:'Showroom, op afspraak',en:'Showroom, by appointment'},ctaCall:{nl:'Bel 0346 - 261 959',en:'Call 0346 - 261 959'},
  scroll:{nl:'Naar de inhoud',en:'Scroll to content'},prev:{nl:'Vorige producten',en:'Previous products'},next:{nl:'Volgende producten',en:'Next products'},
+ service:{nl:'Service',en:'Service'},serviceLong:{nl:'Reparatie &amp; onderhoud',en:'Repair &amp; maintenance'},
  copy:{nl:'Kopieer',en:'Copy'},copied:{nl:'Gekopieerd',en:'Copied'},
  wa:{nl:'Chat via WhatsApp',en:'Chat on WhatsApp'},waShort:{nl:'WhatsApp',en:'WhatsApp'},
  waMsg:{nl:'Hallo Vervat & de Jong, ik heb een vraag:',en:'Hello Vervat & de Jong, I have a question:'}
@@ -571,6 +627,7 @@ function headerHTML(){
     <a href="#about" data-nav="about">${L(T.about)}</a>
     <a href="#vacancies" data-nav="vacancies">${L(T.vacancies)}</a>
     <a href="#showroom" data-nav="showroom">${L(T.showroom)}</a>
+    <a href="#service" data-nav="service">${L(T.service)}</a>
    </nav>
    <div class="hdr-actions">
     <a class="hdr-call" href="tel:+31346261959"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8.5 3.5 6 3c-1 .2-2.6 1.6-2.4 3.4.6 6 6.4 12 13.5 14 1.6.4 3-1 3.3-2l-.4-2.6-3.7-1.4-1.6 1.6c-2.2-1-4.4-3.2-5.4-5.4l1.6-1.6L9.5 5.3z"/><path d="M15 3.5v2.3M19.6 5.4 18 7M21.5 10h-2.3" stroke-linecap="round"/></svg>
@@ -593,7 +650,7 @@ function shellHTML(){
     <div><a class="logo" href="#home"><img src="assets/logo.webp" alt="Vervat &amp; de Jong bv" width="640" height="223"></a>
      <p>${L(T.ftrVisit)}</p><p>Vervat &amp; de Jong<br>Keulschevaart 3a1<br>3621 MX Breukelen</p></div>
     <div><h4>${L(T.ftrHours)}</h4><dl class="hours">${hoursDl().replace(/<dt>(Ma|Mon)<\/dt><dd>[^<]*<\/dd>/,'')}</dl><p class="note">${L(T.ftrNote)}</p></div>
-    <nav aria-label="Footer"><a href="#home">${L(T.home)}</a><a href="#products">${L(T.products)}</a><a href="#about">${L(T.about)}</a><a href="#vacancies">${L(T.vacancies)}</a><a href="#showroom">${L(T.showroom)}</a><a href="#contact">${L(T.contact)}</a></nav>
+    <nav aria-label="Footer"><a href="#home">${L(T.home)}</a><a href="#products">${L(T.products)}</a><a href="#about">${L(T.about)}</a><a href="#vacancies">${L(T.vacancies)}</a><a href="#showroom">${L(T.showroom)}</a><a href="#service">${L(T.serviceLong)}</a><a href="#contact">${L(T.contact)}</a></nav>
     <div class="big"><a class="ph" href="tel:+31346261959">0346 - 261 959</a><a class="em" href="mailto:info@vervat-breukelen.nl">info@vervat-breukelen.nl</a>
      <div class="soc"><a href="https://www.facebook.com/vervatbreukelen.nl" target="_blank" rel="noopener">Facebook</a> &nbsp;-&nbsp; <a href="https://www.instagram.com/vervatendejong/" target="_blank" rel="noopener">Instagram</a></div></div>
    </div>
@@ -605,7 +662,7 @@ function drawerHTML(){
    <div style="display:flex;justify-content:space-between;align-items:center">${langSwitch()}<button class="icon-btn close" type="button" data-act="close" aria-label="${L(T.close)}" style="background:rgba(255,255,255,.12)">${XICON}</button></div>
    <a href="#home">${L(T.home)}</a><a href="#products">${L(T.products)}</a>
    ${PRODUCTS.map(p=>`<a class="sub" href="#${p.id}">${P(p).short}</a>`).join('')}
-   <a href="#about">${L(T.about)}</a><a href="#vacancies">${L(T.vacancies)}</a><a href="#showroom">${L(T.showroom)}</a><a href="#contact">${L(T.contact)}</a>
+   <a href="#about">${L(T.about)}</a><a href="#vacancies">${L(T.vacancies)}</a><a href="#showroom">${L(T.showroom)}</a><a href="#service">${L(T.serviceLong)}</a><a href="#contact">${L(T.contact)}</a>
    <div class="contact-mini">${L(T.callUs)}<b>0346 - 261 959</b>info@vervat-breukelen.nl<br>Keulschevaart 3a1, 3621 MX Breukelen</div></div>`;
 }
 function searchHTML(){
@@ -766,6 +823,71 @@ const VIEWS={
   </div></section>${ctaBand()}`;
  },
 
+ service(){const nl=LANG==='nl';
+  const brands=['Weru','Novoferm','Palazzo','Keralit','VELUX','Trespa'];
+  const steps=nl?[['Aanvraag indienen','Vul het formulier in met uw gegevens, het product en een omschrijving. Voeg gerust foto’s toe.'],['Bevestiging','U ontvangt een bevestiging. Wij beoordelen uw aanvraag en registreren de gegevens.'],['Inplannen','Onze planner neemt contact met u op om een afspraak te maken voor inspectie of reparatie.'],['Uitvoering','Onze eigen monteurs, schilders of glaszetters lossen het probleem vakkundig op.']]
+   :[['Submit a request','Fill in the form with your details, the product and a description. Feel free to add photos.'],['Confirmation','You receive a confirmation. We review your request and register the details.'],['Scheduling','Our planner contacts you to arrange an appointment for an inspection or repair.'],['The work','Our own installers, painters or glaziers fix the problem properly.']];
+  const opt=(id,arr)=>arr.map(([v,t],i)=>`<label class="radio"><input type="radio" name="${id}" value="${v}" ${i===0&&id!=='sDeliv'?'checked':''} ${id==='sDeliv'?'required':''}> ${t}</label>`).join('');
+  return hero([{kicker:nl?'Klantenservice':'Customer service',title:nl?'Reparatie &amp; onderhoud':'Repair &amp; maintenance',sub:nl?'Onderhoud, reparatie en garantie efficiënt geregeld':'Maintenance, repairs and warranty claims, handled efficiently',bg:'glazing-install',thumb:'weru-door',btn:nl?'Service aanvragen':'Request service',href:'#service-form'}])+`
+  <section class="sec"><div class="wrap">
+   ${head(nl?'Service':'Service',nl?'Efficiënt regelen van <span class="y">onderhoud, reparatie</span> en garantie':'Efficiently arrange <span class="y">maintenance, repairs</span> and warranty',nl?'<p>Heeft u een vraag over onderhoud of een reparatie aan uw kozijnen, deuren, schuifpui, garagedeur, dakkapel of ander product? Wij helpen u graag, zowel binnen als buiten de garantieperiode.</p><p>Meld uw verzoek aan via het formulier hieronder. Na verzending ontvangt u een bevestiging.</p>':'<p>Do you have a question about maintenance or a repair to your window frames, doors, sliding door, garage door, dormer or other product? We are happy to help, both within and after the warranty period.</p><p>Submit your request with the form below. You will receive a confirmation once it is sent.</p>')}
+   <ol class="process">${steps.map(([h,t],i)=>`<li><span class="num">${i+1}</span><h3>${h}</h3><p>${t}</p></li>`).join('')}</ol>
+   <p class="busy">${nl?'Let op: in drukke periodes kan de serviceplanning drie tot vier weken vooruit lopen. Bij spoed? Bel ons op <b>0346 - 261 959</b>.':'Please note: in busy periods the service schedule can run three to four weeks ahead. Urgent? Call us on <b>0346 - 261 959</b>.'}</p>
+  </div></section>
+
+  <section class="sec alt" id="service-form"><div class="wrap">
+   ${head(nl?'Serviceverzoek':'Service request',nl?'Meld uw <span class="y">serviceverzoek</span> aan':'Submit your <span class="y">service request</span>',nl?'<p>Drie korte stappen. Velden met * zijn verplicht.</p>':'<p>Three short steps. Fields marked * are required.</p>')}
+   <form class="sform" id="sform" novalidate>
+    <ol class="stepper" aria-label="${nl?'Stappen':'Steps'}">${(nl?['Uw gegevens','Product en vraag','Foto’s en bevestigen']:['Your details','Product and question','Photos and confirm']).map((t,i)=>`<li class="${i?'':'on'}" data-st="${i}"><span>${i+1}</span>${t}</li>`).join('')}</ol>
+
+    <fieldset class="fstep" data-step="0">
+     <legend>${nl?'Uw gegevens':'Your details'}</legend>
+     <div class="radios" role="radiogroup" aria-label="${nl?'Aanhef':'Salutation'}">${opt('sSal',nl?[['dhr','Dhr.'],['mevr','Mevr.'],['fam','Fam.']]:[['mr','Mr'],['mrs','Mrs'],['fam','Family']])}</div>
+     <div class="three"><label for="sInit">${nl?'Voorletters':'Initials'}<input id="sInit" autocomplete="given-name"></label><label for="sInfix">${nl?'Tussenvoegsel':'Infix'}<input id="sInfix"></label><label for="sLast">${nl?'Achternaam':'Last name'} *<input id="sLast" required autocomplete="family-name"></label></div>
+     <label for="sCompany">${nl?'Bedrijf (optioneel)':'Company (optional)'}<input id="sCompany" autocomplete="organization"></label>
+     <div class="three"><label for="sStreet" class="span2">${nl?'Straat en huisnummer':'Street and house number'} *<input id="sStreet" required autocomplete="street-address"></label><label for="sZip">${nl?'Postcode':'Postcode'} *<input id="sZip" required autocomplete="postal-code" pattern="[1-9][0-9]{3} ?[A-Za-z]{2}" placeholder="3621 MX"></label></div>
+     <div class="two"><label for="sCity">${nl?'Plaats':'Town'} *<input id="sCity" required autocomplete="address-level2"></label><label for="sPhone">${nl?'Telefoon':'Phone'} *<input id="sPhone" type="tel" required autocomplete="tel"></label></div>
+     <label for="sEmail">E-mail *<input id="sEmail" type="email" required autocomplete="email"></label>
+    </fieldset>
+
+    <fieldset class="fstep" data-step="1" hidden>
+     <legend>${nl?'Product en vraag':'Product and question'}</legend>
+     <div class="two"><label for="sProd">${nl?'Om welk product gaat het?':'Which product is it about?'} *<select id="sProd" required><option value="">${nl?'Kies een product':'Choose a product'}</option>${PRODUCTS.map(p=>`<option>${P(p).short}</option>`).join('')}<option>${nl?'Anders':'Other'}</option></select></label>
+      <label for="sYear">${nl?'Installatiejaar':'Year of installation'}<input id="sYear" type="number" min="1985" max="2030" placeholder="2015" inputmode="numeric"></label></div>
+     <div class="q"><span>${nl?'Is het product door Vervat &amp; de Jong geleverd of gemonteerd?':'Was the product supplied or installed by Vervat &amp; de Jong?'} *</span>
+      <div class="radios" role="radiogroup">${opt('sDeliv',nl?[['ja','Ja'],['nee','Nee'],['weet-niet','Weet ik niet']]:[['yes','Yes'],['no','No'],['unsure','Not sure']])}</div></div>
+     <label for="sDesc">${nl?'Omschrijving van het probleem of uw vraag':'Describe the problem or your question'} *<textarea id="sDesc" required placeholder="${nl?'Bijvoorbeeld: de schuifpui in de woonkamer sluit niet goed meer en tocht.':'For example: the living-room sliding door no longer closes properly and is draughty.'}"></textarea></label>
+    </fieldset>
+
+    <fieldset class="fstep" data-step="2" hidden>
+     <legend>${nl?'Foto’s en bevestigen':'Photos and confirm'}</legend>
+     <label class="drop" for="sFiles"><input id="sFiles" type="file" accept=".jpg,.jpeg,.png,.pdf,image/jpeg,image/png,application/pdf" multiple>
+      <b>${nl?'Foto’s of documenten toevoegen':'Add photos or documents'}</b><small>${nl?'JPG, PNG of PDF · maximaal 3 bestanden van 5 MB':'JPG, PNG or PDF · up to 3 files of 5 MB each'}</small></label>
+     <ul class="files" id="sFileList"></ul>
+     <label class="check"><input type="checkbox" id="sCost" required> <span>${nl?'Ik begrijp dat werkzaamheden buiten de garantie in rekening worden gebracht op basis van nacalculatie. Het uurtarief wordt vooraf gecommuniceerd.':'I understand that work outside the warranty is charged on actual cost. The hourly rate is communicated in advance.'} *</span></label>
+     <label class="check"><input type="checkbox" id="sPriv" required> <span>${nl?'Ik ga akkoord met het privacybeleid van Vervat &amp; de Jong.':'I agree to the Vervat &amp; de Jong privacy policy.'} *</span></label>
+    </fieldset>
+
+    <div class="sform-nav"><button type="button" class="btn-line" id="sPrev" hidden>${nl?'Vorige':'Previous'}</button><button type="button" class="btn-yellow" id="sNext">${nl?'Volgende':'Next'}</button><button type="submit" class="btn-yellow" id="sSend" hidden>${nl?'Versturen':'Send request'}</button></div>
+    <div class="form-msg" id="sMsg" role="status"></div>
+   </form>
+  </div></section>
+
+  <section class="sec"><div class="wrap">
+   ${head(nl?'Merken':'Brands',nl?'Service op de merken <span class="y">die wij leveren</span>':'Service on the brands <span class="y">we supply</span>','')}
+   <ul class="brands">${brands.map(b=>`<li>${b}</li>`).join('')}</ul>
+   <div class="svc-cards">
+    <div class="svc-card"><h3>Vervat &amp; de Jong Breukelen</h3><p>Keulschevaart 3a1<br>3621 MX Breukelen</p>
+     <dl>${hoursDl()}</dl>
+     <div class="links"><a class="btn-line" href="tel:+31346261959">0346 - 261 959</a><a class="btn-line" href="mailto:info@vervat-breukelen.nl">info@vervat-breukelen.nl</a><a class="btn-line" href="${waLink()}" target="_blank" rel="noopener">${WA_ICON} WhatsApp</a></div></div>
+    <div class="svc-card dark"><h3>${nl?'Klantervaringen':'Customer experiences'}</h3>
+     <div class="score"><b>9.3</b><div><span class="stars" aria-hidden="true">★★★★★</span><small>4.247 ${nl?'beoordelingen':'reviews'}</small></div></div>
+     <p>${nl?'Lees wat klanten over onze service zeggen, of laat zelf een beoordeling achter.':'Read what customers say about our service, or leave a review yourself.'}</p>
+     <a class="btn-ghost" href="https://www.klantenvertellen.nl/reviews/1037906/" target="_blank" rel="noopener">${nl?'Bekijk beoordelingen':'Read reviews'}<span class="arr">${ARROW}</span></a></div>
+   </div>
+  </div></section>`;
+ },
+
  contact(){const nl=LANG==='nl';
   return hero([{kicker:'Contact',title:L(T.contact),sub:'Keulschevaart 3a1, 3621 MX Breukelen<br>'+(nl?'Telefoon':'Phone')+' 0346 - 261 959',bg:'storefront',thumb:'hero-showroom',btn:L(T.ctaCall),href:'tel:+31346261959'}])+`
   <section class="sec"><div class="wrap">
@@ -794,7 +916,7 @@ const VIEWS={
 /* ================= ROUTER & UI ================= */
 const view=document.getElementById('view'),hdr=document.getElementById('hdr'),shell=document.getElementById('shell'),drawer=document.getElementById('drawer'),search=document.getElementById('search');
 let timer=null;
-const TITLES={products:T.products,about:T.about,vacancies:T.vacancies,showroom:T.showroom,contact:T.contact};
+const TITLES={service:T.serviceLong,products:T.products,about:T.about,vacancies:T.vacancies,showroom:T.showroom,contact:T.contact};
 function renderChrome(){
   document.documentElement.lang=LANG;
   hdr.innerHTML=headerHTML();shell.innerHTML=shellHTML()+`<a class="wa" href="${waLink()}" target="_blank" rel="noopener" aria-label="${L(T.wa)}">${WA_ICON}<span>${L(T.waShort)}</span></a>`;drawer.innerHTML=drawerHTML();search.innerHTML=searchHTML();
@@ -806,7 +928,8 @@ function render(keepScroll){
   const h=(location.hash||'#home').slice(1);
   clearInterval(timer);
   let html,key=h;
-  if(byId[h]) html=VIEWS.product(byId[h]);
+  if(h==='service-form'){html=VIEWS.service();key='service';}
+  else if(byId[h]) html=VIEWS.product(byId[h]);
   else if(VIEWS[h]&&h!=='product') html=VIEWS[h]();
   else {html=VIEWS.home();key='home';}
   view.innerHTML=html;
@@ -815,7 +938,8 @@ function render(keepScroll){
   const t=byId[h]?P(byId[h]).short:(TITLES[key]?L(TITLES[key]):'');
   document.title=(t?t+' | ':'')+'Vervat & de Jong';
   if(!keepScroll)window.scrollTo(0,0);
-  initHero();initCarousel();initForms();
+  initHero();initCarousel();initForms();initService();
+  if(h==='service-form'){const t=document.getElementById('service-form');if(t)setTimeout(()=>t.scrollIntoView(),50)}
 }
 function setLang(l){if(l===LANG)return;LANG=l;try{localStorage.setItem('vdj-lang',l)}catch(_){}
   renderChrome();render(true);}
@@ -831,6 +955,29 @@ function initHero(){
 function initCarousel(){
   const tr=view.querySelector('#track');if(!tr)return;
   view.querySelectorAll('.car-ctrl button').forEach(b=>b.onclick=()=>tr.scrollBy({left:(+b.dataset.dir)*(tr.querySelector('.card').offsetWidth+24),behavior:'smooth'}));
+}
+function initService(){
+  const f=view.querySelector('#sform');if(!f)return;const nl=LANG==='nl';
+  const steps=[...f.querySelectorAll('.fstep')],marks=[...f.querySelectorAll('.stepper li')];
+  const prev=f.querySelector('#sPrev'),next=f.querySelector('#sNext'),send=f.querySelector('#sSend'),msg=f.querySelector('#sMsg');let cur=0;
+  const show=i=>{cur=i;steps.forEach((s,k)=>s.hidden=k!==i);marks.forEach((m,k)=>{m.classList.toggle('on',k===i);m.classList.toggle('done',k<i)});prev.hidden=i===0;next.hidden=i===steps.length-1;send.hidden=i!==steps.length-1;msg.textContent=''};
+  const valid=i=>{let ok=true;const st=steps[i];
+    st.querySelectorAll('input:not([type=radio]):not([type=file]),select,textarea').forEach(el=>{const bad=!el.checkValidity();el.classList.toggle('invalid',bad&&el.type!=='checkbox');if(bad)ok=false});
+    st.querySelectorAll('.radios').forEach(g=>{const r=g.querySelector('input[required]');if(r){const bad=!g.querySelector('input:checked');g.classList.toggle('invalid',bad);if(bad)ok=false}});
+    if(!ok){msg.textContent=nl?'Vul de gemarkeerde velden in om verder te gaan.':'Please complete the highlighted fields to continue.';const first=st.querySelector('.invalid input,.invalid,:invalid');if(first&&first.focus)first.focus()}
+    return ok};
+  f.addEventListener('input',e=>{e.target.classList&&e.target.classList.remove('invalid');const g=e.target.closest('.radios');if(g)g.classList.remove('invalid')});
+  next.onclick=()=>{if(valid(cur)){show(cur+1);f.scrollIntoView({block:'start'})}};
+  prev.onclick=()=>{show(cur-1);f.scrollIntoView({block:'start'})};
+  const fi=f.querySelector('#sFiles'),fl=f.querySelector('#sFileList');let filesOk=true;
+  fi.onchange=()=>{const fs=[...fi.files];filesOk=true;
+    fl.innerHTML=fs.map((x,k)=>{const big=x.size>5*1024*1024,ty=!/\.(jpe?g|png|pdf)$/i.test(x.name),many=k>=3;const err=big||ty||many;if(err)filesOk=false;
+      const why=many?(nl?'max. 3 bestanden':'max. 3 files'):big?(nl?'groter dan 5 MB':'larger than 5 MB'):ty?(nl?'alleen JPG, PNG of PDF':'JPG, PNG or PDF only'):(x.size/1048576).toFixed(1)+' MB';
+      return `<li class="${err?'err':''}"><span>${x.name.replace(/[<>&]/g,'')}</span><span>${why}</span></li>`}).join('')};
+  f.addEventListener('submit',e=>{e.preventDefault();if(!valid(cur))return;
+    if(!filesOk){msg.textContent=nl?'Verwijder of vervang de bestanden met een foutmelding.':'Remove or replace the files marked with an error.';return}
+    msg.innerHTML=nl?'Dit formulier is nog niet gekoppeld aan een mailbox. Stuur uw serviceverzoek voorlopig naar <b>info@vervat-breukelen.nl</b> of bel 0346 - 261 959.':'This form is not connected to a mailbox yet. For now, please email your service request to <b>info@vervat-breukelen.nl</b> or call 0346 - 261 959.'});
+  show(0);
 }
 function initForms(){
   const cf=view.querySelector('#cform');
@@ -848,6 +995,7 @@ function doSearch(){
    {h:'about',t:L(T.about),d:nl?'Opgericht in 1842 in Breukelen':'Founded in 1842 in Breukelen',k:'history geschiedenis team 1842 vervat de jong'},
    {h:'vacancies',t:L(T.vacancies),d:nl?'Schilders, timmerman / kozijnmonteur, stages':'Painters, carpenter / frame installer, internships',k:'jobs werk schilder painter timmerman carpenter stage internship'},
    {h:'showroom',t:L(T.showroom),d:nl?'Tien korte films':'Ten short films',k:'video films showroom'},
+   {h:'service',t:L(T.serviceLong).replace('&amp;','&'),d:nl?'Serviceverzoek, garantie en reparaties':'Service requests, warranty and repairs',k:'service reparatie repair onderhoud maintenance garantie warranty storing defect klacht'},
    {h:'contact',t:L(T.contact),d:'Keulschevaart 3a1, Breukelen · 0346 - 261 959',k:'telefoon phone email adres address openingstijden hours afspraak appointment'}];
   const v=document.getElementById('q').value.trim().toLowerCase();
   const hits=idx.filter(x=>!v||(x.t+' '+x.k).toLowerCase().includes(v));
