@@ -1378,7 +1378,7 @@
     "en": "Which window type suits your home?"
    },
    "url": "https://vimeo.com/625513748",
-   "thumb": "hero-showroom"
+   "thumb": "https://vumbnail.com/625513748.jpg"
   },
   {
    "title": {
@@ -1386,7 +1386,7 @@
     "en": "How do you choose a window frame colour?"
    },
    "url": "https://vimeo.com/625744241",
-   "thumb": "weru-door"
+   "thumb": "https://vumbnail.com/625744241.jpg"
   },
   {
    "title": {
@@ -1394,7 +1394,7 @@
     "en": "Should your front door be a fixed closing section?"
    },
    "url": "https://vimeo.com/625753140",
-   "thumb": "storefront"
+   "thumb": "https://vumbnail.com/625753140.jpg"
   },
   {
    "title": {
@@ -1402,7 +1402,7 @@
     "en": "How do you get a correct quote?"
    },
    "url": "https://vimeo.com/625755423",
-   "thumb": "hero-weru"
+   "thumb": "https://vumbnail.com/625755423.jpg"
   },
   {
    "title": {
@@ -1410,7 +1410,7 @@
     "en": "Are ventilation and window treatments often forgotten?"
    },
    "url": "https://vimeo.com/625757618",
-   "thumb": "window-view"
+   "thumb": "https://vumbnail.com/625757618.jpg"
   },
   {
    "title": {
@@ -1418,7 +1418,7 @@
     "en": "Is a lift-and-slide door worth it?"
    },
    "url": "https://vimeo.com/625797498",
-   "thumb": "sliding-door-2"
+   "thumb": "https://vumbnail.com/625797498.jpg"
   },
   {
    "title": {
@@ -1426,7 +1426,7 @@
     "en": "Which terrace or back door is right for you?"
    },
    "url": "https://vimeo.com/625804039",
-   "thumb": "sliding-door"
+   "thumb": "https://vumbnail.com/625804039.jpg"
   },
   {
    "title": {
@@ -1434,7 +1434,7 @@
     "en": "Is installation the overlooked part of a project?"
    },
    "url": "https://vimeo.com/625812388",
-   "thumb": "glazing-install"
+   "thumb": "https://vumbnail.com/625812388.jpg"
   },
   {
    "title": {
@@ -1442,7 +1442,7 @@
     "en": "Four smart budget tips"
    },
    "url": "https://vimeo.com/625822229",
-   "thumb": "office"
+   "thumb": "https://vumbnail.com/625822229.jpg"
   },
   {
    "title": {
@@ -1450,7 +1450,7 @@
     "en": "Choosing sustainability"
    },
    "url": "https://vimeo.com/625827699",
-   "thumb": "keralit"
+   "thumb": "https://vumbnail.com/625827699.jpg"
   }
  ],
  "aboutVideos": [
@@ -1460,7 +1460,7 @@
     "en": "Film: our painters"
    },
    "url": "https://www.youtube.com/watch?v=Z4Ste5Kq2fg",
-   "thumb": "hero-painting"
+   "thumb": "https://i.ytimg.com/vi/Z4Ste5Kq2fg/hqdefault.jpg"
   },
   {
    "title": {
@@ -1468,7 +1468,7 @@
     "en": "Film: glazing"
    },
    "url": "https://www.youtube.com/watch?v=Ehv9BCeDo2w",
-   "thumb": "glazing-install"
+   "thumb": "https://i.ytimg.com/vi/Ehv9BCeDo2w/hqdefault.jpg"
   },
   {
    "title": {
@@ -1476,7 +1476,7 @@
     "en": "Film: Weru frames"
    },
    "url": "https://www.youtube.com/watch?v=QnYYTr1pIuc",
-   "thumb": "video-still"
+   "thumb": "https://i.ytimg.com/vi/QnYYTr1pIuc/hqdefault.jpg"
   }
  ],
  "about": {
