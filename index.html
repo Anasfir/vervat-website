@@ -356,6 +356,10 @@ button{font:inherit;cursor:pointer}
 .lang button.on{background:var(--yellow);color:var(--ink)}
 .drawer-in .lang{color:var(--white)}
 @media (max-width:420px){.hdr-actions{gap:8px}.hdr .icon-btn{width:40px;height:40px}}
+.wa{position:fixed;z-index:70;right:calc(20px + env(safe-area-inset-right,0px));bottom:calc(20px + env(safe-area-inset-bottom,0px));display:flex;align-items:center;gap:10px;background:#25D366;color:#fff;text-decoration:none;border-radius:99px;padding:12px 18px 12px 14px;font:700 15px/1 var(--font);box-shadow:0 10px 28px rgba(0,0,0,.28);transition:transform .2s,background .2s}
+.wa:hover{background:#1EBE5A;transform:translateY(-2px)}
+.wa svg{flex:none}
+@media (max-width:600px){.wa{padding:14px}.wa span{display:none}}
 </style>
 
 </head>
@@ -374,6 +378,9 @@ let LANG='nl';
 try{const s=localStorage.getItem('vdj-lang');if(s==='en'||s==='nl')LANG=s;}catch(_){}
 const L=v=>(v&&typeof v==='object'&&!Array.isArray(v)&&('nl' in v))?v[LANG]:v;
 
+const WA_NUMBER='31346261959'; /* WhatsApp number in international format, without + or spaces */
+const WA_ICON='<svg width="26" height="26" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d="M16 3a13 13 0 0 0-11.2 19.6L3 29l6.6-1.7A13 13 0 1 0 16 3zm0 23.6c-2 0-4-.6-5.7-1.6l-.4-.2-3.9 1 1-3.8-.3-.4A10.6 10.6 0 1 1 16 26.6z"/><path d="M21.9 18.8c-.3-.2-1.9-.9-2.2-1-.3-.1-.5-.2-.7.2l-1 1.2c-.2.2-.4.2-.7.1a8.7 8.7 0 0 1-4.3-3.8c-.3-.5.3-.5.9-1.6.1-.2 0-.4 0-.5l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.2 1.4 3.5c.2.2 2.4 3.7 5.8 5.1 2.2.9 3 1 4.1.8.7-.1 1.9-.8 2.2-1.5.3-.8.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4z"/></svg>';
+const waLink=()=>`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(L(T.waMsg))}`;
 const T={
  home:{nl:'Home',en:'Home'},products:{nl:'Producten',en:'Products'},about:{nl:'Over ons',en:'About us'},vacancies:{nl:'Vacatures',en:'Vacancies'},showroom:{nl:'Virtuele showroom',en:'Virtual showroom'},contact:{nl:'Contact',en:'Contact us'},
  callUs:{nl:'Bel ons',en:'Call us Phone'},contactBtn:{nl:'Contact',en:'Contact Us'},
@@ -395,7 +402,9 @@ const T={
  ctaText:{nl:'Bekijk de producten van dichtbij en krijg advies dat past bij uw woning. We trekken ongeveer 1,5 uur uit per bezoek, zodat er tijd is voor al uw vragen.',en:'See the products up close and get advice that fits your home. We plan about 1.5 hours per visit, so there is time for all your questions.'},
  ctaAppt:{nl:'Afspraak maken',en:'Make an appointment'},ctaHoursT:{nl:'Showroom, op afspraak',en:'Showroom, by appointment'},ctaCall:{nl:'Bel 0346 - 261 959',en:'Call 0346 - 261 959'},
  scroll:{nl:'Naar de inhoud',en:'Scroll to content'},prev:{nl:'Vorige producten',en:'Previous products'},next:{nl:'Volgende producten',en:'Next products'},
- copy:{nl:'Kopieer',en:'Copy'},copied:{nl:'Gekopieerd',en:'Copied'}
+ copy:{nl:'Kopieer',en:'Copy'},copied:{nl:'Gekopieerd',en:'Copied'},
+ wa:{nl:'Chat via WhatsApp',en:'Chat on WhatsApp'},waShort:{nl:'WhatsApp',en:'WhatsApp'},
+ waMsg:{nl:'Hallo Vervat & de Jong, ik heb een vraag:',en:'Hello Vervat & de Jong, I have a question:'}
 };
 const HOURS={nl:[['Di','10:00 – 17:00'],['Wo','10:00 – 17:00'],['Do','10:00 – 17:00'],['Vr','10:00 – 17:00'],['Za','10:00 – 13:00'],['Ma','Alleen huisbezoeken']],
  en:[['Tue','10:00 AM – 5:00 PM'],['Wed','10:00 AM – 5:00 PM'],['Thu','10:00 AM – 5:00 PM'],['Fri','10:00 AM – 5:00 PM'],['Sat','10:00 AM – 1:00 PM'],['Mon','Home visits only']]};
@@ -762,6 +771,7 @@ const VIEWS={
    <div class="contact-grid">
     <div class="cinfo">
      <div><h4>${nl?'Telefoon':'Phone'}</h4><span class="v">0346 - 261 959</span><button class="copybtn" type="button" data-copy="0346 261 959">${L(T.copy)}</button></div>
+     <div><h4>WhatsApp</h4><a class="btn-line" href="${waLink()}" target="_blank" rel="noopener">${WA_ICON} ${L(T.wa)}</a></div>
      <div><h4>E-mail</h4><span class="v">info@vervat-breukelen.nl</span><button class="copybtn" type="button" data-copy="info@vervat-breukelen.nl">${L(T.copy)}</button></div>
      <div><h4>${nl?'Adres':'Address'}</h4><span class="v">Vervat &amp; de Jong<br>Keulschevaart 3a1<br>3621 MX Breukelen</span></div>
      <div><h4>${L(T.ctaHoursT)}</h4><dl>${hoursDl()}</dl></div>
@@ -785,7 +795,7 @@ let timer=null;
 const TITLES={products:T.products,about:T.about,vacancies:T.vacancies,showroom:T.showroom,contact:T.contact};
 function renderChrome(){
   document.documentElement.lang=LANG;
-  hdr.innerHTML=headerHTML();shell.innerHTML=shellHTML();drawer.innerHTML=drawerHTML();search.innerHTML=searchHTML();
+  hdr.innerHTML=headerHTML();shell.innerHTML=shellHTML()+`<a class="wa" href="${waLink()}" target="_blank" rel="noopener" aria-label="${L(T.wa)}">${WA_ICON}<span>${L(T.waShort)}</span></a>`;drawer.innerHTML=drawerHTML();search.innerHTML=searchHTML();
   document.getElementById('q').addEventListener('input',doSearch);
   document.getElementById('newsForm').addEventListener('submit',e=>{e.preventDefault();const em=document.getElementById('newsEmail'),m=document.getElementById('newsMsg');
     m.textContent=(!em.value||!em.checkValidity())?L(T.newsBad):L(T.newsOk);});
