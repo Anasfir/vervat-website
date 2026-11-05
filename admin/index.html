@@ -285,7 +285,7 @@ function fld(label,path,o={}){
   const v=get(path)??'';const long=o.long??isLong(v);
   const inp=long?`<textarea data-path="${path}" class="${o.mono?'mono':''} ${String(v).length>300?'long':''}" ${o.ph?`placeholder="${esc(o.ph)}"`:''}>${esc(v)}</textarea>`
     :`<input type="${o.type||'text'}" data-path="${path}" value="${esc(v)}" class="${o.mono?'mono':''}" ${o.ph?`placeholder="${esc(o.ph)}"`:''} ${o.type==='number'?'data-num="1"':''}>`;
-  return `<label class="f"><span>${label}${o.lang?` <i class="lng">${o.lang}</i>`:''}</span>${inp}${o.hint?`<small>${o.hint}</small>`:''}</label>`;
+  return `<label class="f"><span>${label}${o.lang?` <i class="lng" translate="no">${o.lang}</i>`:''}</span>${inp}${o.hint?`<small>${o.hint}</small>`:''}</label>`;
 }
 function bi(label,base,o={}){
   const long=o.long??(isLong(get(base+'.nl'))||isLong(get(base+'.en')));
@@ -414,7 +414,7 @@ const VIEW={
   <div class="filters"><input type="search" id="tq" placeholder="Zoek in teksten…" value="${esc(VIEW.texts.q||'')}" style="min-width:min(100%,320px)"></div>
   ${Object.entries(groups).map(([g,ks])=>`<div class="card tgroup"><h3>${NAMES[g]||g}</h3>${ks.map(k=>{const long=isLong(C.texts[k].nl)||isLong(C.texts[k].en);
     const f=l=>long?`<textarea data-path="texts.${k}.${l}" aria-label="${k} ${l}">${esc(C.texts[k][l])}</textarea>`:`<input type="text" data-path="texts.${k}.${l}" value="${esc(C.texts[k][l])}" aria-label="${k} ${l}">`;
-    return `<div class="trow"><code>${esc(k)}</code><label class="f"><span><i class="lng">NL</i></span>${f('nl')}</label><label class="f"><span><i class="lng">EN</i></span>${f('en')}</label></div>`}).join('')}</div>`).join('')||'<p class="empty">Geen teksten gevonden.</p>'}`;
+    return `<div class="trow"><code>${esc(k)}</code><label class="f"><span><i class="lng" translate="no">NL</i></span>${f('nl')}</label><label class="f"><span><i class="lng" translate="no">EN</i></span>${f('en')}</label></div>`}).join('')}</div>`).join('')||'<p class="empty">Geen teksten gevonden.</p>'}`;
  },
  photos(){
   return `<p class="intro">Upload foto’s om ze daarna overal te kunnen kiezen. Foto’s worden automatisch verkleind (max. 2000 px) en als lichte webafbeelding opgeslagen. Een nieuwe foto staat na ongeveer een minuut online.</p>
@@ -640,6 +640,28 @@ const NL_DAYS=[['MONDAY','maandag'],['TUESDAY','dinsdag'],['WEDNESDAY','woensdag
 const nlBlank=()=>({subject:{nl:'',en:''},preheader:{nl:'',en:''},intro:{nl:'Beste lezer,\n\n',en:'Dear reader,\n\n'},blocks:[]});
 const nget=p=>p.split('.').reduce((o,k)=>o==null?o:o[k],NLS.src);
 function nset(p,v){const ks=p.split('.');let o=NLS.src;for(let i=0;i<ks.length-1;i++){if(o[ks[i]]==null)o[ks[i]]=/^\d+$/.test(ks[i+1])?[]:{};o=o[ks[i]]}o[ks[ks.length-1]]=v}
+const nlExample=()=>({
+ subject:{nl:'Nieuws van Vervat & de Jong: klaar voor de winter',en:'News from Vervat & de Jong: ready for winter'},
+ preheader:{nl:'Warmte binnenhouden, schilderwerk plannen en snel een reparatie melden.',en:'Keep the warmth in, plan your painting and report a repair in minutes.'},
+ intro:{nl:'Beste lezer,\n\nDe dagen worden korter en kouder. Dit is **het moment** om uw woning winterklaar te maken. In deze nieuwsbrief leest u hoe u de warmte binnenhoudt, wat u nu al kunt plannen voor het voorjaar, en hoe u snel een reparatie aanvraagt.',
+        en:'Dear reader,\n\nThe days are getting shorter and colder. This is **the moment** to get your home ready for winter. In this newsletter: how to keep the warmth in, what to plan now for spring, and how to request a repair quickly.'},
+ blocks:[
+  {img:'sliding-door',url:'#weru-sliding-doors',
+   title:{nl:'Warm de winter door met een Weru schuifpui',en:'Stay warm this winter with a Weru sliding door'},
+   text:{nl:'Weru schuifpuien sluiten rondom luchtdicht af en isoleren daardoor zeer goed. Ze lopen zo licht dat iedereen ze moeiteloos opent, en standaard zit er inbraakwerend beslag op (Politiekeurmerk Veilig Wonen).',
+         en:'Weru sliding doors close airtight all round, so they insulate very well. They run so lightly that anyone can open them, and burglar-resistant hardware is standard (Police Safe Living quality mark).'},
+   btn:{nl:'Bekijk de schuifpuien',en:'See the sliding doors'}},
+  {img:'hero-painting',url:'#painting',
+   title:{nl:'Plan nu uw buitenschilderwerk voor het voorjaar',en:'Plan your exterior painting for spring now'},
+   text:{nl:'De agenda voor het voorjaar vult zich snel. Met een meerjarenonderhoudsplan spreidt u de kosten en blijft uw woning in topconditie. Al onze schilders zijn in vaste dienst.',
+         en:'The spring schedule fills up quickly. A multi-year maintenance plan spreads the cost and keeps your home in top condition. All our painters are permanent staff.'},
+   btn:{nl:'Over ons schilderwerk',en:'About our painting'}},
+  {img:'glazing-install',url:'#service',
+   title:{nl:'Iets kapot of tocht het? Meld het online',en:'Something broken or draughty? Report it online'},
+   text:{nl:'Via ons serviceformulier meldt u in drie stappen een reparatie of onderhoudsverzoek, met foto’s erbij. Onze planner neemt daarna contact met u op om een afspraak te maken.',
+         en:'With our service form you report a repair or maintenance request in three steps, photos included. Our planner then contacts you to make an appointment.'},
+   btn:{nl:'Service aanvragen',en:'Request service'}}
+ ]});
 function nlTouch(){NLS.dirty=true;store.set('vdj-nl-draft',NLS.src);clearTimeout(nlTouch._t);nlTouch._t=setTimeout(nlPreview,300);const s=$('#nlSaveState');if(s)s.textContent='Niet opgeslagen wijzigingen'}
 async function nlCall(action,data={}){
   const r=await fetch(C.site.formEndpoint,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action,key:store.get('vdj-admin-formkey',''),...data})});
@@ -679,7 +701,7 @@ function buildEmail(src,lang){
 function nlPreview(){const f=$('#nlFrame');if(!f||!NLS.src)return;f.srcdoc=buildEmail(NLS.src,NLS.lang).replace('{{UNSUBSCRIBE_URL}}','#')}
 function nf(label,path,o={}){const v=nget(path)??'';const long=o.long;
   const inp=long?`<textarea data-npath="${path}" style="min-height:${o.h||110}px">${esc(v)}</textarea>`:`<input type="text" data-npath="${path}" value="${esc(v)}" ${o.ph?`placeholder="${esc(o.ph)}"`:''}>`;
-  return `<label class="f"><span>${label}${o.lang?` <i class="lng">${o.lang}</i>`:''}</span>${inp}${o.hint?`<small>${o.hint}</small>`:''}</label>`}
+  return `<label class="f"><span>${label}${o.lang?` <i class="lng" translate="no">${o.lang}</i>`:''}</span>${inp}${o.hint?`<small>${o.hint}</small>`:''}</label>`}
 const nbi=(label,base,o={})=>`<div class="bi">${nf(label,base+'.nl',{...o,lang:'NL'})}${nf(label,base+'.en',{...o,lang:'EN'})}</div>`;
 function nimg(path){const v=nget(path)||'';return `<div class="f"><span>Foto</span><div class="imgf"><div class="pv" style="background-image:url('${esc(v?emailImg(v):'')}')"></div><div class="meta"><code>${esc(v)||'geen foto'}</code><div style="display:flex;gap:6px"><button type="button" class="btn sm" data-act="pick" data-path="@${path}">Kies foto</button>${v?`<button type="button" class="btn sm" data-act="nlNoImg" data-path="${path}">Geen foto</button>`:''}</div></div></div></div>`}
 function fmtNext(n){if(!n)return'';const [d]=n.split('|');const dt=new Date(d);return dt.toLocaleDateString('nl-NL',{weekday:'long',day:'numeric',month:'long'})+' om '+String(dt.getHours()).padStart(2,'0')+':00'}
@@ -711,6 +733,7 @@ VIEW.newsletter=function(){
   <div class="nl-wrap">
    <div style="min-width:0">
     <div class="card"><h2>Deze nieuwsbrief ${status}</h2>
+     <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button type="button" class="btn sm" data-act="nlExample">Voorbeeld laden</button><button type="button" class="btn sm" data-act="nlClear">Leeg beginnen</button><span class="hint">Vult een complete test-nieuwsbrief in (NL en EN) die u daarna kunt aanpassen.</span></div>
      ${nbi('Onderwerp',`subject`,{ph:'Bijv. Nieuw in de showroom: Weru schuifpuien'})}
      ${nbi('Voorvertoningstekst',`preheader`,{hint:'Korte tekst die in de inbox naast het onderwerp staat.'})}
      ${nbi('Introductie',`intro`,{long:true,hint:'Lege regel = nieuwe alinea. **tekst** = vet.'})}
@@ -733,7 +756,7 @@ VIEW.newsletter=function(){
     </div>
    </div>
    <div class="nl-prev"><div class="card" style="position:sticky;top:80px;padding:12px">
-     <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><b>Voorbeeld</b><div class="lang-t">${['nl','en'].map(l=>`<button type="button" class="btn sm ${NLS.lang===l?'dark':''}" data-act="nlLang" data-l="${l}">${l.toUpperCase()}</button>`).join('')}</div></div>
+     <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><b>Voorbeeld</b><div class="lang-t">${['nl','en'].map(l=>`<button type="button" class="btn sm ${NLS.lang===l?'dark':''}" data-act="nlLang" data-l="${l}" translate="no">${l.toUpperCase()}</button>`).join('')}</div></div>
      <iframe id="nlFrame" title="Voorbeeld nieuwsbrief" style="width:100%;height:calc(100vh - 170px);min-height:520px;border:1px solid var(--line);border-radius:10px;background:#F3F3F0"></iframe>
    </div></div>
   </div>
@@ -843,6 +866,8 @@ document.addEventListener('click',async e=>{
    case 'reloadLive':closeModal();store.del('vdj-admin-draft');await loadContent();render(true);break;
    case 'restoreOld':{const d=store.get('vdj-admin-draft-old',null);if(d){C=d.content;store.del('vdj-admin-draft-old');markDirty();go('products')}break}
    case 'dropOld':store.del('vdj-admin-draft-old');render();break;
+   case 'nlExample':{const go=()=>{NLS.src=nlExample();nlTouch();render()};const s0=NLS.src;(s0.subject.nl||s0.blocks.length)?confirmBox('Voorbeeld laden?','De huidige tekst in de editor wordt vervangen door de voorbeeld-nieuwsbrief.','Vervangen',go):go();break}
+   case 'nlClear':confirmBox('Leeg beginnen?','De editor wordt leeggemaakt. Een al klaargezette nieuwsbrief blijft klaargezet tot u opnieuw opslaat.','Leegmaken',()=>{NLS.src=nlBlank();nlTouch();render()});break;
    case 'nlLang':NLS.lang=b.dataset.l;render();break;
    case 'nlAdd':NLS.src.blocks.push({img:'',title:{nl:'',en:''},text:{nl:'',en:''},btn:{nl:'',en:''},url:''});nlTouch();render();break;
    case 'nlUp':{const B=NLS.src.blocks;if(i>0)[B[i-1],B[i]]=[B[i],B[i-1]];nlTouch();render();break}
