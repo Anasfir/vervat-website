@@ -87,8 +87,8 @@
     "en": "Weru windows and doors"
    },
    "href": "#weru-windows",
-   "bg": "hero-showroom",
-   "thumb": "hero-showroom"
+   "bg": "foto/showroom-weru",
+   "thumb": "foto/showroom-gang"
   },
   {
    "title": {
@@ -104,7 +104,7 @@
     "en": "Weru windows and doors"
    },
    "href": "#weru-windows",
-   "bg": "uploads/img_0002-mwezv1ea.webp",
+   "bg": "foto/showroom-erik-weru",
    "thumb": "uploads/img_0060-mwezvttu.webp"
   },
   {
@@ -281,7 +281,7 @@
   {
    "id": "weru-windows",
    "img": "weru-door",
-   "hero": "hero-weru",
+   "hero": "foto/showroom-weru",
    "thumb": "hero-weru",
    "ctaHref": "https://weru.nl/vakbedrijven-kunststof-kozijnen/over-vervat-de-jong/",
    "video": "https://www.youtube.com/watch?v=QnYYTr1pIuc",
@@ -348,6 +348,14 @@
      [
       "hero-showroom",
       "Weru deuren en kozijnen in onze showroom in Breukelen"
+     ],
+     [
+      "foto/erik-weru-deur",
+      "Weru voordeuren in onze showroom"
+     ],
+     [
+      "foto/showroom-erik-weru",
+      "Weru deuren en ramen in de showroom in Breukelen"
      ]
     ],
     "refs": [],
@@ -416,6 +424,14 @@
      [
       "hero-showroom",
       "Weru doors and frames in our Breukelen showroom"
+     ],
+     [
+      "foto/erik-weru-deur",
+      "Weru front doors in our showroom"
+     ],
+     [
+      "foto/showroom-erik-weru",
+      "Weru doors and windows in the Breukelen showroom"
      ]
     ],
     "refs": [],
@@ -849,6 +865,10 @@
      [
       "dormer-roof",
       "Dakramen en dakkapellen op één dak"
+     ],
+     [
+      "foto/erik-dakkapel",
+      "Velux dakraam in een dakmodel in de showroom"
      ]
     ],
     "links": [],
@@ -896,6 +916,10 @@
      [
       "dormer-roof",
       "Roof windows and dormers on one roof"
+     ],
+     [
+      "foto/erik-dakkapel",
+      "Velux roof window in a roof model in the showroom"
      ]
     ],
     "links": [],
@@ -1175,6 +1199,10 @@
     ],
     "gallery": [
      [
+      "foto/erik-dakkapel",
+      "Dakkapel met Velux dakraam in de showroom"
+     ],
+     [
       "dormer-roof",
       "Dakkapellen op een pannendak"
      ],
@@ -1221,6 +1249,10 @@
      ]
     ],
     "gallery": [
+     [
+      "foto/erik-dakkapel",
+      "Dormer with a Velux roof window in the showroom"
+     ],
      [
       "dormer-roof",
       "Dormers on a tiled roof"
@@ -1273,12 +1305,12 @@
    ]
   },
   "images": {
-   "founded": "storefront",
-   "painters": "office",
+   "founded": "foto/gevel-bus",
+   "painters": "foto/kantoor-erik",
    "plan": "floorplan",
    "space": "aluport",
    "longBuilding": "long-building",
-   "clients": "team"
+   "clients": "foto/showroom-advies"
   },
   "video": {
    "url": "https://www.youtube.com/watch?v=QnYYTr1pIuc",
@@ -1519,9 +1551,9 @@
    ]
   },
   "images": {
-   "hero": "storefront",
-   "photo1": "hero-weru",
-   "photo2": "team"
+   "hero": "foto/gevel-bus",
+   "photo1": "foto/erik-showroom",
+   "photo2": "foto/adviestafel"
   }
  },
  "jobs": {
@@ -1912,12 +1944,12 @@
    "en": "<p>Vervat &amp; de Jong BV in Breukelen was founded in 1842 as a painting company and has grown into an all-round maintenance company. Originally founded as Fa. C. Vervat &amp; Zn, the company has worked with de Jong Schilderwerken for years to ensure continuity. Today it is run by Cees Vervat and Erik de Jong.</p><p>Our team consists of painters, glaziers and uPVC window frame fitters. All of them are permanent employees who work together as a team and care about the company. That shows in very satisfied customers, and references are available on request.</p>"
   },
   "about.caption1": {
-   "nl": "Erik de Jong &amp; Cees Vervat",
-   "en": "Erik de Jong &amp; Cees Vervat"
+   "nl": "Onze showroom in Breukelen",
+   "en": "Our showroom in Breukelen"
   },
   "about.caption2": {
-   "nl": "Schilders, glaszetters en kozijnmonteurs, allemaal in vaste dienst",
-   "en": "Painters, glaziers and frame fitters, all permanent staff"
+   "nl": "Persoonlijk advies aan tafel, met monsters en brochures bij de hand",
+   "en": "Personal advice at the table, with samples and brochures to hand"
   },
   "vac.kicker": {
    "nl": "Werken bij ons",
